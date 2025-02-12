@@ -1,0 +1,71 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Unregistered User" as User
+participant ":RegisterUserUI" as UI
+participant ":RegisterUserController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "userRepository:\nUserRepository" as UserRepository
+participant "user\n:User" as UserModel
+
+activate User
+
+    User -> UI : asks to register a new user
+    activate UI
+
+        UI --> User : requests data (name, email, \nphone number, password, clientType)
+    deactivate UI
+
+    User -> UI : types requested data (name, email, phone number, password, clientType)
+    activate UI
+
+        UI ---> User : shows all data and requests confirmation
+    deactivate UI
+
+    User -> UI : submits data
+    activate UI
+
+        UI -> CTRL : registerUser(name,\nemail, phone number,\npassword, clientType)
+        activate CTRL
+
+            CTRL -> RepositorySingleton : getInstance()
+            activate RepositorySingleton
+
+                RepositorySingleton --> CTRL : repositories
+            deactivate RepositorySingleton
+
+            CTRL -> PLAT : getUserRepository()
+            activate PLAT
+
+                PLAT --> CTRL : userRepository
+            deactivate PLAT
+
+            CTRL -> UserRepository: createUser(name, email, phone number,\npassword, clientType)
+            activate UserRepository
+
+                UserRepository -->> UserModel**: create(name, email, phone number,\npassword, clientType)
+
+                UserRepository -> UserRepository: validateUser(user)
+                activate UserRepository
+                    UserRepository --> UserRepository
+                deactivate UserRepository
+
+                UserRepository -> UserRepository: addUser(user)
+
+                UserRepository --> CTRL : user
+
+            deactivate UserRepository
+
+            CTRL --> UI: true
+            deactivate CTRL
+
+            UI --> User: displays operation success
+    deactivate UI
+
+deactivate User
+@enduml

@@ -1,0 +1,53 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+skinparam linetype orto
+
+skinparam classAttributeIconSize 0
+
+'left to right direction
+
+class User {
+    - String id
+    - String name
+    - String email
+    - String phoneNumber
+    - String password
+    - String clientType
+
+    + User(name, email, phoneNumber, password, clientType)
+}
+
+class UserRepository {
+    '- addUser(user)
+    - validateUser(user)
+    + createUser(name, email, phoneNumber, password, clientType)
+}
+
+class Repositories {
+    - Repositories()
+    + getInstance() : Repositories
+}
+
+class RegisterUserController {
+    + RegisterUserController(userRepository)
+    + registerUser(name, email, phoneNumber, password, clientType)
+}
+
+class RegisterUserUI {
+}
+
+Repositories -> Repositories : instance
+
+RegisterUserUI .> RegisterUserController
+
+RegisterUserController .> Repositories : repositories
+
+Repositories "1" --> "1" UserRepository
+
+RegisterUserController ..> UserRepository : userRepository
+
+UserRepository "1" --> "*" User : user
+@enduml

@@ -5,7 +5,7 @@ skinparam shadowing true
 skinparam classAttributeIconSize 0
 hide methods
 
-class User {
+class RegisterUser {
     + id: Long
     + name: String
     + email: String

@@ -1,0 +1,82 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+'skinparam linetype ortho
+left to right direction
+skinparam classAttributeIconSize 0
+hide circle
+hide methods
+
+
+class Person {
+    name
+    emailAddress
+    phoneNumber
+    password
+    role
+}
+
+class RegisteredUser {
+    clientType
+}
+
+class SystemManager{
+
+}
+
+class PickupPoint{
+    id
+    designation
+    address
+    workingDays
+    openingTime
+    closingTime
+}
+
+class Item{
+    id
+    designation
+    condition
+    status
+    categoryId
+    ownerId
+}
+
+class Category{
+    id
+    designation
+}
+
+class Donation {
+    id
+    item
+    ownerId
+    receiverId
+    status
+}
+
+class Tip {
+    id
+    title
+    description
+}
+
+Person <|-- RegisteredUser
+Person <|-- SystemManager
+
+Item "1.*" --- "1" Category : belongs to a >
+RegisteredUser "1.*" -- "1.*" Item : consults/registers an >
+RegisteredUser "1" --- "0.*" Item : owns/receives an >
+RegisteredUser "1.*" --- "0.*" PickupPoint : delivers/collects an Item in a >
+RegisteredUser "1.*" --- "0.*" PickupPoint : consults a >
+RegisteredUser "1" --- "0.*" Donation : has a >
+RegisteredUser "1.*" -- "0.*" Tip : consults >
+RegisteredUser "1" -- "0.*" Donation : consults >
+SystemManager "1.*" -- "1.*" Item : manages/consults an >
+SystemManager "1.*" --- "0.*" PickupPoint : consults a >
+SystemManager "1.*" -- "1.*" Tip : manages >
+RegisteredUser "1" --- "1.*" Donation : makes/receives a >
+Donation "1" --- "1" Item : contains an >
+
+@enduml

@@ -13,36 +13,22 @@ class Category {
     + Category(designation)
 }
 
-class CategoryDTO {
-    - id : String
-    - designation : String
-    + CategoryDTO(designation)
-}
-
 class CategoryController {
-    + createCategory(CategoryDTO categoryDTO)
+    + deleteCategory(String id)
 }
 
 class CategoryService {
-    + createCategory(CategoryDTO categoryDTO)
+    + deleteCategory(String id)
 }
 
 interface CategoryRepository {
-    + save(Category category)
+    + deleteById(String id)
 }
 
-class CategoryMapper {
-    + toEntity(CategoryDTO categoryDTO)
-    + toDTO(Category category)
-}
-
-CategoryUI .> CategoryController
+CategoryUI .> CategoryController : requests to delete
 CategoryController ..> CategoryService
 CategoryService ..> CategoryRepository
-CategoryService ..> CategoryMapper
 CategoryRepository "1" --> "*" Category : category
-CategoryMapper ..> Category
-CategoryMapper ..> CategoryDTO
 
 
 @enduml

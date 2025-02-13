@@ -1,0 +1,56 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor Client as CLT
+participant ":AdvertisementUI" as UI
+participant ":AdvertisementController" as CTRL
+participant ":AdvertisementService" as SERV
+participant ":AdvertisementRepository" as REPO
+participant ":AdvertisementMapper" as MAPPER
+
+participant "advertisementDTO\n:AdvertisementDTO" as DTO
+participant "advertisement\n:Advertisement" as AD
+
+activate CLT
+
+    CLT -> UI : requests to view an advertisement
+    activate UI
+
+        UI -> CTRL : getAdvertisementById(id)
+        activate CTRL
+
+            CTRL -> SERV : findById(id)
+            activate SERV
+
+                    SERV -> REPO : findById(id)
+                activate REPO
+
+                    REPO --> SERV : advertisement
+
+                deactivate REPO
+
+                    SERV -> MAPPER : toDTO(advertisement)
+                activate MAPPER
+
+                    MAPPER -->> DTO**: create()
+
+                    MAPPER --> SERV : advertisementDTO
+                deactivate MAPPER
+                deactivate REPO
+
+                SERV --> CTRL : advertisementDTO
+            deactivate SERV
+
+            CTRL --> UI : advertisementDTO
+        deactivate CTRL
+
+        UI --> CLT : displays operation success
+    deactivate UI
+
+deactivate CLT
+
+@enduml

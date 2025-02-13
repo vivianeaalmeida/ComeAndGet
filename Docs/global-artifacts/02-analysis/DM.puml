@@ -34,12 +34,12 @@ class Advertisement{
     finalDate
     address
     status
-    '(active, pending, closed)
+    '(active, closed)
 }
 
 class Request {
     status
-    '(pending, canceled, denied/rejected, accepted, donated/done)
+    '(pending, canceled, rejected, accepted, donated)
 }
 
 class Tip {
@@ -49,6 +49,15 @@ class Tip {
 
 class Like {
 }
+
+note bottom of Request
+Status: Pending, Canceled, Rejected,
+Accepted, Donated
+endnote
+
+note bottom of Advertisement
+Status: Active, Closed
+endnote
 
 Item "0..*" -left- "1" Category : belongs to a \t >
 Advertisement "1" -- "1" Item : contains an \t >

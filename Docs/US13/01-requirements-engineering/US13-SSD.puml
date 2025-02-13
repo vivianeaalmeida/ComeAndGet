@@ -3,7 +3,7 @@ skinparam monochrome true
 skinparam packageStyle rectangle
 skinparam shadowing false
 
-title System Sequence Diagram (SSD) - Create Advertisement
+title System Sequence Diagram (SSD) - Update Advertisement
 
 autonumber
 
@@ -12,7 +12,7 @@ participant ":System" as System
 
 activate User
 
-    User -> System : requests to create a new advertisement
+    User -> System : requests to update an advertisement
         activate System
 
             System --> User : shows categories list and asks to select one
@@ -21,7 +21,7 @@ activate User
         User -> System : selects a category
         activate System
 
-            System --> User : requests advertisement data (designation, \nfinalDate, address, item values)
+            System --> User : requests updated advertisement data \n(designation, finalDate, address, item values)
         deactivate System
 
         User -> System : types requested data and click on Submit button

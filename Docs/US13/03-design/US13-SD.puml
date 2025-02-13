@@ -18,7 +18,6 @@ participant ":AdvertisementRepository" as AD_REPO
 
 participant "updatedAdDto:\nAdvertisementDto" as AD_DTO
 participant "updatedItem:\nItem" as ITEM
-participant "advertisement:\nAdvertisement" as AD
 participant "updatedAdvertisement:\nAdvertisement" as UPDATED_AD
 
 activate USER
@@ -49,44 +48,50 @@ activate USER
     USER -> UI : selects a category
     activate UI
 
-        UI --> USER : requests advertisement data \n(designation, finalDate, address, item values)
+        UI --> USER : requests updated advertisement data \n(designation, finalDate, address, item values)
     deactivate UI
 
     USER -> UI : types requested data and clicks Submit
     activate UI
 
-        UI -> CTRL : createAdvertisement(advertisementDto)
+        UI -> CTRL : updateAdvertisement(advertisementDto)
         activate CTRL
 
-            CTRL -> AD_SERVICE : createAdvertisement(advertisementDto)
+            CTRL -> AD_SERVICE : updateAdvertisement(advertisementDto)
             activate AD_SERVICE
 
-                AD_SERVICE -> AD_MAPPER : toEntity(advertisementDto)
-                activate AD_MAPPER
-                    AD_MAPPER -->> AD** : create()
-                    AD_MAPPER --> AD_SERVICE : advertisement
-                deactivate AD_MAPPER
-
-                AD_SERVICE -> ITEM_REPO : save(advertisement.item)
-                activate ITEM_REPO
-                    ITEM_REPO --> AD_SERVICE : savedItem
-                deactivate ITEM_REPO
-
-                AD_SERVICE -> AD_REPO : save(advertisement)
+                AD_SERVICE -> AD_REPO : findById(advertisementDto.id)
                 activate AD_REPO
-                    AD_REPO --> AD_SERVICE : savedAdvertisement
+                    AD_REPO --> AD_SERVICE : advertisement
                 deactivate AD_REPO
 
-                AD_SERVICE -> AD_MAPPER : toDto(savedAdvertisement)
+                AD_SERVICE -> AD_SERVICE : updateAdvertisement(advertisement)
+                activate AD_SERVICE
+                    AD_SERVICE --> AD_SERVICE : updatedAdvertisement
+                deactivate AD_SERVICE
+
+                AD_SERVICE -> ITEM_REPO : save(updatedAdvertisement.item)
+                activate ITEM_REPO
+                    ITEM_REPO -->> ITEM** : create()
+                    ITEM_REPO --> AD_SERVICE : updatedItem
+                deactivate ITEM_REPO
+
+                AD_SERVICE -> AD_REPO : save(updatedAdvertisement)
+                activate AD_REPO
+                    AD_REPO -->> UPDATED_AD** : create()
+                    AD_REPO --> AD_SERVICE : updatedAdvertisement
+                deactivate AD_REPO
+
+                AD_SERVICE -> AD_MAPPER : toDto(updatedAdvertisement)
                 activate AD_MAPPER
                     AD_MAPPER -->> AD_DTO** : create()
-                    AD_MAPPER --> AD_SERVICE : savedAdDTO
+                    AD_MAPPER --> AD_SERVICE : updatedAdDTO
                 deactivate AD_MAPPER
 
-                AD_SERVICE --> CTRL : savedAdDTO
+                AD_SERVICE --> CTRL : updatedAdDTO
             deactivate AD_SERVICE
 
-            CTRL --> UI : success(savedAdDTO)
+            CTRL --> UI : success(updatedAdDTO)
         deactivate CTRL
 
         UI --> USER : displays operation success

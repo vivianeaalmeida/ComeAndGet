@@ -12,10 +12,10 @@ participant ":System" as System
 
 activate M
 
-    M -> System : requests to create a new category
+    M -> System : requests to delete a category
     activate System
 
-        System --> M : requests data (designation)
+        System --> M : requests data (category id)
     deactivate System
 
     M -> System : types requested data and submits data

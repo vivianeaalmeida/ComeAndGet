@@ -6,19 +6,17 @@ skinparam shadowing false
 autonumber
 
 actor Manager as M
-participant ":CreateCategoryUI" as UI
+participant ":CategoryUI" as UI
 participant ":CategoryController" as CTRL
 participant ":CategoryService" as SERV
 participant ":CategoryRepository" as REPO
 participant ":CategoryMapper" as MAPPER
 
-participant "categoryDTO\n:CategoryDTO" as DTO
 participant "savedCategoryDTO\n:CategoryDTO" as SAVEDDTO
-
-
 participant "savedCategory\n:Category" as SAVEDCATEGORY
-
 participant "category\n:Category" as CATEGORY
+participant "categoryDTO\n:CategoryDTO" as DTO
+
 
 activate M
 
@@ -55,6 +53,7 @@ activate M
 
                 SERV -> MAPPER : toDTO(savedCategory)
                 activate MAPPER
+
                 MAPPER -->> SAVEDDTO**: create()
 
                 MAPPER -> SERV : savedDTO

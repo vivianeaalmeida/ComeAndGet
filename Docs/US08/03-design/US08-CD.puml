@@ -1,0 +1,81 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+skinparam classAttributeIconSize 0
+
+
+class AdvertisementUI {
+}
+
+class AdvertisementController {
+    + getAdvertisements()
+}
+
+class AdvertisementService {
+    + getAdvertisements()
+}
+
+interface AdvertisementRepository {
+    + findAll()
+}
+
+
+class Item {
+    - id: String
+    - designation: String
+    - condition: String
+    - initialDate: Date
+    - finalDate: Date
+    - address: String
+    + Item(...)
+}
+
+class Advertisement {
+    - id : String
+    - designation: String
+    - initialDate: Date
+    - finalDate: Date
+    - address: String
+    + Advertisement(...)
+}
+
+enum AdvertisementStatus {
+    designation: String
+}
+
+class Category {
+    - designation: String
+    + Category(...)
+}
+
+class AdvertisementMapper {
+    + toEntity()
+    + toDTO()
+}
+
+class AdvertisementDTO {
+    - id: String
+    - designation: String
+    - initialDate: Date
+    - finalDate: Date
+    - address: String
+    + AdvertisementDTO(...)
+}
+
+' --- Relacionamentos ---
+User ..> AdvertisementUI : requests to list all available advertisements
+AdvertisementUI ..> AdvertisementController
+AdvertisementController .> AdvertisementService
+AdvertisementService ..> AdvertisementRepository
+AdvertisementService ..> AdvertisementMapper
+AdvertisementMapper ..> Advertisement
+AdvertisementMapper ..> AdvertisementDTO
+AdvertisementRepository "1" --> "*" Advertisement : advertisement
+Advertisement --> Item : contains an
+Category --> Item : belongs to
+Advertisement --> AdvertisementStatus : has
+
+
+
+@enduml

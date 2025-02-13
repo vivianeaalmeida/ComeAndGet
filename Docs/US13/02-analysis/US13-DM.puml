@@ -8,11 +8,11 @@ hide circle
 hide methods
 
 class User {
-    name
-    emailAddress
-    phoneNumber
-    password
-    role
+    - name
+    - emailAddress
+    - phoneNumber
+    - password
+    - role
 }
 
 class Category {

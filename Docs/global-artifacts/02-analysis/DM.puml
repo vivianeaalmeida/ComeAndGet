@@ -1,28 +1,23 @@
 @startuml
 skinparam monochrome true
 skinparam packageStyle rectangle
-skinparam shadowing false
+skinparam shadowing true
 'skinparam linetype ortho
-left to right direction
 skinparam classAttributeIconSize 0
 hide circle
 hide methods
+'left to right direction
 
-
-class RegisteredUser {
-    name
-    emailAddress
-    phoneNumber
-    password
-    role
+class Manager {
 }
 
 class Client {
-    clientType
+    name
+    emailAddress
+    phoneNumber
 }
 
 class PickupPoint{
-    id
     designation
     address
     workingDays
@@ -31,62 +26,44 @@ class PickupPoint{
 }
 
 class Item{
-    id
     designation
     condition
-    categoryId
 }
 
 class Category{
-    id
     designation
 }
 
 class Advertisement{
-    id
     designation
-    ownerId
-    itemId
     initialDate
     finalDate
     address
-    status (active, pending, closed)
+    'status
+    '(active, pending, closed)
 }
 
-class DonationRequest {
-    id
-    advertisementId
-    status (active, canceled, finished)
-    receiverId
-}
-
-class Donation {
-    id
-    requestId
-    date
+class Request {
+    status
+    '(pending, canceled, denied/rejected, accepted, donated/done)
 }
 
 class Tip {
-    id
     title
     description
 }
 
-RegisteredUser <|-- Client
+class Like {
+}
 
-Item "1.*" -- "1" Category : belongs to a >
-Advertisement "1" -- "1" Item : contains an >
-Advertisement "1" --- "1" Client : owned by >
-Advertisement "1" --- "1" Donation: results in a >
-Client "0.*" --- "0.*" Advertisement : consults/registers an >
-Client "0.*" --- "0.*" DonationRequest : consults/registers a >
-Client "1.*" -- "0.*" PickupPoint : delivers/collects Donation in a >
-Client "0.*" --- "0.*" Tip : consults >
-Client "1" --- "0.*" Donation : consults/registers >
-RegisteredUser "1" --- "1.*" Tip : manages >
-DonationRequest "1" --- "1" Donation : results in >
-DonationRequest "1" --- "1" RegisteredUser : requested by >
-Donation "1" --- "1" PickupPoint : delivered/collected at >
-Donation "1" --- "1" Item : contains an >
+Item "0..*" -left- "1" Category : belongs to a \t >
+Advertisement "1" -left- "1" Item : contains an \t >
+Client "1" -- "0..*" Advertisement : create >
+Client "1" -- "0..*" Request : references <
+Manager "1" -- "0..*" Tip : manages \t\t >
+Request "0..*" -- "1" Advertisement : receives <
+Advertisement "0..*" -- "0..1" PickupPoint : references >
+Client "1" -- "0..*" Like : makes >
+Like "0..*" -left- "1" Tip : references >
 
 @enduml

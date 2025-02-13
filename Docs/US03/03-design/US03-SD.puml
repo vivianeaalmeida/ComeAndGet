@@ -10,6 +10,14 @@ participant ":CreateCategoryUI" as UI
 participant ":CategoryController" as CTRL
 participant ":CategoryService" as SERV
 participant ":CategoryRepository" as REPO
+participant ":CategoryMapper" as MAPPER
+
+participant "categoryDTO\n:CategoryDTO" as DTO
+participant "savedCategoryDTO\n:CategoryDTO" as SAVEDDTO
+
+
+participant "savedCategory\n:Category" as SAVEDCATEGORY
+
 participant "category\n:Category" as CATEGORY
 
 activate M
@@ -23,25 +31,42 @@ activate M
     M -> UI : types requested data and submits
     activate UI
 
-        UI -> CTRL : createCategory(category)
+        UI -> CTRL : createCategory(categoryDTO)
         activate CTRL
 
-            CTRL -> SERV : createCategory(category)
+            CTRL -> SERV : createCategory(categoryDTO)
             activate SERV
 
+                    SERV -> MAPPER : toEntity(categoryDTO)
+                activate MAPPER
+
+                    MAPPER -->> CATEGORY**: create()
+
+                    MAPPER --> SERV : category
+                deactivate MAPPER
                 SERV -> REPO : save(category)
+
                 activate REPO
 
-                    REPO --> SERV : category saved
+                    REPO -->> SAVEDCATEGORY**: create()
+
+                    REPO --> SERV : savedCategory
                 deactivate REPO
 
-                SERV --> CTRL : category created
+                SERV -> MAPPER : toDTO(savedCategory)
+                activate MAPPER
+                MAPPER -->> SAVEDDTO**: create()
+
+                MAPPER -> SERV : savedDTO
+                deactivate MAPPER
+
+                SERV --> CTRL : savedCategory
             deactivate SERV
 
-            CTRL --> UI : category created
+            CTRL --> UI : savedCategory
         deactivate CTRL
 
-        UI --> M : confirmation message
+        UI --> M : displays operation success
     deactivate UI
 
 deactivate M

@@ -1,28 +1,48 @@
+Linha contínua - relação de posse (contem, guarda como atributo), por exemplo o storeRepository guarda uma store (o que vem do modelo de dominio mantem-se com linha continua como no caso do agente que tem uma loja como atributo)
+Linha tracejada - relação de uso (nao persiste ao longo do tempo), por exemplo o controller apenas comunica repositories
+
 @startuml
 skinparam packageStyle rectangle
 skinparam shadowing false
 skinparam linetype polyline
 skinparam classAttributeIconSize 0
 
+class CreateCategoryUI {
+}
+
 class Category {
+    - id : String
+    - designation : String
+    + Category(designation)
+}
+
+class CategoryDTO {
+    - id : String
     - designation : String
 }
 
 class CategoryController {
-    - designation: String
-    - initialDate: Date
-    - finalDate: Date
-    - address: String
-    - images: String[]
-    - status: AdvertisementStatus
+    + createCategory()
 }
 
 class CategoryService {
+    + createCategory()
 }
 
 class CategoryRepository {
-
+    + save()
 }
+
+class CategoryMapper {
+    + toEntity()
+    + toDTO()
+}
+
+CreateCategoryUI .> CategoryController
+CategoryController ..> CategoryService
+CategoryService ..> CategoryRepository
+CategoryService ..> CategoryMapper
+CategoryRepository "1" --> "*" Category : category
 
 
 @enduml

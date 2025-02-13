@@ -3,30 +3,32 @@ skinparam monochrome true
 skinparam packageStyle rectangle
 skinparam shadowing false
 
-title System Sequence Diagram (SSD)
+title System Sequence Diagram (SSD) - Create Advertisement
 
 autonumber
 
-actor "User" as User
+actor "Client" as Client
 participant ":System" as System
 
-activate User
+activate Client
 
-    User -> System : requests to register a new user
+    Client -> System : requests to create a new advertisement
     activate System
 
-        System --> User : requests data (i.e. name, email, phone number, \npassword, client type)
+        System --> Client : requests advertisement data \n(title, description, category, condition)
     deactivate System
 
-    User -> System : types requested data
+    Client -> System : provides item details
     activate System
 
-        System --> User : shows all data and requests confirmation
+        System --> Client : displays advertisement summary \n(status = "available") and requests confirmation
     deactivate System
 
-    User -> System : confirms data
+    Client -> System : confirms creation
     activate System
 
-        System --> User : displays operation success (e.g., "Registration successful")
+        System --> Client : displays success message \n(e.g., "Advertisement created successfully")
     deactivate System
+
+deactivate Client
 @enduml

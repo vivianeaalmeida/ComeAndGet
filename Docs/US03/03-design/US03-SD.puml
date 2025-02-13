@@ -1,0 +1,57 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Client" as CLIENT
+participant ":CreateAdvertisementUI" as UI
+participant ":CreateAdvertisementController" as CTRL
+participant ":AdvertisementsRepository" as AD_REPO
+participant ":CategoriesRepository" as CAT_REPO
+participant ":Advertisement" as AD
+participant ":Item" as ITEM
+
+activate CLIENT
+
+    CLIENT -> UI : requests to create new advertisement
+    activate UI
+
+        UI --> CLIENT : requests item details\n(designation, condition, category,\naddress, images)
+    deactivate UI
+
+    CLIENT -> UI : provides item details
+    activate UI
+
+        UI -> CTRL** : create
+        UI -> CTRL : createAdvertisement(designation, itemId,\naddress, images)
+        activate CTRL
+
+            CTRL -> CAT_REPO : getCategoryById(categoryId)
+            activate CAT_REPO
+                CAT_REPO --> CTRL : category
+            deactivate CAT_REPO
+
+            CTRL -> ITEM** : new(itemId, designation, condition, category)
+            CTRL -> ITEM : validate()
+            activate ITEM
+                ITEM --> CTRL : valid
+            deactivate ITEM
+
+            CTRL -> AD** : new(designation, item, address, images)
+            CTRL -> AD : setStatus(ACTIVE)
+            CTRL -> AD_REPO : addAdvertisement(advertisement)
+            activate AD_REPO
+                AD_REPO -> AD : persist()
+                AD_REPO --> CTRL : advertisementId
+            deactivate AD_REPO
+
+            CTRL --> UI : success(advertisementId)
+        deactivate CTRL
+
+        UI --> CLIENT : display "Advertisement created\n(ID: ADV-2023-001)"
+    deactivate UI
+
+deactivate CLIENT
+@enduml

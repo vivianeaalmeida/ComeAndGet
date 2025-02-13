@@ -19,6 +19,7 @@ class Category {
 class CategoryDTO {
     - id : String
     - designation : String
+    + CategoryDTO()
 }
 
 class CategoryController {
@@ -43,6 +44,8 @@ CategoryController ..> CategoryService
 CategoryService ..> CategoryRepository
 CategoryService ..> CategoryMapper
 CategoryRepository "1" --> "*" Category : category
+CategoryMapper ..> Category
+CategoryMapper ..> CategoryDTO
 
 
 @enduml

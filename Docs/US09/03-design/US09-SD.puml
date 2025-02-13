@@ -1,0 +1,56 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "User" as USER
+participant ":AdvertisementUI" as UI
+participant ":AdvertisementController" as CTRL
+participant ":AdvertisementService" as SERV
+participant "mapper\n:AdvertisementMapper" as MAPPER
+participant ":AdvertisementsRepository" as AD_REPO
+participant "avAdvertisementList" as AD_LIST
+participant "advertisementDTO\n:AdvertisementDTO" as advertisementDTO
+
+
+
+activate USER
+
+    USER -> UI : requests to list all available advertisements
+    activate UI
+        UI -> CTRL : getAvAdvertisementsList()
+        activate CTRL
+
+            CTRL -> SERV : getAvAdvertisementsList()
+            activate SERV
+
+                SERV -> AD_REPO : findAllByStatusAvailable()
+                activate AD_REPO
+                AD_REPO -->> AD_LIST**:create()
+                AD_REPO --> SERV : avAdvertisementList
+                deactivate AD_REPO
+            SERV --> MAPPER : toDTO(avAdvertisementList)
+            activate MAPPER
+            MAPPER --> avAdvertisementsDTOList**:create()
+            loop for each advertisement in AD_LIST
+                MAPPER -> AD_LIST : advertisement = get(i)
+                activate AD_LIST
+                deactivate AD_LIST
+                MAPPER -> MAPPER : advertisementDTO = toDTO(advertisement)
+                activate MAPPER
+                MAPPER -->> advertisementDTO**:create(...)
+                deactivate MAPPER
+                MAPPER -> avAdvertisementsDTOList :add(advertisementDTO)
+                activate avAdvertisementsDTOList
+                deactivate avAdvertisementsDTOList
+            end
+            MAPPER --> SERV : avAdvertisementsDTOList
+            SERV --> CTRL : avAdvertisementsDTOList
+            deactivate SERV
+        CTRL --> UI : avAdvertisementsDTOList
+        UI --> USER : avAdvertisementsDTOList
+        deactivate CTRL
+deactivate USER
+@enduml

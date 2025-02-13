@@ -8,17 +8,18 @@
 - US06 - Delete category
 - US07 - Create an advertisement *
 - US08 - View advertisements list *
-- US09 - View available advertisements list
-- US10 - View pending advertisement list
-- US11 - View advertisement details *
+- US09 - View active advertisements list
+- US10 - View closed advertisement list
+- US11 - View advertisement *
 - US12 - Search advertisements *
 - US13 - Update advertisement *
 - US14 - Delete advertisement *
-- US15 - Create request
-- US16 - View request detail
-- US17 - View list of requests made by the user
-- US18 - View list of active requests received by the user
-- US19 - Updates request status *
+- US15 - View my published advertisements
+- US16 - Create request
+- US17 - View request
+- US18 - View my list of requests
+- US19 - View requests on my advertisements
+- US20 - Updates request status *
 
 ## US01 - Register new user
 - **Endpoint**: `POST /signup`
@@ -48,15 +49,16 @@
 - **Description**: As a manager, I want to create new categories so that users can classify their advertisements properly.
 - **Permissions/Role**: Manager
 - **Acceptance Criteria**:
-  - The category name must be unique.
-  - The system should validate that the category name is not empty.
+  - The category name must be unique
+  - The category name must have a minimum length of 5 characters (optional)
+  - The system should validate that the category name is not null or empty.
 
 ---
 
 ## US04 - View categories list
 - **Endpoint**: `GET /categories`
 - **Description**: As a user, I want to view a list of all available categories so that I can classify advertisements correctly and search by item category.
-- **Permissions/Role**: Client
+- **Permissions/Role**: All
 - **Acceptance Criteria**:
   - The system should return a list of categories with their respective names.
 
@@ -68,6 +70,7 @@
 - **Permissions/Role**: Manager
 - **Acceptance Criteria**:
   - The category name must be unique and not empty.
+  - The category name must have a minimum length of 5 characters (optional)
 
 ---
 
@@ -85,7 +88,11 @@
 - **Description**: As a client, I want to create an advertisement so that I can donate an item.
 - **Permissions/Role**: Client
 - **Acceptance Criteria**:
-    - Status advertisement is “available” by default.
+  - Advertisement Status is "available" by default.
+  - Initial Date is automatically created with the current date.
+  - The user must provide the item details when creating an advertisement.
+  - The system must create the associated item together with the advertisement.
+  - The advertisement must not exist without an associated item.
 
 ---
 
@@ -99,7 +106,7 @@
 
 ---
 
-## US09 - View available advertisements list
+## US09 - View active advertisements list
 - **Endpoint**: `GET /advertisements/active`
 - **Description**: As a user, I want to view the list of active advertisements so that I can explore the items that are available for donation.
 - **Permissions/Role**: All
@@ -109,9 +116,9 @@
 
 ---
 
-## US10 - View pending advertisement list
-- **Endpoint**: `GET /advertisements/pending`
-- **Description**: As a manager, I want to list the pending advertisements so that I can easily manage and oversee the items in the system.
+## US10 - View closed advertisement list
+- **Endpoint**: `GET /advertisements/closed`
+- **Description**: As a manager, I want to list the closed advertisements so that I can easily manage and oversee the items in the system.
 - **Permissions/Role**: Manager
 - **Acceptance Criteria**:
     - The list displays key details for each advertisement.
@@ -130,7 +137,7 @@
 
 ## US12 - Search advertisements
 - **Endpoint**: `/advertisement/available?category=[arg1]&keyword=[arg2]&location=[arg3]`
-- **Description**: As a user, I want to search for available advertisements by category, keyword, and location so that I can better find the items I’m interested in.
+- **Description**: As a user, I want to search for active advertisements by category, keyword, and location so that I can better find the items I’m interested in.
 - **Permissions/Role**: All
 - **Acceptance Criteria**:
     - The list displays key details for each advertisement, such as product name, category, condition, status.
@@ -140,10 +147,11 @@
 
 ## US13 - Update advertisement
 - **Endpoint**: `PUT /advertisements/{id}`
-- **Description**: As a client, I want to update advertisement’s name, location, and end date.
+- **Description**: As a client, I want to update advertisement’s designation, location, end date and the respective item so that it remains relevant and accurate.
 - **Permissions/Role**: Client (the creator)
 - **Acceptance Criteria**:
     - Only advertisements with available status can be updated.
+    - Advertisement status and initialDate cannot be updated
     - Advertisements with closed status have the possibility to extend the end date and reopen the advertisement.
 
 ---
@@ -157,9 +165,19 @@
 
 ---
 
-## US15 - Create donation request
-- **Endpoint**: `POST /advertisements/{id}/donation-requests`
-- **Description**: As a client, I want to create a donation request on an advertisement so that I can request the item being donated.
+## US15 - View my published advertisements
+- **Endpoint**: `GET /users/{userId}/advertisements`
+- **Description**: As a client, I want to see a list of my published advertisements so that I can manage them if necessary
+- **Permissions/Role**: Client
+- **Acceptance Criteria**:
+  - The client should be able to view all their published listings.
+  - The list is paginated or scrollable if it contains a large number of items (optional).
+
+---
+
+## US16 - Create a request
+- **Endpoint**: `POST /advertisements/{id}/requests`
+- **Description**: As a client, I want to create a request on an advertisement so that I can request the item being donated.
 - **Permissions/Role**: Client
 - **Acceptance Criteria**:
     - The donation request must be linked to an advertisement with active status.
@@ -168,9 +186,9 @@
 
 ---
 
-## US16 - View donation request detail
-- **Endpoint**: `GET /advertisements/{adId}/donation-requests/{requestId}`
-- **Description**: As a client, I want to view the details of a donation request so that I can track its status and relevant information.
+## US17 - View request
+- **Endpoint**: `GET /advertisements/{adId}/requests/{requestId}`
+- **Description**: As a client, I want to view the details of a request so that I can track its status and relevant information.
 - **Permissions/Role**: Client (requester or advertisement owner)
 - **Acceptance Criteria**:
     - The requester can view the details of their own donation requests.
@@ -179,32 +197,31 @@
 
 ---
 
-## US17 - View list of donation requests made by the user
-- **Endpoint**: `GET /users/{userId}/donation-requests`
-- **Description**: As a client, I want to view the list of donation requests I have made so that I can track their status and manage the requests.
+## US18 - View my list of requests
+- **Endpoint**: `GET /users/{userId}/requests`
+- **Description**: As a client, I want to view the list of requests I have made on advertisements so that I can track their status and manage them
 - **Permissions/Role**: Client
 - **Acceptance Criteria**:
-    - The client (receiver) can view all donation requests they have made.
-    - The system must return a list of donation requests, including the request status, creation date, and associated advertisement details.
-    - If no donation requests have been made by the user, the system must return an empty list.
+    - The client should be able to view a list of requests they have made on advertisements. 
+    - Each request should display its status
+    - Clicking on a request should show its details and the associated advertisement.
 
 ---
 
-## US18 - View list of active donation requests received by the user
-- **Endpoint**: `GET /users/{userId}/advertisements/donation-requests/active`
-- **Description**: As a client (advertisement owner), I want to view all active donation requests made to my advertisements so that I can respond to the requests.
+## US19 - View requests on my advertisements
+- **Endpoint**: `GET /users/{userId}/advertisements/requests`
+- **Description**: As a client (advertisement owner), I want to see the list of requests made on my advertisements so that I can track interest and respond accordingly.
 - **Permissions/Role**: Client (advertisement owner)
 - **Acceptance Criteria**:
-    - The advertisement owner can view all active donation requests made to their advertisements.
-    - The system must return a list of active donation requests, including the request status, creation date, and associated advertisement details.
-    - If no active donation requests exist, the system must return an empty list.
+    - The client should be able to view all requests received for each of their advertisements.
+    - Clicking on a request should allow the client to respond (accept/reject).
 
 ---
 
-## US19 - Update request status
-- **Endpoint**: `PATCH /advertisements/{id}/donation-requests/{id}/status`
-- **Description**: As a client (requester or advertisement owner), I want to change a request so that I can canceled my request or decline/accepted/conclude a request made to my advertisement.
-- **Permissions/Role**: Client (requester or advertisement owner)
+## US20 - Update request status
+- **Endpoint**: `PATCH /advertisements/{id}/requests/{id}/status`
+- **Description**: As a client, I want to change a request so that I can canceled my request or decline/accepted/conclude a request made to my advertisement.
+- **Permissions/Role**: Client (requester or advertisement creator)
 - **Acceptance Criteria**:
     - The only editable field is the request status.
     - Only the requester or the advertisement owner can update the status of the request.

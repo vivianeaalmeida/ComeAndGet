@@ -5,53 +5,45 @@ skinparam shadowing false
 
 autonumber
 
-actor "Client" as CLIENT
-participant ":CreateAdvertisementUI" as UI
-participant ":CreateAdvertisementController" as CTRL
-participant ":AdvertisementsRepository" as AD_REPO
-participant ":CategoriesRepository" as CAT_REPO
-participant ":Advertisement" as AD
-participant ":Item" as ITEM
+actor Manager as M
+participant ":CreateCategoryUI" as UI
+participant ":CategoryController" as CTRL
+participant ":CategoryService" as SERV
+participant ":CategoryRepository" as REPO
+participant "category\n:Category" as CATEGORY
 
-activate CLIENT
+activate M
 
-    CLIENT -> UI : requests to create new advertisement
+    M -> UI : asks to create a new category
     activate UI
 
-        UI --> CLIENT : requests item details\n(designation, condition, category,\naddress, images)
+        UI --> M : requests data (designation)
     deactivate UI
 
-    CLIENT -> UI : provides item details
+    M -> UI : types requested data and submits
     activate UI
 
-        UI -> CTRL** : create
-        UI -> CTRL : createAdvertisement(designation, itemId,\naddress, images)
+        UI -> CTRL : createCategory(category)
         activate CTRL
 
-            CTRL -> CAT_REPO : getCategoryById(categoryId)
-            activate CAT_REPO
-                CAT_REPO --> CTRL : category
-            deactivate CAT_REPO
+            CTRL -> SERV : createCategory(category)
+            activate SERV
 
-            CTRL -> ITEM** : new(itemId, designation, condition, category)
-            CTRL -> ITEM : validate()
-            activate ITEM
-                ITEM --> CTRL : valid
-            deactivate ITEM
+                SERV -> REPO : save(category)
+                activate REPO
 
-            CTRL -> AD** : new(designation, item, address, images)
-            CTRL -> AD : setStatus(ACTIVE)
-            CTRL -> AD_REPO : addAdvertisement(advertisement)
-            activate AD_REPO
-                AD_REPO -> AD : persist()
-                AD_REPO --> CTRL : advertisementId
-            deactivate AD_REPO
+                    REPO --> SERV : category saved
+                deactivate REPO
 
-            CTRL --> UI : success(advertisementId)
+                SERV --> CTRL : category created
+            deactivate SERV
+
+            CTRL --> UI : category created
         deactivate CTRL
 
-        UI --> CLIENT : display "Advertisement created\n(ID: ADV-2023-001)"
+        UI --> M : confirmation message
     deactivate UI
 
-deactivate CLIENT
+deactivate M
+
 @enduml

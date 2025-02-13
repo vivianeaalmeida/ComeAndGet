@@ -4,21 +4,11 @@ skinparam shadowing false
 skinparam linetype polyline
 skinparam classAttributeIconSize 0
 
-class Client {
-    - name: String
-    - emailAddress: String
-    - phoneNumber: String
-    - password: String
-    - role: String
-    - clientType: String
+class Category {
+    - designation : String
 }
 
-class Item {
-    - designation: String
-    - condition: String
-}
-
-class Advertisement {
+class CategoryController {
     - designation: String
     - initialDate: Date
     - finalDate: Date
@@ -27,52 +17,12 @@ class Advertisement {
     - status: AdvertisementStatus
 }
 
-class AdvertisementStatus {
-    <<enumeration>>
-    ACTIVE
-    PENDING
-    CLOSED
+class CategoryService {
 }
 
-class CategoriesRepository {
-    + getCategoryById(id: Long)
+class CategoryRepository {
+
 }
 
-class AdvertisementsRepository {
-    + addAdvertisement(advertisement: Advertisement)
-    + getAdvertisementById(id: Long)
-}
 
-class Repositories {
-    - Repositories()
-    + getInstance() : Repositories
-    + getAdvertisementsRepository()
-    + getCategoriesRepository()
-}
-
-class CreateAdvertisementController {
-    + CreateAdvertisementController(repositories: Repositories)
-    + createAdvertisement(designation: String, itemId: Long,\n address: String, images: String[])
-    - validateItem(itemId: Long)
-}
-
-class CreateAdvertisementUI {
-}
-
-' --- Relacionamentos ---
-Repositories --> Repositories : instance
-
-CreateAdvertisementUI .> CreateAdvertisementController
-
-CreateAdvertisementController .> Repositories : repositories
-
-Repositories --> "1" AdvertisementsRepository
-Repositories --> "1" CategoriesRepository
-
-Client --> CreateAdvertisementUI : requests to create
-
-Advertisement --> CreateAdvertisementController : is created by
-Item --> CreateAdvertisementController : is validated
-
-Advertisement "1" --> "1" AdvertisementStatus
 @enduml

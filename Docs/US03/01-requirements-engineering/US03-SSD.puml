@@ -7,28 +7,22 @@ title System Sequence Diagram (SSD) - Create Advertisement
 
 autonumber
 
-actor "Client" as Client
+actor Manager as M
 participant ":System" as System
 
-activate Client
+activate M
 
-    Client -> System : requests to create a new advertisement
+    M -> System : requests to create a new category
     activate System
 
-        System --> Client : requests advertisement data \n(title, description, category, condition)
+        System --> M : requests data (designation)
     deactivate System
 
-    Client -> System : provides item details
+    M -> System : types requested data and submits data
     activate System
 
-        System --> Client : displays advertisement summary \n(status = "available") and requests confirmation
+        System --> M : displays operation success
     deactivate System
 
-    Client -> System : confirms creation
-    activate System
-
-        System --> Client : displays success message \n(e.g., "Advertisement created successfully")
-    deactivate System
-
-deactivate Client
+deactivate M
 @enduml

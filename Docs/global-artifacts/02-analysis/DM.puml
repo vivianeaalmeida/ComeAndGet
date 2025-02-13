@@ -8,29 +8,23 @@ hide circle
 hide methods
 'left to right direction
 
-class Manager {
-}
-
-class Client {
+class User {
     name
     emailAddress
     phoneNumber
 }
 
-class PickupPoint{
+class Role {
     designation
-    address
-    workingDays
-    openingTime
-    closingTime
 }
 
-class Item{
+class Item {
     designation
     condition
+    image
 }
 
-class Category{
+class Category {
     designation
 }
 
@@ -39,7 +33,7 @@ class Advertisement{
     initialDate
     finalDate
     address
-    'status
+    status
     '(active, pending, closed)
 }
 
@@ -57,13 +51,11 @@ class Like {
 }
 
 Item "0..*" -left- "1" Category : belongs to a \t >
-Advertisement "1" -left- "1" Item : contains an \t >
-Client "1" -- "0..*" Advertisement : create >
-Client "1" -- "0..*" Request : references <
-Manager "1" -- "0..*" Tip : manages \t\t >
+Advertisement "1" -- "1" Item : contains an \t >
+User "1" -- "0..*" Advertisement : create >
+User "1" -- "0..*" Request : references <
 Request "0..*" -- "1" Advertisement : receives <
-Advertisement "0..*" -- "0..1" PickupPoint : references >
-Client "1" -- "0..*" Like : makes >
+User "1" -- "0..*" Like : makes >
 Like "0..*" -left- "1" Tip : references >
-
+"User" "0..*" - "1" Role : has \t >
 @enduml

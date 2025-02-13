@@ -5,12 +5,9 @@ skinparam shadowing true
 skinparam classAttributeIconSize 0
 hide methods
 
-class RegisterUser {
-    + id: Long
-    + name: String
+class Login {
     + email: String
-    + phoneNumber: String
     + password: String
-    + clientType: String
 }
+
 @enduml

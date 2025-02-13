@@ -7,24 +7,24 @@ autonumber
 
 actor "Unregistered User" as User
 participant ":RegisterUserUI" as UI
-participant ":RegisterUserController" as CTRL
-participant ":Repositories" as RepositorySingleton
-participant "repositories\n:Repositories" as PLAT
-participant "userRepository:\nUserRepository" as UserRepository
+participant ":UserController" as CTRL
+participant ":UserService" as UserService
+participant ":UserRepository" as UserRepository
 participant "user\n:User" as UserModel
+participant "userDTO\n:UserDTO" as UserDTO
 
 activate User
 
-    User -> UI : asks to register a new user
+    User -> UI : user clicks on signup button
     activate UI
 
-        UI --> User : requests data (name, email, \nphone number, password, clientType)
+    UI -> User : show signup form
     deactivate UI
 
     User -> UI : types requested data (name, email, phone number, password, clientType)
     activate UI
 
-        UI ---> User : shows all data and requests confirmation
+    UI ---> User : shows all data and confirm button is enabled.
     deactivate UI
 
     User -> UI : submits data
@@ -33,35 +33,26 @@ activate User
         UI -> CTRL : registerUser(name,\nemail, phone number,\npassword, clientType)
         activate CTRL
 
-            CTRL -> RepositorySingleton : getInstance()
-            activate RepositorySingleton
+            CTRL -->> UserDTO**: UserDTO(name, email, phone number,\npassword, clientType)
 
-                RepositorySingleton --> CTRL : repositories
-            deactivate RepositorySingleton
+            CTRL -> UserService : addUser(userDTO)
+            activate UserService
 
-            CTRL -> PLAT : getUserRepository()
-            activate PLAT
+            UserService -->> UserModel: toUserEntity(userDTO)
 
-                PLAT --> CTRL : userRepository
-            deactivate PLAT
-
-            CTRL -> UserRepository: createUser(name, email, phone number,\npassword, clientType)
+            UserService -> UserRepository: createUser(user)
             activate UserRepository
 
-                UserRepository -->> UserModel**: create(name, email, phone number,\npassword, clientType)
-
-                UserRepository -> UserRepository: validateUser(user)
-                activate UserRepository
-                    UserRepository --> UserRepository
-                deactivate UserRepository
-
-                UserRepository -> UserRepository: addUser(user)
-
-                UserRepository --> CTRL : user
-
+            UserRepository -> UserRepository: validateUser(user)
+            UserRepository -> UserRepository: save(user)
+            UserRepository -> UserService: user
             deactivate UserRepository
 
-            CTRL --> UI: true
+            UserService -->> UserDTO: toUserDTO(user)
+            UserService -> CTRL: userDTO
+            deactivate UserService
+
+            CTRL --> UI: userDTO
             deactivate CTRL
 
             UI --> User: displays operation success

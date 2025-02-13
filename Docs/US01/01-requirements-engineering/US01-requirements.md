@@ -55,4 +55,4 @@ As an unregistered user, I want to register a new client.
 
 ### 1.7 Other Relevant Remarks
 
-* If a client forgets their password, they must go through the password recovery process.
+* 

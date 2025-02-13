@@ -7,16 +7,12 @@ skinparam classAttributeIconSize 0
 hide methods
 
 class Client {
-    - name: String
-    - emailAddress: String
-    - phoneNumber: String
-    - password: String
-    - role: String
-    - clientType: String
-}
-
-class Category {
-    - designation: String
+      - name: String
+      - emailAddress: String
+      - phoneNumber: String
+      - password: String
+      - role: String
+      - clientType: String
 }
 
 class Item {
@@ -33,14 +29,10 @@ class Advertisement {
     - status: AdvertisementStatus
 }
 
-enum AdvertisementStatus {
-    ACTIVE
-    PENDING
-    CLOSED
-}
-
 ' --- Associações ---
 Client "1" -- "0..*" Advertisement : owns
 Advertisement "1" -- "1" Item : has >
-Item "0..*" -- "0..*" Category: categorized >
+
+@enduml
+
 @enduml

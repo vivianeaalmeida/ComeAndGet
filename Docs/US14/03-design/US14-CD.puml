@@ -1,0 +1,57 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+skinparam classAttributeIconSize 0
+
+class User {
+    - name: String
+    - emailAddress: String
+    - phoneNumber: String
+    - password: String
+    - role: String
+}
+
+class DeleteAdvertisementUI {
+    + deleteAdvertisement(id)
+}
+
+class Advertisement {
+    - id : String
+    - designation : String
+    - status : AdvertisementStatus
+    + Advertisement(designation, status)
+}
+
+'class AdvertisementDTO {
+'    - id : String
+'    - designation : String
+ '   + AdvertisementDTO()
+'}
+
+class AdvertisementController {
+    + deleteAdvertisement(id: String)
+}
+
+class AdvertisementService {
+    + deleteAdvertisement(id: String)
+}
+
+class AdvertisementRepository {
+    + deleteById(id: String)
+}
+
+'class AdvertisementMapper {
+'    + toEntity()
+'    + toDTO()
+'}
+
+User .> DeleteAdvertisementUI : Requests
+DeleteAdvertisementUI .> AdvertisementController
+AdvertisementController ..> AdvertisementService
+AdvertisementService ..> AdvertisementRepository
+AdvertisementRepository "1" --> "*" Advertisement : advertisement
+
+
+
+@enduml

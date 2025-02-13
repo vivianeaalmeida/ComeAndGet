@@ -1,0 +1,30 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Create Advertisement
+
+autonumber
+
+actor "Client" as Client
+participant ":System" as System
+
+activate Client
+
+    Client -> System : requests to delete a advertisement
+        activate System
+
+            System --> Client : displays confirmation button
+        deactivate System
+
+        Client -> System : confirms deletion
+        activate System
+
+            System --> Client : displays operation success
+        deactivate System
+
+deactivate Client
+@enduml
+
+

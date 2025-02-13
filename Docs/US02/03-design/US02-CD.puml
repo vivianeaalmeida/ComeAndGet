@@ -1,0 +1,56 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+skinparam linetype orto
+
+skinparam classAttributeIconSize 0
+
+class User {
+    - String id
+    - String name
+    - String email
+    - String phoneNumber
+    - String password
+    - String clientType
+
+    + User(name, email, phoneNumber, password, clientType)
+}
+
+class UserRepository {
+    + findByEmail(email) : User
+}
+
+class AuthService {
+    + getAuthServiceImpl() : AuthServiceImpl
+}
+
+class AuthServiceImpl {
+    + authenticate(userDTO) : User
+    + findUserByEmail(email) : User
+}
+
+class AuthController {
+    + AuthController(authService)
+    + authenticateUser(email, password) : UserDTO
+}
+
+class LoginUI {
+    + showLoginForm() : void
+    + getUserCredentials() : UserDTO
+    + displayLoginSuccess(user: User) : void
+}
+
+LoginUI .> AuthController : authenticateUser
+
+AuthController ..> AuthService : authService
+
+AuthService "1" --> "1" AuthServiceImpl : authServiceImpl
+
+AuthController ..> UserRepository : userRepository
+
+UserRepository "1" --> "*" User : user
+
+AuthServiceImpl --> UserRepository : findByEmail
+@enduml

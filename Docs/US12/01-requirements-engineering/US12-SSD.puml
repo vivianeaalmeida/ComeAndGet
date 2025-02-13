@@ -1,0 +1,25 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Create Advertisement
+
+autonumber
+
+actor "Client" as Client
+participant ":System" as System
+
+activate Client
+
+    Client -> System : send search request
+        activate System
+
+    'verificar se vai ser feito busca por listas e etc. Caso seja, adicionar.
+    System --> Client : displays search results
+        deactivate System
+
+deactivate Client
+@enduml
+
+

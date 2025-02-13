@@ -1,0 +1,23 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - View available advertisements list
+
+autonumber
+
+actor "All Users" as User
+participant ":System" as System
+
+activate User
+
+    User -> System : asks to list all available\nadvertisements (ordered desc by date)
+    activate System
+
+        System --> User : shows available advertisements list
+    deactivate System
+
+
+deactivate User
+@enduml

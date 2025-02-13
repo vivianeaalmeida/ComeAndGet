@@ -1,16 +1,16 @@
 @startuml
 skinparam monochrome false
+hide circle
 skinparam packageStyle rectangle
 skinparam shadowing true
 skinparam classAttributeIconSize 0
 hide methods
 
 class RegisterUser {
-    + id: Long
-    + name: String
-    + email: String
-    + phoneNumber: String
-    + password: String
-    + clientType: String
+    - id: Long
+    - name: String
+    - email: String
+    - phoneNumber: String
+    - password: String
 }
 @enduml

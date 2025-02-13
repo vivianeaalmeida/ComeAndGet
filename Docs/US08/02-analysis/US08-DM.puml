@@ -1,0 +1,37 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam shadowing true
+skinparam classAttributeIconSize 0
+hide circle
+hide methods
+
+
+class Advertisement {
+    - designation: String
+    - initialDate: Date
+    - finalDate: Date
+    - address: String
+}
+
+enum AdvertisementStatus {
+   - designation: String
+}
+
+note right of AdvertisementStatus
+    - Active, Pending or Closed
+end note
+
+class Item {
+    - designation: String
+    - condition: String
+    - image: String
+}
+
+class Category {
+    - designation: String
+}
+
+Advertisement "1" - "1" Item : contains an
+Category "1" --- "*" Item : belongs to
+Advertisement "*" -- "1" AdvertisementStatus : has
+@enduml

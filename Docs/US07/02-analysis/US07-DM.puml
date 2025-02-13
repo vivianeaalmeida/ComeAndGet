@@ -7,7 +7,7 @@ skinparam classAttributeIconSize 0
 hide circle
 hide methods
 
-class Client {
+class User {
     name
     emailAddress
     phoneNumber
@@ -21,14 +21,14 @@ class Category {
 }
 
 class Item {
-    - id: String
+    - id
     - designation
     - condition
     - image
 }
 
 class Advertisement {
-    - id: String
+    - id
     - designation
     - initialDate
     - finalDate
@@ -44,8 +44,8 @@ Active, Pending or Closed
 endnote
 
 ' --- Associações ---
-Client "1" -- "0..*" Advertisement : owns
+User "1" -- "0..*" Advertisement : owns
 Advertisement "1" -- "1" Item : has >
 Item "0..*" -- "1" Category: categorized >
-Advertisement "1" -- "1" AdvertisementStatus: has >
+Item "1" -- "1" AdvertisementStatus: has >
 @enduml

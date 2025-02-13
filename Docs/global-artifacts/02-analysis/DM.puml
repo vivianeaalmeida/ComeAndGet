@@ -34,7 +34,7 @@ class Advertisement{
     finalDate
     address
     status
-    '(active, pending, closed)
+    '(active, closed)
 }
 
 class Request {
@@ -51,12 +51,12 @@ class Like {
 }
 
 note bottom of Request
-Pending, Canceled, Rejected,
+Status: Pending, Canceled, Rejected,
 Accepted, Donated
 endnote
 
 note bottom of Advertisement
-Active, Pending or Closed
+Status: Active, Closed
 endnote
 
 Item "0..*" -left- "1" Category : belongs to a \t >

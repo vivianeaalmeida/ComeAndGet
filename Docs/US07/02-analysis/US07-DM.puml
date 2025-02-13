@@ -11,28 +11,28 @@ class Client {
     name
     emailAddress
     phoneNumber
-    password: String
-    role: String
+    password
+    role
 }
 
 class Category {
-    - id: String
-    - designation: String
+    - id
+    - designation
 }
 
 class Item {
     - id: String
-    - designation: String
-    - condition: String
+    - designation
+    - condition
     - image
 }
 
 class Advertisement {
     - id: String
-    - designation: String
-    - initialDate: Date
-    - finalDate: Date
-    - address: String
+    - designation
+    - initialDate
+    - finalDate
+    - address
 }
 
 enum AdvertisementStatus {
@@ -47,5 +47,5 @@ endnote
 Client "1" -- "0..*" Advertisement : owns
 Advertisement "1" -- "1" Item : has >
 Item "0..*" -- "1" Category: categorized >
-Item "1" -- "1" AdvertisementStatus: has >
+Advertisement "1" -- "1" AdvertisementStatus: has >
 @enduml

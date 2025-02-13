@@ -1,0 +1,35 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing true
+'skinparam linetype ortho
+skinparam classAttributeIconSize 0
+hide circle
+hide methods
+'left to right direction
+
+class Item {
+    designation
+    condition
+    image
+}
+
+class Category {
+    designation
+}
+
+class Advertisement {
+    - id: String
+    - designation
+    - initialDate
+    - finalDate
+    - address
+}
+
+note bottom of Advertisement
+Status: Active, Closed
+endnote
+
+Item "0..*" -left- "1" Category : belongs to a \t >
+Advertisement "1" -- "1" Item : contains an \t >
+@enduml

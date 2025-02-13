@@ -1,0 +1,70 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+skinparam classAttributeIconSize 0
+
+class AdvertisementUI {
+}
+
+class AdvertisementController {
+    + createCategory(categoryDTO CategoryDTO)
+}
+
+class AdvertisementService {
+    + createCategory(categoryDTO CategoryDTO)
+}
+
+interface AdvertisementRepository {
+    + save(advertiment Advertisement)
+}
+
+class AdvertisementMapper {
+    + toDTO(AdvertisementDTO advertisementDTO)
+}
+
+class Advertisement {
+    - id: String
+    - designation: String
+    - initialDate: Date
+    - finalDate: Date
+    - address: String
+    - status: AdvertisementStatus
+    + Advertisement(...)
+}
+
+enum AdvertisementStatus {
+    ACTIVE
+    CLOSED
+}
+
+class AdvertisementDTO {
+    - id: String
+    - designation: String
+    - initialDate: Date
+    - finalDate: Date
+    - itemDTO: ItemDTO
+    - address: String
+    + AdvertisementDTO(..)
+}
+
+class ItemDTO {
+    - id: String
+    - designation: String
+    - condition
+    - image: String
+    - categoryName: String
+    + ItemDTO(...)
+}
+
+AdvertisementUI .> AdvertisementController
+AdvertisementController ..> AdvertisementService
+AdvertisementService ..> AdvertisementRepository
+AdvertisementService ..> AdvertisementMapper
+AdvertisementRepository "1" --> "*" Advertisement : advertisement
+AdvertisementMapper ..> Advertisement
+AdvertisementMapper ..> AdvertisementDTO
+AdvertisementDTO "1" --> "1" ItemDTO
+Advertisement --> AdvertisementStatus : has
+
+@enduml

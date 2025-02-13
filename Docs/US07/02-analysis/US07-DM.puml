@@ -1,0 +1,43 @@
+@startuml
+skinparam monochrome false
+skinparam packageStyle rectangle
+skinparam shadowing true
+left to right direction
+skinparam classAttributeIconSize 0
+hide methods
+
+class Client {
+    name
+    emailAddress
+    phoneNumber
+}
+
+class Category {
+    - designation: String
+}
+
+class Item {
+    - designation: String
+    - condition: String
+}
+
+class Advertisement {
+    - designation: String
+    - initialDate: Date
+    - finalDate: Date
+    - address: String
+    - images: String[]
+    - status: AdvertisementStatus
+}
+
+enum AdvertisementStatus {
+    ACTIVE
+    PENDING
+    CLOSED
+}
+
+' --- Associações ---
+Client "1" -- "0..*" Advertisement : owns
+Advertisement "1" -- "1" Item : has >
+Item "0..*" -- "0..*" Category: categorized >
+@enduml

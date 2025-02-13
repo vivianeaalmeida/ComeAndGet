@@ -1,24 +1,24 @@
 # User Stories
 
-- US01 - Register new user
-- US02 - Log In
-- US03 - Create category
+- US01 - Register new user *
+- US02 - Log In *
+- US03 - Create category *
 - US04 - View categories list
 - US05 - Update category
 - US06 - Delete category
-- US07 - Create an advertisement
-- US08 - View advertisements list
+- US07 - Create an advertisement *
+- US08 - View advertisements list *
 - US09 - View available advertisements list
 - US10 - View pending advertisement list
-- US11 - View advertisement details
-- US12 - Search advertisements
-- US13 - Update advertisement
-- US14 - Delete advertisement
+- US11 - View advertisement details *
+- US12 - Search advertisements *
+- US13 - Update advertisement *
+- US14 - Delete advertisement *
 - US15 - Create request
 - US16 - View request detail
 - US17 - View list of requests made by the user
 - US18 - View list of active requests received by the user
-- US19 - Updates request status
+- US19 - Updates request status *
 
 ## US01 - Register new user
 - **Endpoint**: `POST /signup`

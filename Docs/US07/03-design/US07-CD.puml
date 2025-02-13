@@ -1,0 +1,100 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+skinparam classAttributeIconSize 0
+
+class Client {
+    - name: String
+    - emailAddress: String
+    - phoneNumber: String
+    - password: String
+    - role: String
+    - clientType: String
+}
+
+class Item {
+    - designation: String
+    - condition: String
+    - category: Category
+}
+
+class AdvertisementDto {
+    - designation: String
+    - itemId: Long
+    - address: String
+    - images: String[]
+}
+
+class Advertisement {
+    - designation: String
+    - initialDate: Date
+    - finalDate: Date
+    - address: String
+    - images: String[]
+    - status: AdvertisementStatus
+}
+
+class AdvertisementStatus {
+    <<enumeration>>
+    ACTIVE
+    PENDING
+    CLOSED
+}
+
+class CategoriesRepository {
+    + getCategoryById(id: Long)
+}
+class AdvertisementsRepository {
+    + save(advertisement: Advertisement)
+    + findById(id: Long)
+}
+class ItemsRepository {
+    + save(item: Item)
+    + findById(id: Long)
+}
+
+interface JpaRepository <<interface>> {
+}
+
+class AdvertisementMapper {
+    + toEntity(dto: AdvertisementDto): Advertisement
+    + toDto(advertisement: Advertisement): AdvertisementDto
+}
+
+class AdvertisementService {
+    + createAdvertisement(dto: AdvertisementDto)
+    - validateItem(itemId: Long)
+}
+
+class CreateAdvertisementController {
+    + CreateAdvertisementController(service: AdvertisementService)
+    + createAdvertisement(dto: AdvertisementDto)
+}
+
+class CreateAdvertisementUI
+
+' --- Relacionamentos ---
+CreateAdvertisementUI --> AdvertisementDto : uses
+CreateAdvertisementUI .> CreateAdvertisementController
+
+CreateAdvertisementController .> AdvertisementService : service
+
+AdvertisementService .> AdvertisementMapper : uses
+AdvertisementService .> AdvertisementsRepository
+AdvertisementService .> CategoriesRepository
+AdvertisementService .> ItemsRepository
+
+AdvertisementsRepository --|> JpaRepository
+CategoriesRepository --|> JpaRepository
+ItemsRepository --|> JpaRepository
+
+Client --> CreateAdvertisementUI : requests to create
+
+Advertisement "1" --> "1" AdvertisementStatus
+AdvertisementDto ..> CreateAdvertisementController : received by
+AdvertisementMapper ..> Advertisement : converts to
+AdvertisementMapper ..> AdvertisementDto : receives from
+AdvertisementService ..> Advertisement : creates
+AdvertisementService ..> Item : creates
+@enduml

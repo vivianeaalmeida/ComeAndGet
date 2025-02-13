@@ -1,0 +1,28 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Create Category
+
+autonumber
+
+actor Manager as M
+participant ":System" as System
+
+activate M
+
+    M -> System : requests to delete a category
+    activate System
+
+        System --> M : requests data (category id)
+    deactivate System
+
+    M -> System : types requested data and submits data
+    activate System
+
+        System --> M : displays operation success
+    deactivate System
+
+deactivate M
+@enduml

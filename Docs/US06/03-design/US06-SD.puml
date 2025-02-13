@@ -1,0 +1,62 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor Manager as M
+participant ":CategoryUI" as UI
+participant ":CategoryController" as CTRL
+participant ":CategoryService" as SERV
+participant ":CategoryRepository" as REPO
+participant ":CategoryMapper" as MAPPER
+
+participant "deletedCategoryDTO\n:CategoryDTO" as DELETED_DTO
+participant "deletedCategory\n:Category" as DELETED_CAT
+
+activate M
+
+    M -> UI : asks to delete category
+    activate UI
+
+        UI --> M : requests data (id)
+    deactivate UI
+
+    M -> UI : types requested data and submits
+    activate UI
+
+        UI -> CTRL : deleteCategory(id)
+        activate CTRL
+
+            CTRL -> SERV : deleteCategory(id)
+            activate SERV
+
+                SERV -> REPO : findById(id)
+                activate REPO
+                    REPO --> SERV : category
+                deactivate REPO
+
+                SERV -> REPO : deleteById(id)
+                activate REPO
+                    REPO --> SERV : void
+                deactivate REPO
+
+                SERV -> MAPPER : toDTO(category)
+                activate MAPPER
+                    MAPPER -->> DELETED_DTO** : create()
+                    MAPPER --> SERV : deletedCategoryDTO
+                deactivate MAPPER
+
+                SERV --> CTRL : deletedCategoryDTO
+            deactivate SERV
+
+            CTRL --> UI : deletedCategoryDTO
+        deactivate CTRL
+
+        UI --> M : displays operation success\n and deleted category details
+    deactivate UI
+
+deactivate M
+
+@enduml

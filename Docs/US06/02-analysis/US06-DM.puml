@@ -1,0 +1,14 @@
+@startuml
+skinparam monochrome false
+hide circle
+skinparam packageStyle rectangle
+skinparam shadowing true
+left to right direction
+skinparam classAttributeIconSize 0
+hide methods
+
+class Category {
+    designation
+}
+
+@enduml

@@ -1,0 +1,74 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Client" as CLIENT
+participant ":CreateAdvertisementUI" as UI
+participant ":CreateAdvertisementController" as CTRL
+participant ":AdvertisementService" as SERVICE
+participant ":AdvertisementMapper" as MAPPER
+participant ":ItemsRepository" as ITEM_REPO
+participant ":CategoriesRepository" as CAT_REPO
+participant ":AdvertisementsRepository" as AD_REPO
+participant ":Item" as ITEM
+participant ":Advertisement" as AD
+
+activate CLIENT
+
+    CLIENT -> UI : requests to create new advertisement
+    activate UI
+
+        UI --> CLIENT : requests advertisement details\n(designation, itemId, address, images)
+    deactivate UI
+
+    CLIENT -> UI : provides advertisement details
+    activate UI
+
+        UI -> CTRL : createAdvertisement(dto: AdvertisementDto)
+        activate CTRL
+
+            CTRL -> SERVICE : createAdvertisement(dto)
+            activate SERVICE
+
+                SERVICE -> MAPPER : toEntity(dto)
+                activate MAPPER
+                    MAPPER --> SERVICE : advertisement (entity)
+                deactivate MAPPER
+
+                SERVICE -> CAT_REPO : getCategoryById(categoryId)
+                activate CAT_REPO
+                    CAT_REPO --> SERVICE : category
+                deactivate CAT_REPO
+
+                SERVICE -> ITEM : validate()
+                activate ITEM
+                    ITEM --> SERVICE : valid
+                deactivate ITEM
+
+                SERVICE -> AD : setStatus(ACTIVE)
+                SERVICE -> ITEM_REPO : save(item)
+                activate ITEM_REPO
+                    ITEM_REPO -> ITEM : persist()
+                    ITEM_REPO --> SERVICE : itemId
+                deactivate ITEM_REPO
+
+                SERVICE -> AD_REPO : save(advertisement)
+                activate AD_REPO
+                    AD_REPO -> AD : persist()
+                    AD_REPO --> SERVICE : advertisementId
+                deactivate AD_REPO
+
+                SERVICE --> CTRL : advertisementId
+            deactivate SERVICE
+
+            CTRL --> UI : success(advertisementId)
+        deactivate CTRL
+
+        UI --> CLIENT : display "Advertisement created successfully"
+    deactivate UI
+
+deactivate CLIENT
+@enduml

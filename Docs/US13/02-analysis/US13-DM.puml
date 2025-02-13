@@ -4,48 +4,40 @@ skinparam packageStyle rectangle
 skinparam shadowing true
 left to right direction
 skinparam classAttributeIconSize 0
-hide circle
 hide methods
 
 class Client {
     name
     emailAddress
     phoneNumber
-    password: String
-    role: String
 }
 
 class Category {
-    - id: String
     - designation: String
 }
 
 class Item {
-    - id: String
     - designation: String
     - condition: String
-    - image
 }
 
 class Advertisement {
-    - id: String
     - designation: String
     - initialDate: Date
     - finalDate: Date
     - address: String
+    - images: String[]
+    - status: AdvertisementStatus
 }
 
 enum AdvertisementStatus {
-    designation
+    ACTIVE
+    PENDING
+    CLOSED
 }
 
-note left of AdvertisementStatus
-Active, Pending or Closed
-endnote
-
 ' --- Associações ---
-Client "1" -- "0..*" Advertisement : owns
+Client "1" -- "0..*" Advertisement : updates
 Advertisement "1" -- "1" Item : has >
 Item "0..*" -- "1" Category: categorized >
-Item "1" -- "1" AdvertisementStatus: has >
 @enduml

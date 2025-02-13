@@ -10,20 +10,35 @@ class Client {
     - phoneNumber: String
     - password: String
     - role: String
-    - clientType: String
+    + Client(...)
 }
 
 class Item {
     - designation: String
     - condition: String
-    - category: Category
+    - image
+    + Item(...)
+}
+
+class ItemDto {
+    - designation: String
+    - categoryName: String
+    - condition: String
+    - image
+    + ItemDto(...)
+}
+
+class Category {
+    - id: String
+    - designation: String
+    + Category(...)
 }
 
 class AdvertisementDto {
     - designation: String
-    - itemId: Long
     - address: String
-    - images: String[]
+    - itemDto: ItemDto
+    + AdvertisementDto(...)
 }
 
 class Advertisement {
@@ -31,30 +46,22 @@ class Advertisement {
     - initialDate: Date
     - finalDate: Date
     - address: String
-    - images: String[]
-    - status: AdvertisementStatus
+    + Advertisement(...)
 }
 
-class AdvertisementStatus {
-    <<enumeration>>
-    ACTIVE
-    PENDING
-    CLOSED
+enum AdvertisementStatus {
 }
 
-class CategoriesRepository {
+interface CategoryRepository {
     + getCategoryById(id: Long)
 }
-class AdvertisementsRepository {
+interface AdvertisementRepository {
     + save(advertisement: Advertisement)
     + findById(id: Long)
 }
-class ItemsRepository {
+interface ItemRepository {
     + save(item: Item)
     + findById(id: Long)
-}
-
-interface JpaRepository <<interface>> {
 }
 
 class AdvertisementMapper {
@@ -63,38 +70,41 @@ class AdvertisementMapper {
 }
 
 class AdvertisementService {
-    + createAdvertisement(dto: AdvertisementDto)
+    + Advertisement(dto: AdvertisementDto)
     - validateItem(itemId: Long)
 }
 
-class CreateAdvertisementController {
-    + CreateAdvertisementController(service: AdvertisementService)
-    + createAdvertisement(dto: AdvertisementDto)
+class AdvertisementController {
+    + AdvertisementController(service: AdvertisementService)
+    + Advertisement(dto: AdvertisementDto)
 }
 
-class CreateAdvertisementUI
+class AdvertisementUI
 
 ' --- Relacionamentos ---
-CreateAdvertisementUI --> AdvertisementDto : uses
-CreateAdvertisementUI .> CreateAdvertisementController
+AdvertisementUI .> AdvertisementController
 
-CreateAdvertisementController .> AdvertisementService : service
+AdvertisementController ..> AdvertisementService : service
 
-AdvertisementService .> AdvertisementMapper : uses
-AdvertisementService .> AdvertisementsRepository
-AdvertisementService .> CategoriesRepository
-AdvertisementService .> ItemsRepository
+AdvertisementService .> AdvertisementMapper
+AdvertisementService ..> AdvertisementRepository
+AdvertisementService ..> CategoryRepository
+AdvertisementService ..> ItemRepository
 
-AdvertisementsRepository --|> JpaRepository
-CategoriesRepository --|> JpaRepository
-ItemsRepository --|> JpaRepository
+ItemRepository "1" -> "0..*" Item
+CategoryRepository "1" --> "0..*" Category
+AdvertisementRepository "1" --> "0..*" Advertisement
 
-Client --> CreateAdvertisementUI : requests to create
+Client -> AdvertisementUI : requests to create
 
 Advertisement "1" --> "1" AdvertisementStatus
-AdvertisementDto ..> CreateAdvertisementController : received by
-AdvertisementMapper ..> Advertisement : converts to
-AdvertisementMapper ..> AdvertisementDto : receives from
-AdvertisementService ..> Advertisement : creates
-AdvertisementService ..> Item : creates
+Advertisement "1" --> "1" Item : contains
+AdvertisementMapper ..> AdvertisementDto
+AdvertisementMapper ..> Advertisement
+
+AdvertisementDto "1" --> "1" ItemDto
+note bottom of AdvertisementStatus
+Active, pending, closed
+endnote
+
 @enduml

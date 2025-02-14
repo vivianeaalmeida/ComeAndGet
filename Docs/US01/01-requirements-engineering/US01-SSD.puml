@@ -21,12 +21,6 @@ activate User
     User -> System : types requested data
     activate System
 
-        System --> User : shows all data and requests confirmation
-    deactivate System
-
-    User -> System : confirms data
-    activate System
-
         System --> User : displays operation success (e.g., "Registration successful")
     deactivate System
 @enduml

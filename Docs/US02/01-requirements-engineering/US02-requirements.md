@@ -1,18 +1,18 @@
-# US01 - Register a user
+# US02 - Login
 
 ## 1. Requirements Engineering
 
 ### 1.1. User Story Description
 
-As an unregistered user, I want to register a new client.
+As an unauthenticated user, I want to log in to the application to access restricted functionalities.
 
 ### 1.2. Customer Specifications and Clarifications 
 
 **From the specifications document:**
 
-> Each client must have a unique identification number, a valid email address, and a password. 
-> The email address serves as the unique identifier for login. 
-> The system must validate the email format and ensure password security (e.g., minimum length, special characters).
+> The login process must require a valid email and password combination.
+> If the credentials are incorrect, the system must provide appropriate feedback to the user.
+> Upon successful login, the system should establish a session for the user. 
 
 **From the client clarifications:**
 
@@ -34,18 +34,16 @@ As an unregistered user, I want to register a new client.
 **Input Data:**
 
 * Typed data:
-    * name
     * email
-    * phone number
     * password
 	
 * Selected data:
-    * client type
+    * 
 
 **Output Data:**
 
-* Confirmation message (e.g., "Registration successful.")
-* Success or failure response with error messages (e.g., "Email already registered", "Invalid password format")
+* Success: User is authenticated, and a session is created.
+* Failure: Error message indicating incorrect credentials.
 
 ### 1.6. System Sequence Diagram (SSD)
 
@@ -55,4 +53,4 @@ As an unregistered user, I want to register a new client.
 
 ### 1.7 Other Relevant Remarks
 
-* If a client forgets their password, they must go through the password recovery process.
+* If a user forgets their password, they must use the password recovery process.

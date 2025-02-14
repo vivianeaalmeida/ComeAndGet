@@ -7,30 +7,30 @@ title System Sequence Diagram (SSD) - Create Advertisement
 
 autonumber
 
-actor "Client" as Client
+actor "User" as User
 participant ":System" as System
 
-activate Client
+activate User
 
-    Client -> System : requests to create a new advertisement
+    User -> System : requests to create a new advertisement
         activate System
 
-            System --> Client : shows categories list and asks to select one
+            System --> User : shows categories list and asks to select one
         deactivate System
 
-        Client -> System : selects a category
+        User -> System : selects a category
         activate System
 
-            System --> Client : requests advertisement data (title, description,\n condition)
+            System --> User : requests advertisement data (designation, \nfinalDate, address, item values)
         deactivate System
 
-        Client -> System : types requested data and click on Submit button
+        User -> System : types requested data and click on Submit button
         activate System
 
-            System --> Client : displays operation success
+            System --> User : displays operation success
         deactivate System
 
-deactivate Client
+deactivate User
 @enduml
 
 

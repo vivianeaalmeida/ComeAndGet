@@ -1,0 +1,63 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+skinparam linetype orto
+
+skinparam classAttributeIconSize 0
+
+class RegisterUserUI {
+}
+
+class UserService {
+    + toUserDTO(user)
+    + toUserEntity(userDTO)
+    + createUser(user)
+}
+
+
+
+class RegisterUserController {
+    + RegisterUserController(userRepository)
+    + registerUser(name, email, phoneNumber, password, clientType)
+}
+
+class User {
+    - String id
+    - String name
+    - String email
+    - String phoneNumber
+    - String password
+    - String clientType
+
+    + User(name, email, phoneNumber, password, clientType)
+}
+
+class UserDTO {
+    - String id
+    - String name
+    - String email
+    - String phoneNumber
+    - String password
+    - String clientType
+
+    + UserDTO(name, email, phoneNumber, password, clientType)
+}
+
+class UserRepository {
+    + createUser(name, email, phoneNumber, password, clientType)
+}
+
+
+RegisterUserUI .> RegisterUserController
+
+RegisterUserController .> UserService
+
+UserService ..> UserRepository : userRepository
+
+UserRepository "1" --> "*" User : user
+RegisterUserController "1" ---> "*" UserDTO: use
+UserService "1" --> "*" UserDTO: use
+
+@enduml

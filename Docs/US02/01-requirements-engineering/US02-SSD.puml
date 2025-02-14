@@ -1,0 +1,29 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Login
+
+autonumber
+
+actor "Unauthenticated User" as User
+participant ":System" as System
+
+activate User
+
+    User -> System : requests to log in
+    activate System
+
+        System --> User : requests credentials (email, password)
+    deactivate System
+
+    User -> System : provides email and password
+    activate System
+
+        System -> System : validate credentials
+        System --> User : authentication successful (e.g., "Login successful")
+    deactivate System
+
+deactivate User
+@enduml

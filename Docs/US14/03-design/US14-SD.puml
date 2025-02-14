@@ -1,0 +1,46 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Logged User" as USER
+participant ":DeleteAdvertisementUI" as UI
+participant ":AdvertisementController" as CTRL
+participant ":AdvertisementService" as SERVICE
+participant ":AdvertisementsRepository" as AD_REPO
+
+activate USER
+
+    USER -> UI : requests to delete advertisement
+    activate UI
+
+    UI --> USER : request confirmation
+    deactivate UI
+
+    USER -> UI : confirm
+    activate UI
+
+        UI -> CTRL : deleteAdvertisement(id)
+        activate CTRL
+
+            CTRL -> SERVICE : deleteAdvertisement(id)
+            activate SERVICE
+
+            SERVICE -> AD_REPO : deleteById(id)
+            activate AD_REPO
+            AD_REPO -> SERVICE :void
+            deactivate AD_REPO
+
+            SERVICE --> CTRL : void
+            deactivate SERVICE
+
+            CTRL --> UI : success 200
+        deactivate CTRL
+
+        UI --> USER : display "Advertisement deleted "
+    deactivate UI
+
+deactivate USER
+@enduml

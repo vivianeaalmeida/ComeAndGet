@@ -4,13 +4,13 @@ skinparam shadowing false
 skinparam linetype polyline
 skinparam classAttributeIconSize 0
 
-class Client {
+class User {
     - name: String
     - emailAddress: String
     - phoneNumber: String
     - password: String
     - role: String
-    + Client(...)
+    + User(...)
 }
 
 class Item {
@@ -95,7 +95,7 @@ ItemRepository "1" -> "0..*" Item
 CategoryRepository "1" --> "0..*" Category
 AdvertisementRepository "1" --> "0..*" Advertisement
 
-Client -> AdvertisementUI : requests to create
+User -> AdvertisementUI : requests to create
 
 Advertisement "1" --> "1" AdvertisementStatus
 Advertisement "1" --> "1" Item : contains

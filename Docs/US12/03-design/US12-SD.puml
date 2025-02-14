@@ -1,0 +1,44 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "User" as USER
+participant ":SearchAdvertisementUI" as UI
+participant ":AdvertisementController" as CTRL
+participant ":AdvertisementService" as SERVICE
+participant ":AdvertisementsRepository" as AD_REPO
+participant ":AdvertisementDTO" as AdDTO
+
+activate USER
+
+    USER -> UI : select category, fill location and key words \nand then click confirm
+    activate UI
+
+        UI -> CTRL : searchAdvertisement(category, location, keyWords)
+        activate CTRL
+            'se for fazer criação do objeto, representar
+            CTRL -> SERVICE : searchAdvertisement(category, location, keyWords)
+            activate SERVICE
+
+            SERVICE -> AD_REPO : findByCategoryLocationAndKeyWords(category, location, keyWords)
+            activate AD_REPO
+
+            AD_REPO -> SERVICE :listAdvertisement
+            deactivate AD_REPO
+            'lista ou for no dto
+            SERVICE -->> AdDTO : toDTO(advertisement)
+
+            SERVICE --> CTRL : listAdvertisementDTO
+            deactivate SERVICE
+
+            CTRL --> UI : listAdvertisementDTO
+        deactivate CTRL
+
+        UI --> USER : display searched results
+    deactivate UI
+
+deactivate USER
+@enduml

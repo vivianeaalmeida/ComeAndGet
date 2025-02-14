@@ -1,0 +1,58 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "User" as User
+participant ":LoginUI" as UI
+participant ":AuthController" as CTRL
+participant ":AuthService" as AuthService
+participant ":UserRepository" as UserRepository
+participant "auth\n:AuthenticationDTO" as AuthenticationDTO
+
+activate User
+
+    User -> UI : user clicks on login button
+    activate UI
+
+    UI -> User : show login form
+    deactivate UI
+
+    User -> UI : types email and password
+    activate UI
+
+    UI -> User :  enable confirm button
+    deactivate UI
+
+    User -> UI : submits credentials
+    activate UI
+
+        UI -> CTRL : authenticateUser(email, password)
+        activate CTRL
+
+            CTRL --> AuthService : authenticate(email, password)
+            activate AuthService
+
+
+            AuthService -> UserRepository: findByEmail(email)
+            activate UserRepository
+
+            UserRepository -> AuthService: user
+            deactivate UserRepository
+
+            AuthService -> AuthService: validateUserAndPassword(email, password)
+            AuthService -> AuthService: createToken(user)
+            AuthService -->> AuthenticationDTO
+            AuthService --> CTRL: authDTO
+            deactivate AuthService
+
+            CTRL --> UI: authDTO
+            deactivate CTRL
+
+            UI --> User: displays login success
+    deactivate UI
+
+deactivate User
+@enduml

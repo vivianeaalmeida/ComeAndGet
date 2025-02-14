@@ -5,70 +5,97 @@ skinparam shadowing false
 
 autonumber
 
-actor "Client" as CLIENT
-participant ":CreateAdvertisementUI" as UI
-participant ":CreateAdvertisementController" as CTRL
-participant ":AdvertisementService" as SERVICE
-participant ":AdvertisementMapper" as MAPPER
-participant ":ItemsRepository" as ITEM_REPO
-participant ":CategoriesRepository" as CAT_REPO
-participant ":AdvertisementsRepository" as AD_REPO
-participant ":Item" as ITEM
-participant ":Advertisement" as AD
+actor "User" as USER
+participant ":AdvertisementUI" as UI
+participant ":AdvertisementController" as CTRL
+participant ":CategoryService" as CAT_SERVICE
+participant ":AdvertisementService" as AD_SERVICE
 
-activate CLIENT
+participant ":AdvertisementMapper" as AD_MAPPER
+participant ":ItemRepository" as ITEM_REPO
+participant ":CategoryRepository" as CAT_REPO
+participant ":AdvertisementRepository" as AD_REPO
 
-    CLIENT -> UI : requests to create new advertisement
+participant "updatedAdDto:\nAdvertisementDto" as AD_DTO
+participant "updatedItem:\nItem" as ITEM
+participant "updatedAdvertisement:\nAdvertisement" as UPDATED_AD
+
+activate USER
+
+    USER -> UI : requests to update an advertisement
     activate UI
 
-        UI --> CLIENT : requests advertisement details\n(designation, itemId, address, images)
-    deactivate UI
-
-    CLIENT -> UI : provides advertisement details
-    activate UI
-
-        UI -> CTRL : createAdvertisement(dto: AdvertisementDto)
+        UI -> CTRL : getCategories()
         activate CTRL
 
-            CTRL -> SERVICE : createAdvertisement(dto)
-            activate SERVICE
+            CTRL -> CAT_SERVICE : getAllCategories()
+            activate CAT_SERVICE
 
-                SERVICE -> MAPPER : toEntity(dto)
-                activate MAPPER
-                    MAPPER --> SERVICE : advertisement (entity)
-                deactivate MAPPER
-
-                SERVICE -> CAT_REPO : getCategoryById(categoryId)
+                CAT_SERVICE -> CAT_REPO : findAll()
                 activate CAT_REPO
-                    CAT_REPO --> SERVICE : category
+                    CAT_REPO --> CAT_SERVICE : categoryList
                 deactivate CAT_REPO
 
-                SERVICE -> ITEM : validate()
-                activate ITEM
-                    ITEM --> SERVICE : valid
-                deactivate ITEM
+                CAT_SERVICE --> CTRL : categoryList
+            deactivate CAT_SERVICE
 
-                SERVICE -> AD : setStatus(ACTIVE)
-                SERVICE -> ITEM_REPO : save(item)
-                activate ITEM_REPO
-                    ITEM_REPO -> ITEM : persist()
-                    ITEM_REPO --> SERVICE : itemId
-                deactivate ITEM_REPO
-
-                SERVICE -> AD_REPO : save(advertisement)
-                activate AD_REPO
-                    AD_REPO -> AD : persist()
-                    AD_REPO --> SERVICE : advertisementId
-                deactivate AD_REPO
-
-                SERVICE --> CTRL : advertisementId
-            deactivate SERVICE
-
-            CTRL --> UI : success(advertisementId)
+            CTRL --> UI : categoryList
         deactivate CTRL
 
-        UI --> CLIENT : display "Advertisement created successfully"
+        UI --> USER : shows categories list and asks to select one
     deactivate UI
 
-deactivate CLIENT
+    USER -> UI : selects a category
+    activate UI
+
+        UI --> USER : requests updated advertisement data \n(designation, finalDate, address, item values)
+    deactivate UI
+
+    USER -> UI : types requested data and clicks Submit
+    activate UI
+
+        UI -> CTRL : updateAdvertisement(advertisementDto)
+        activate CTRL
+
+            CTRL -> AD_SERVICE : updateAdvertisement(advertisementDto)
+            activate AD_SERVICE
+
+                AD_SERVICE -> AD_REPO : findById(advertisementDto.id)
+                activate AD_REPO
+                    AD_REPO --> AD_SERVICE : advertisement
+                deactivate AD_REPO
+
+                AD_SERVICE -> AD_SERVICE : updateAdvertisement(advertisement)
+                activate AD_SERVICE
+                    AD_SERVICE --> AD_SERVICE : updatedAdvertisement
+                deactivate AD_SERVICE
+
+                AD_SERVICE -> ITEM_REPO : save(updatedAdvertisement.item)
+                activate ITEM_REPO
+                    ITEM_REPO -->> ITEM** : create()
+                    ITEM_REPO --> AD_SERVICE : updatedItem
+                deactivate ITEM_REPO
+
+                AD_SERVICE -> AD_REPO : save(updatedAdvertisement)
+                activate AD_REPO
+                    AD_REPO -->> UPDATED_AD** : create()
+                    AD_REPO --> AD_SERVICE : updatedAdvertisement
+                deactivate AD_REPO
+
+                AD_SERVICE -> AD_MAPPER : toDto(updatedAdvertisement)
+                activate AD_MAPPER
+                    AD_MAPPER -->> AD_DTO** : create()
+                    AD_MAPPER --> AD_SERVICE : updatedAdDTO
+                deactivate AD_MAPPER
+
+                AD_SERVICE --> CTRL : updatedAdDTO
+            deactivate AD_SERVICE
+
+            CTRL --> UI : success(updatedAdDTO)
+        deactivate CTRL
+
+        UI --> USER : displays operation success
+    deactivate UI
+
+deactivate USER
 @enduml

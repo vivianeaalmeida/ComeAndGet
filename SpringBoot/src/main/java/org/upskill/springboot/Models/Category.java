@@ -29,7 +29,6 @@ public class Category {
      * The designation must be unique across the system.
      */
     @NonNull
-    @Size(min = 5, max = 50)
-    @Column(unique = true)
+    @Column(unique = true, length = 50)
     private String designation;
 }

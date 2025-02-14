@@ -13,7 +13,7 @@
 - US11 - View advertisement *
 - US12 - Search advertisements *
 - US13 - Update advertisement *
-- US14 - Delete advertisement *
+- git *
 - US15 - View my published advertisements
 - US16 - Create request
 - US17 - View request

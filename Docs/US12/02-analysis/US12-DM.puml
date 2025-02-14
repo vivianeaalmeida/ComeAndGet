@@ -1,18 +1,14 @@
 @startuml
-skinparam monochrome false
 skinparam packageStyle rectangle
-skinparam shadowing true
-left to right direction
+skinparam shadowing false
 skinparam classAttributeIconSize 0
-hide methods
 
-class Client {
-      - name: String
-      - emailAddress: String
-      - phoneNumber: String
-      - password: String
-      - role: String
-      - clientType: String
+class User {
+    - name: String
+    - emailAddress: String
+    - phoneNumber: String
+    - password: String
+    - role: String
 }
 
 class Item {
@@ -21,22 +17,48 @@ class Item {
 }
 
 class Advertisement {
+    - id: String
     - designation: String
     - initialDate: Date
     - finalDate: Date
     - address: String
     - images: String[]
     - status: AdvertisementStatus
+    + deleteAdvertisement(): boolean
 }
 
-class Categories
+class Category {
+    - name: String
+}
 
-class Location
+class Location {
+    - city: String
+    - state: String
+}
+
+class AdvertisementController {
+    + searchAdvertisement(category, location, keyWords)
+    + deleteAdvertisement(advertisementId)
+}
+
+class AdvertisementService {
+    + searchAdvertisement(category, location, keyWords)
+    + deleteAdvertisement(advertisementId)
+}
+
+class AdvertisementRepository {
+    + searchAdvertisement(category, location, keyWords)
+    + deleteAdvertisement(advertisementId)
+}
 
 ' --- Associações ---
-Client "1" -- "0..*" Advertisement : owns
+User "1" -- "0..*" Advertisement : requests
 Advertisement "1" -- "1" Item : has >
+Advertisement "1" -- "1" Category : belongs to >
+Advertisement "1" -- "1" Location : located in >
 
-@enduml
+AdvertisementController ..> AdvertisementService
+AdvertisementService ..> AdvertisementRepository
+AdvertisementRepository "1" --> "*" Advertisement : advertisement
 
 @enduml

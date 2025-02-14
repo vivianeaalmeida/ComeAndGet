@@ -1,0 +1,22 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - Create Request
+
+autonumber
+
+actor "User (role:client)" as User
+participant ":System" as System
+
+activate User
+
+    User -> System : requests to create a new request
+    activate System
+
+        System --> User : displays operation success
+    deactivate System
+
+deactivate User
+@enduml

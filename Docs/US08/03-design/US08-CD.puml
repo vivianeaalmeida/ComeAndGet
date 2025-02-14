@@ -20,6 +20,9 @@ interface AdvertisementRepository {
     + findAll()
 }
 
+class User {
+   - role: manager
+    }
 
 class Item {
     - id: String

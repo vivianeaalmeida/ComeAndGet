@@ -64,7 +64,6 @@ class AdvertisementDTO {
 }
 
 ' --- Relacionamentos ---
-User ..> AdvertisementUI : requests to list all available advertisements
 AdvertisementUI ..> AdvertisementController
 AdvertisementController .> AdvertisementService
 AdvertisementService ..> AdvertisementRepository

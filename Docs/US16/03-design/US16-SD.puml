@@ -1,0 +1,47 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Client" as USER
+participant "RequestUI" as UI
+participant "RequestController" as CTRL
+participant "RequestService" as SERV
+participant "mapper\n:RequestMapper" as MAPPER
+participant "RequestsRepository" as AD_REPO
+participant "request\n:Request" as request
+participant "requestDTO\n:RequestDTO" as requestDTO
+
+
+
+activate USER
+
+    USER -> UI : requests to create new request
+    activate UI
+        UI -> CTRL : createRequest()
+        activate CTRL
+            CTRL -> SERV : createRequest()
+            activate SERV
+                    SERV -->> request**: create()
+                deactivate MAPPER
+
+                SERV -> AD_REPO : save(request)
+                activate AD_REPO
+                    AD_REPO --> SERV : request
+                deactivate AD_REPO
+
+                SERV -> MAPPER : toDTO(request)
+                activate MAPPER
+                    MAPPER -->> requestDTO**: create()
+                    MAPPER --> SERV : requestDTO
+                deactivate MAPPER
+                SERV --> CTRL : requestDTO
+        deactivate SERV
+        CTRL --> UI : requestDTO
+        deactivate CTRL
+    UI --> USER : requestDTO
+    deactivate UI
+deactivate USER
+@enduml

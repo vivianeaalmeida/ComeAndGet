@@ -5,7 +5,7 @@ skinparam shadowing false
 
 autonumber
 
-actor "User" as USER
+actor "Manager" as USER
 participant ":AdvertisementUI" as UI
 participant ":AdvertisementController" as CTRL
 participant ":AdvertisementService" as SERV
@@ -28,7 +28,7 @@ activate USER
 
                 SERV -> AD_REPO : findAll()
                 activate AD_REPO
-                AD_REPO -->> AD_LIST**:create()
+                AD_REPO -->> AD_LIST**:returns()
                 AD_REPO --> SERV : advertisementList
                 deactivate AD_REPO
             SERV --> MAPPER : toDTO(advertisementList)

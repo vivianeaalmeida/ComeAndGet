@@ -40,7 +40,15 @@ class Advertisement{
 class Request {
     status
     '(pending, canceled, rejected, accepted, donated)
+    date
+    email
+    phone
 }
+
+note bottom of Request
+Status: Pending, Canceled, Rejected,
+Accepted, Donated
+endnote
 
 class Tip {
     title
@@ -50,10 +58,7 @@ class Tip {
 class Like {
 }
 
-note bottom of Request
-Status: Pending, Canceled, Rejected,
-Accepted, Donated
-endnote
+
 
 note bottom of Advertisement
 Status: Active, Closed

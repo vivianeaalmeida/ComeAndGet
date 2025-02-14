@@ -22,7 +22,6 @@ public class CategoryService implements ICategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-
     /**
      * Retrieves a paginated list of the existing categories.
      *
@@ -85,6 +84,7 @@ public class CategoryService implements ICategoryService {
         if (categoryDTO.getDesignation().length() < 5 || categoryDTO.getDesignation().length() > 50) {
             throw new CategoryValidationException("Category name must be between 5 and 50 characters");
         }
+      
         return true;
     }
 }

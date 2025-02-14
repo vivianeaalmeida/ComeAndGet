@@ -6,27 +6,27 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.upskill.springboot.DTOs.AdvertisementDTO;
 import org.upskill.springboot.DTOs.ItemDTO;
-import org.upskill.springboot.Exceptions.AdvertisementValidationException;
+import org.upskill.springboot.DTOs.UserDTO;
 import org.upskill.springboot.Exceptions.InvalidLengthException;
 import org.upskill.springboot.Mappers.AdvertisementMapper;
 import org.upskill.springboot.Mappers.ItemMapper;
 import org.upskill.springboot.Models.Advertisement;
 import org.upskill.springboot.Models.Item;
 import org.upskill.springboot.Repositories.AdvertisementRepository;
-import org.upskill.springboot.Repositories.ItemRepository;
 import org.upskill.springboot.Services.Interfaces.IAdvertisementService;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Service
 public class AdvertisementService implements IAdvertisementService {
 
     @Autowired
-    AdvertisementRepository advertisementRepository;
+    private AdvertisementRepository advertisementRepository;
     @Autowired
-    ItemRepository itemRepository;
+    private ItemService itemService;
     @Autowired
-    ItemService itemService;
+    private UserService userService;
 
     //    Advertisement Status is "active" by default.
     //    Initial Date is automatically created with the current date.
@@ -37,21 +37,19 @@ public class AdvertisementService implements IAdvertisementService {
     @Override
     @Transactional // Garante que a operação seja atômica
     public AdvertisementDTO createAdvertisement(AdvertisementDTO advertisementDTO) {
-        // Validate the advertisement
         validateAdvertisement(advertisementDTO);
 
         Advertisement advertisement = AdvertisementMapper.toEntity(advertisementDTO);
         advertisement.setInitialDate(LocalDate.now());
         advertisement.setStatus(Advertisement.AdvertisementStatus.ACTIVE);
 
-        // Create and validate the Item
+        // Create and validate the item with the itemService
         Item item = advertisementDTO.getItem();
-        itemService.validateItem(ItemMapper.toDTO(item)); // Valida o Item antes de salvar
-        ItemDTO itemDTO = itemService.createItem(ItemMapper.toDTO(item));
-        // Associate the item with the advertisement
-        advertisement.setItem(item);
+        itemService.validateItem(ItemMapper.toDTO(item));
 
-        // Save advertisement in the database
+        ItemDTO savedItemDTO = itemService.createItem(ItemMapper.toDTO(item));
+        Item savedItem = ItemMapper.toEntity(savedItemDTO);
+        advertisement.setItem(savedItem);
         advertisement = advertisementRepository.save(advertisement);
 
         return AdvertisementMapper.toDTO(advertisement);
@@ -90,9 +88,7 @@ public class AdvertisementService implements IAdvertisementService {
         }
 
         // Check if the client associated with the advertisement is valid
-        if (advertisementDTO.getClientId() == null) {
-            throw new AdvertisementValidationException("The client ID must be provided.");
-        }
+        Optional<UserDTO> user = Optional.ofNullable(userService.getUserById(advertisementDTO.getClientId()));
 
         return true;
     }

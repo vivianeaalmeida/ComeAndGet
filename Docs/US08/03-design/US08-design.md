@@ -9,7 +9,7 @@
 | Step 1         | ... interacting with the actor?             | AdvertisementUI         | Pure Fabrication: there is no reason to assign this responsibility to any existing class in the Domain Model. |
 |                | ... coordinating the US?                    | AdvertisementController | Controller                                                                                                    |
 | Step 2         | ... obtain the requested information?       | AdvertisementService    | IE: is responsible for interactions with the repository.                                                      |
-| Step 3         | ... instantiating advertisements?           | AdvertisementRepository | Creator (Rule 2): AdvertisementRepository records instances of Advertisement.                                 |
+| Step 3         | ... instantiating advertisements?           | AdvertisementRepository | Pure fabrication: owns all its categories instances of Request.                                               |
 | Step 4         | ... showing all requested information?      | AdvertisementUI         | IE: is responsible for user interactions.                                                                     |
 
 ### Systematization ##
@@ -32,9 +32,9 @@ Other software classes (i.e. Pure Fabrication) identified:
 
 This diagram shows the full sequence of interactions between the classes involved in the realization of this user story.
 
-![Sequence Diagram - Full](C:\Users\lm_rs\Documents\GitHub\ComeAndGet\Docs\US08\03-design\US08-SD.svg)
+![Sequence Diagram - Full](US08-SD.svg)
 
 
 ## 3.3. Class Diagram (CD)
 
-![Class Diagram](C:\Users\lm_rs\Documents\GitHub\ComeAndGet\Docs\US08\03-design\US08-CD.svg)
+![Class Diagram](US08-CD.svg)

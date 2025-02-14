@@ -49,7 +49,7 @@ As an unregistered user, I want to register a new client.
 
 ### 1.6. System Sequence Diagram (SSD)
 
-![System Sequence Diagram](US006-SSD.svg)
+![System Sequence Diagram](US01-SSD.svg)
 
 **_Other alternatives might exist._**
 

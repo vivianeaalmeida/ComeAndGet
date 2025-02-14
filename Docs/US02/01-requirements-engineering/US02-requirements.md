@@ -47,7 +47,7 @@ As an unauthenticated user, I want to log in to the application to access restri
 
 ### 1.6. System Sequence Diagram (SSD)
 
-![System Sequence Diagram](US006-SSD.svg)
+![System Sequence Diagram](US02-SSD.svg)
 
 **_Other alternatives might exist._**
 

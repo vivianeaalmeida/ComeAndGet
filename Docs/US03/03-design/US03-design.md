@@ -22,7 +22,7 @@
 
 According to the taken rationale, the conceptual classes promoted to software classes are:
 
-* Store
+* Category
 
 Other software classes (i.e. Pure Fabrication) identified:
 

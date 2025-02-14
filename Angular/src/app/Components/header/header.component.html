@@ -1,0 +1,30 @@
+<nav class="fixed top-0 w-full bg-white shadow-md z-50 h-20">
+  <div class="flex justify-between items-center h-full max-w-[80vw] mx-auto">
+    <!-- Logo -->
+    <div>
+      <a routerLink="/home">
+        <img src="../assets/Logo.png" alt="Logo" class="w-44" />
+      </a>
+    </div>
+    <div>
+      <input
+        type="search"
+        placeholder="Search item"
+        class="border py-2 px-20 pl-5 rounded-l-md border-lime-700 focus:outline-none"
+      />
+      <button
+        class="border border-purple-700 focus:outline-none bg-lime-700 py-2 px-4 rounded-r-md hover:bg-lime-950"
+        type="button"
+      >
+        <i class="fa-solid fa-magnifying-glass fa-lg text-white"></i>
+      </button>
+    </div>
+    <div>
+      <app-button
+        buttonText="Login Area"
+        fontSize="1rem"
+        padding=".5rem 1rem"
+      ></app-button>
+    </div>
+  </div>
+</nav>

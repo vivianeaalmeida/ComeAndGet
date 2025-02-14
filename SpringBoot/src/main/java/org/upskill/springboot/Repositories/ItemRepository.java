@@ -1,4 +1,7 @@
 package org.upskill.springboot.Repositories;
 
-public interface ItemRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.upskill.springboot.Models.Item;
+
+public interface ItemRepository extends JpaRepository<Item, Long> {
 }

@@ -31,7 +31,8 @@ public class CategoryController extends BaseController {
      *
      * @param page Optional parameter for the page number (default is 0).
      * @param size Optional parameter for the page size (default is 10).
-     * @return A ResponseEntity containing a CollectionModel of CategoryDTOs with HATEOAS links.
+     * @return A ResponseEntity containing a CollectionModel of CategoryDTO with HATEOAS links,
+     * including self, next, and previous page links and HTTP status 200 (Ok) if get is successful.
      */
     @GetMapping("/categories")
     public ResponseEntity<CollectionModel<CategoryDTO>> getCategories(
@@ -66,7 +67,8 @@ public class CategoryController extends BaseController {
      * Creates a new category.
      *
      * @param request The CategoryDTO containing the new category data.
-     * @return The created CategoryDTO with HATEOAS link.
+     * @return A ResponseEntity containing the created CategoryDTO with a self HATEOAS link
+     * and HTTP status 201 (Created) if creation is successful.
      */
     @PostMapping("/categories")
     public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO request) {
@@ -77,5 +79,18 @@ public class CategoryController extends BaseController {
                 .createCategory(request)).withSelfRel());
 
         return new ResponseEntity<>(categoryDTO, HttpStatus.CREATED);
+    }
+
+    /**
+     * Deletes a category by its ID.
+     * If the category exists and meets the deletion criteria, it is removed from the system.
+     *
+     * @param id The ID of the category to be deleted.
+     * @return A ResponseEntity with HTTP status 204 (No Content) if the deletion is successful.
+     */
+    @DeleteMapping("/categories/{id}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable("id") String id) {
+        categoryService.deleteCategory(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

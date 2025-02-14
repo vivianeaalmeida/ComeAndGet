@@ -1,4 +1,4 @@
-@startuml
+0@startuml
 skinparam monochrome true
 skinparam packageStyle rectangle
 skinparam shadowing false
@@ -6,7 +6,7 @@ skinparam shadowing false
 autonumber
 
 actor "Logged User" as USER
-participant ":DeleteAdvertisementUI" as UI
+participant ":AdvertisementUI" as UI
 participant ":AdvertisementController" as CTRL
 participant ":AdvertisementService" as SERVICE
 participant ":AdvertisementsRepository" as AD_REPO
@@ -36,7 +36,7 @@ activate USER
             SERVICE --> CTRL : void
             deactivate SERVICE
 
-            CTRL --> UI : success 200
+            CTRL --> UI : success 204
         deactivate CTRL
 
         UI --> USER : display "Advertisement deleted "

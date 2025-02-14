@@ -1,2 +1,65 @@
-/Docs/.idea/
-/.idea/
+# C# and .NET
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.log
+.vscode/
+.vs/
+.DS_Store
+Thumbs.db
+.idea/
+*.iml
+*.nupkg
+packages/
+.env
+.env.*
+*.generated.cs
+*.edmx.diagram
+*.edmx.sql
+*.edmx
+Migrations/
+*.bak
+*.swp
+*.tmp
+**/bin/
+**/obj/
+.history/
+*.DotSettings.user
+
+# Angular
+/node_modules/
+/dist/
+/angular/
+src/environments/environment*.ts
+
+# Spring Boot
+/target/
+*.war
+*.jar
+.mvn/
+!mvn/wrapper/maven-wrapper.jar
+
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# Logs and temp files
+*.log
+*.tmp
+hs_err_pid*
+
+# Gradle
+.gradle/
+/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Lombok config
+.lombok.config
+
+# Sensitive files
+*.env
+*.key
+*.pem

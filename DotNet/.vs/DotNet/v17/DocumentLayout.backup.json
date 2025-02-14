@@ -1,12 +1,105 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\diana\\OneDrive\\Ambiente de Trabalho\\Upskill\\Project\\ComeAndGet\\DotNet\\",
-  "Documents": [],
+  "WorkspaceRootPath": "C:\\Users\\Dinossauro\\Desktop\\._\\ComeAndGet\\DotNet\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|c:\\users\\dinossauro\\desktop\\._\\comeandget\\dotnet\\dotnet\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|solutionrelative:dotnet\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|c:\\users\\dinossauro\\desktop\\._\\comeandget\\dotnet\\dotnet\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|solutionrelative:dotnet\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|c:\\users\\dinossauro\\desktop\\._\\comeandget\\dotnet\\dotnet\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|solutionrelative:dotnet\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|c:\\users\\dinossauro\\desktop\\._\\comeandget\\dotnet\\dotnet\\data\\usercontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|solutionrelative:dotnet\\data\\usercontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|c:\\users\\dinossauro\\desktop\\._\\comeandget\\dotnet\\dotnet\\dotnet.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|solutionrelative:dotnet\\dotnet.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Dinossauro\\Desktop\\._\\ComeAndGet\\DotNet\\DotNet\\Program.cs",
+              "RelativeDocumentMoniker": "DotNet\\Program.cs",
+              "ToolTip": "C:\\Users\\Dinossauro\\Desktop\\._\\ComeAndGet\\DotNet\\DotNet\\Program.cs",
+              "RelativeToolTip": "DotNet\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-14T14:43:22.608Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "UserContext.cs",
+              "DocumentMoniker": "C:\\Users\\Dinossauro\\Desktop\\._\\ComeAndGet\\DotNet\\DotNet\\Data\\UserContext.cs",
+              "RelativeDocumentMoniker": "DotNet\\Data\\UserContext.cs",
+              "ToolTip": "C:\\Users\\Dinossauro\\Desktop\\._\\ComeAndGet\\DotNet\\DotNet\\Data\\UserContext.cs",
+              "RelativeToolTip": "DotNet\\Data\\UserContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-14T14:41:31.966Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\Users\\Dinossauro\\Desktop\\._\\ComeAndGet\\DotNet\\DotNet\\Models\\User.cs",
+              "RelativeDocumentMoniker": "DotNet\\Models\\User.cs",
+              "ToolTip": "C:\\Users\\Dinossauro\\Desktop\\._\\ComeAndGet\\DotNet\\DotNet\\Models\\User.cs*",
+              "RelativeToolTip": "DotNet\\Models\\User.cs*",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAQwBAAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-14T14:39:03.123Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "DotNet",
+              "DocumentMoniker": "C:\\Users\\Dinossauro\\Desktop\\._\\ComeAndGet\\DotNet\\DotNet\\DotNet.csproj",
+              "RelativeDocumentMoniker": "DotNet\\DotNet.csproj",
+              "ToolTip": "C:\\Users\\Dinossauro\\Desktop\\._\\ComeAndGet\\DotNet\\DotNet\\DotNet.csproj",
+              "RelativeToolTip": "DotNet\\DotNet.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-02-14T14:38:57.136Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\Dinossauro\\Desktop\\._\\ComeAndGet\\DotNet\\DotNet\\appsettings.json",
+              "RelativeDocumentMoniker": "DotNet\\appsettings.json",
+              "ToolTip": "C:\\Users\\Dinossauro\\Desktop\\._\\ComeAndGet\\DotNet\\DotNet\\appsettings.json",
+              "RelativeToolTip": "DotNet\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-02-14T14:37:33.775Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }

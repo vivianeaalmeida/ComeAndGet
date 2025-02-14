@@ -14,7 +14,7 @@ public interface CategoryRepository extends JpaRepository<Category, String> {
      * This method is used to ensure that category names are unique.
      *
      * @param designation The designation (name) of the category to check.
-     * @return true if a category with the specified designation exists, false otherwise.
+     * @return {@code true} if a category with the specified designation exists, false otherwise.
      */
     boolean existsByDesignation(String designation);
 }

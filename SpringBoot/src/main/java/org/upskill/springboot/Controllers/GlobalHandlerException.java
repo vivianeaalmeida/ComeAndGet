@@ -15,10 +15,10 @@ public class GlobalHandlerException {
     public ResponseEntity<ErrorResponse> handleDuplicateCategoryException(DuplicateCategoryException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
                 ex.getMessage(),
-                HttpStatus.CONFLICT.value(),
-                HttpStatus.CONFLICT.getReasonPhrase()
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase()
         );
-        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(CategoryValidationException.class)

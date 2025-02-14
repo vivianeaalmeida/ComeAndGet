@@ -1,6 +1,8 @@
 package org.upskill.springboot.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.upskill.springboot.DTOs.CategoryDTO;
 import org.upskill.springboot.Exceptions.CategoryValidationException;
@@ -19,6 +21,20 @@ public class CategoryService implements ICategoryService {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+
+    /**
+     * Retrieves a paginated list of the existing categories.
+     *
+     * @param page the page number (zero-based index)
+     * @param size the number of elements per page
+     * @return a page of a CategoryDTO containing the requested categories
+     */
+    @Override
+    public Page<CategoryDTO> getCategories(int page, int size) {
+        return categoryRepository.findAll(PageRequest.of(page, size))
+                .map(CategoryMapper::toDTO);
+    }
 
     /**
      * Creates a new category in the system and saves it to the database.
@@ -45,7 +61,7 @@ public class CategoryService implements ICategoryService {
      * <ul>
      *     <li>Verifies if a category with the same designation already exists in the database.</li>
      *     <li>Checks if the category designation is null or empty.</li>
-     *     <li>Ensures that the category designation does not exceed the maximum allowed length of 50 characters.</li>
+     *     <li>Ensures that the category designation is between 5 and 50 characters</li>
      * </ul>
      *
      * @param categoryDTO The CategoryDTO object containing the category data to be validated.
@@ -53,7 +69,7 @@ public class CategoryService implements ICategoryService {
      * @throws DuplicateCategoryException If a category with the same designation already exists in the database.
      * @throws IllegalArgumentException If the category designation is null, empty, or exceeds the allowed length of 50 characters.
      */
-    public boolean validateCategory(CategoryDTO categoryDTO) {
+    private boolean validateCategory(CategoryDTO categoryDTO) {
         // Check if the category designation already exists
         if (categoryRepository.existsByDesignation(categoryDTO.getDesignation())) {
             throw new DuplicateCategoryException("Category name '" +
@@ -65,11 +81,10 @@ public class CategoryService implements ICategoryService {
             throw new CategoryValidationException("Category name cannot be null or empty");
         }
 
-        // Check if the category has more than 50 characters
-        if (categoryDTO.getDesignation().length() > 50) {
-            throw new CategoryValidationException("Category name cannot exceed 50 characters");
+        // Check if the category has between 5 and 50 characters
+        if (categoryDTO.getDesignation().length() < 5 || categoryDTO.getDesignation().length() > 50) {
+            throw new CategoryValidationException("Category name must be between 5 and 50 characters");
         }
-
         return true;
     }
 }

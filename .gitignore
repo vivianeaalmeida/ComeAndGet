@@ -1,53 +1,65 @@
-/Docs/.idea/
-/.idea/
-
-# C# specific
-# Build Folders
+# C# and .NET
 bin/
 obj/
-
-# User-specific files
 *.user
 *.suo
 *.userosscache
 *.sln.docstates
-
-# Logs
 *.log
-
-# Visual Studio specific
 .vscode/
 .vs/
-
-# OS-generated files
 .DS_Store
 Thumbs.db
-
-# Rider specific
 .idea/
 *.iml
-
-# NuGet Packages
 *.nupkg
-
-# Environment files
+packages/
 .env
 .env.*
-
-# Generated files
 *.generated.cs
-
-# Other
+*.edmx.diagram
+*.edmx.sql
+*.edmx
+Migrations/
 *.bak
 *.swp
 *.tmp
+**/bin/
+**/obj/
+.history/
+*.DotSettings.user
 
-# Angular specific
+# Angular
 /node_modules/
 /dist/
-
-# Angular environment files
+/angular/
 src/environments/environment*.ts
 
-# Angular build and temporary files
-.angular/
+# Spring Boot
+/target/
+*.war
+*.jar
+.mvn/
+!mvn/wrapper/maven-wrapper.jar
+
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# Logs and temp files
+*.log
+*.tmp
+hs_err_pid*
+
+# Gradle
+.gradle/
+/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Lombok config
+.lombok.config
+
+# Sensitive files
+*.env
+*.key
+*.pem

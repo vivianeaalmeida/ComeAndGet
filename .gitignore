@@ -1,2 +1,53 @@
 /Docs/.idea/
 /.idea/
+
+# C# specific
+# Build Folders
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Logs
+*.log
+
+# Visual Studio specific
+.vscode/
+.vs/
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# Rider specific
+.idea/
+*.iml
+
+# NuGet Packages
+*.nupkg
+
+# Environment files
+.env
+.env.*
+
+# Generated files
+*.generated.cs
+
+# Other
+*.bak
+*.swp
+*.tmp
+
+# Angular specific
+/node_modules/
+/dist/
+
+# Angular environment files
+src/environments/environment*.ts
+
+# Angular build and temporary files
+.angular/

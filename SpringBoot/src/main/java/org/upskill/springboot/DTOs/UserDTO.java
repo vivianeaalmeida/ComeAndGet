@@ -14,11 +14,11 @@ public class UserDTO extends RepresentationModel<UserDTO> {
 
     public String id;
 
-    public String Name;
+    public String name;
 
-    public String Email;
+    public String email;
 
-    public String PhoneNumber;
+    public String phoneNumber;
 
-    public String Role;
+    public String role;
 }

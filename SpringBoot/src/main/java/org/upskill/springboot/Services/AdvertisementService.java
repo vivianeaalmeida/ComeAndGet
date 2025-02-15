@@ -50,23 +50,38 @@ public class AdvertisementService implements IAdvertisementService {
     @Override
     @Transactional // Garante que a operação seja atômica
     public AdvertisementDTO createAdvertisement(AdvertisementDTO advertisementDTO) {
+        // Valida os dados do anúncio (ex: verificar título, descrição)
         validateAdvertisement(advertisementDTO);
 
+        // Converte o DTO do anúncio para a entidade do anúncio
         Advertisement advertisement = AdvertisementMapper.toEntity(advertisementDTO);
         advertisement.setInitialDate(LocalDate.now());
         advertisement.setStatus(Advertisement.AdvertisementStatus.ACTIVE);
 
-        // Create and validate the item with the itemService
-        Item item = advertisementDTO.getItem();
-        itemService.validateItem(ItemMapper.toDTO(item));
+        // Converte o DTO do item para a entidade do item
+        ItemDTO itemDTO = advertisementDTO.getItem();
+        if (itemDTO == null) {
+            throw new IllegalArgumentException("Item não pode ser nulo");
+        }
+        Item item = ItemMapper.toEntity(itemDTO);
 
-        ItemDTO savedItemDTO = itemService.createItem(ItemMapper.toDTO(item));
+        // Valida o item com o itemService
+        itemService.validateItem(itemDTO);
+
+        // Salva o item no banco e obtém o item salvo
+        ItemDTO savedItemDTO = itemService.createItem(itemDTO);
         Item savedItem = ItemMapper.toEntity(savedItemDTO);
+
+        // Define o item salvo no anúncio
         advertisement.setItem(savedItem);
+
+        // Salva o anúncio no banco
         advertisement = advertisementRepository.save(advertisement);
 
+        // Converte a entidade do anúncio de volta para DTO e retorna
         return AdvertisementMapper.toDTO(advertisement);
     }
+
 
     /**
      * Retrieves all advertisements with pagination.

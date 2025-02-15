@@ -13,18 +13,11 @@ import org.upskill.springboot.Models.Item;
 @Setter
 public class ItemDTO {
 
-    public enum Condition {
-        EXCELLENT,
-        GOOD,
-        ACCEPTABLE,
-        POOR
-    }
-
     private String id;
 
     private String image;
 
-    private Item.Condition condition;
+    private String condition;
 
-    private Category category;
+    private CategoryDTO category;
 }

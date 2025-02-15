@@ -12,15 +12,6 @@ import java.time.LocalDate;
 @Setter
 public class AdvertisementDTO extends RepresentationModel<AdvertisementDTO> {
 
-    /**
-     * Enumeration representing the possible statuses of an advertisement.
-     * The advertisement can either be ACTIVE or CLOSED.
-     */
-    public enum AdvertisementStatus {
-        ACTIVE,
-        CLOSED
-    }
-
     private String id;  // Unique identifier for the advertisement
 
     /**
@@ -31,7 +22,7 @@ public class AdvertisementDTO extends RepresentationModel<AdvertisementDTO> {
 
     /**
      * A detailed description of the advertisement.
-     * This is a required field with a minimum length of 5 characters and a maximum of 50 characters.
+     * This is a required field with a minimum length of 5 characters and a maximum of 150 characters.
      */
     private String description;
 
@@ -44,15 +35,13 @@ public class AdvertisementDTO extends RepresentationModel<AdvertisementDTO> {
     /**
      * The current status of the advertisement (ACTIVE or CLOSED).
      * This is a required field.
-     * The status is stored in the database as a numeric value.
      */
-    private Advertisement.AdvertisementStatus status;
+    private String status;
 
     /**
      * The item associated with the advertisement.
-     * This is a required field, and the item is linked by its unique ID.
      */
-    private Item item;
+    private ItemDTO item;
 
     /**
      * The unique client ID associated with the advertisement.

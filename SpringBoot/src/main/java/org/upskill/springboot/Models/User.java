@@ -21,16 +21,16 @@ public class User {
     @NonNull
     @Min(5)
     @Max(100)
-    public String Name;
+    public String name;
 
     @Min(5)
     @Max(60)
     @NonNull
-    public String Email;
+    public String email;
 
     @NonNull
-    public String PhoneNumber;
+    public String phoneNumber;
 
     @NonNull
-    public String Role;
+    public String role;
 }

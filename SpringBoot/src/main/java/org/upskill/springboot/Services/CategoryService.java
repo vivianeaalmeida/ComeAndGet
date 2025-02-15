@@ -41,6 +41,17 @@ public class CategoryService implements ICategoryService {
     }
 
     /**
+     * Retrieves a category by its id. If the category does not exist, an exception is thrown.
+     *
+     * @param id The unique identifier of the category.
+     * @return The Category corresponding to the id.
+     */
+    private Category getCategoryById(String id)  {
+        return categoryRepository.findById(id)
+                .orElseThrow(CategoryNotFoundException::new);
+    }
+
+    /**
      * Creates a new category in the system and saves it to the database.
      * Ensures that the category is created and saved according to the validation method.
      *
@@ -53,6 +64,32 @@ public class CategoryService implements ICategoryService {
         validateCategory(categoryDTO);
 
         Category category = CategoryMapper.toEntity(categoryDTO);
+
+        category = categoryRepository.save(category);
+
+        return CategoryMapper.toDTO(category);
+    }
+
+    /**
+     * Updates an existing category in the system by its ID.
+     * Ensures that the category is updated according to the validation method.
+     *
+     * @param id The unique identifier of the category to be updated.
+     * @param categoryDTO The CategoryDTO object containing the category data to be updated.
+     * @return A categoryDTO object containing the updated category data.
+     */
+    @Override
+    public CategoryDTO updateCategory(String id, CategoryDTO categoryDTO) {
+
+        validateCategory(categoryDTO);
+
+        Category category = getCategoryById(id);
+
+        if(category == null) {
+            throw new CategoryNotFoundException();
+        }
+
+        category.setDesignation(categoryDTO.getDesignation());
 
         category = categoryRepository.save(category);
 
@@ -118,14 +155,5 @@ public class CategoryService implements ICategoryService {
         return true;
     }
 
-    /**
-     * Retrieves a category by its id. If the category does not exist, an exception is thrown.
-     *
-     * @param id The unique identifier of the category.
-     * @return The Category corresponding to the id.
-     */
-    private Category getCategoryById(String id)  {
-        return categoryRepository.findById(id)
-                .orElseThrow(CategoryNotFoundException::new);
-    }
+
 }

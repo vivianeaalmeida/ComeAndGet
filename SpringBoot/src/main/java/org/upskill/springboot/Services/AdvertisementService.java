@@ -11,7 +11,6 @@ import org.upskill.springboot.DTOs.UserDTO;
 import org.upskill.springboot.Exceptions.InvalidLengthException;
 import org.upskill.springboot.Exceptions.NotFoundException;
 import org.upskill.springboot.Mappers.AdvertisementMapper;
-import org.upskill.springboot.Mappers.CategoryMapper;
 import org.upskill.springboot.Mappers.ItemMapper;
 import org.upskill.springboot.Models.Advertisement;
 import org.upskill.springboot.Models.Item;
@@ -35,12 +34,6 @@ public class AdvertisementService implements IAdvertisementService {
     @Autowired
     private UserService userService;
 
-    //    Advertisement Status is "active" by default.
-    //    Initial Date is automatically created with the current date.
-    //    The advertisement must provide the item details when creating an advertisement.
-    //    The system must create the associated item together with the advertisement.
-    //    The advertisement must not exist without an associated item.
-
     /**
      * Creates a new advertisement.
      *
@@ -50,35 +43,27 @@ public class AdvertisementService implements IAdvertisementService {
     @Override
     @Transactional // Garante que a operação seja atômica
     public AdvertisementDTO createAdvertisement(AdvertisementDTO advertisementDTO) {
-        // Valida os dados do anúncio (ex: verificar título, descrição)
+        // Validate the advertisement DTO
         validateAdvertisement(advertisementDTO);
 
-        // Converte o DTO do anúncio para a entidade do anúncio
+        // Converts the DTO of the advertisement to the entity of the advertisement
         Advertisement advertisement = AdvertisementMapper.toEntity(advertisementDTO);
         advertisement.setInitialDate(LocalDate.now());
         advertisement.setStatus(Advertisement.AdvertisementStatus.ACTIVE);
 
-        // Converte o DTO do item para a entidade do item
         ItemDTO itemDTO = advertisementDTO.getItem();
-        if (itemDTO == null) {
-            throw new IllegalArgumentException("Item não pode ser nulo");
-        }
         Item item = ItemMapper.toEntity(itemDTO);
-
-        // Valida o item com o itemService
+        // Validates the item DTO
         itemService.validateItem(itemDTO);
 
-        // Salva o item no banco e obtém o item salvo
+        // Saves the item in the database
         ItemDTO savedItemDTO = itemService.createItem(itemDTO);
         Item savedItem = ItemMapper.toEntity(savedItemDTO);
 
-        // Define o item salvo no anúncio
+        // Define the item associated with the advertisement and save the advertisement in the database
         advertisement.setItem(savedItem);
-
-        // Salva o anúncio no banco
         advertisement = advertisementRepository.save(advertisement);
 
-        // Converte a entidade do anúncio de volta para DTO e retorna
         return AdvertisementMapper.toDTO(advertisement);
     }
 
@@ -114,7 +99,7 @@ public class AdvertisementService implements IAdvertisementService {
     /**
      * Updates an existing advertisement.
      *
-     * @param id the ID of the advertisement to update
+     * @param id               the ID of the advertisement to update
      * @param advertisementDto the updated advertisement data transfer object
      * @return the updated advertisement data transfer object
      */
@@ -143,6 +128,11 @@ public class AdvertisementService implements IAdvertisementService {
      * @throws InvalidLengthException if the title or description length is invalid
      */
     public boolean validateAdvertisement(AdvertisementDTO advertisementDTO) {
+        if (advertisementDTO == null) {
+            throw new IllegalArgumentException("The advertisement must be provided.");
+        }
+
+
         // Check if the title is less than 5 or more than 50 characters
         if (advertisementDTO.getTitle().length() < 5 || advertisementDTO.getTitle().length() > 50) {
             throw new InvalidLengthException("The title must have between 5 and 50 characters.");

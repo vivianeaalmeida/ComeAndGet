@@ -8,10 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.upskill.springboot.DTOs.AdvertisementDTO;
 import org.upskill.springboot.DTOs.ItemDTO;
 import org.upskill.springboot.DTOs.UserDTO;
+import org.upskill.springboot.Exceptions.InvalidActionException;
 import org.upskill.springboot.Exceptions.InvalidLengthException;
 import org.upskill.springboot.Exceptions.NotFoundException;
 import org.upskill.springboot.Mappers.AdvertisementMapper;
-import org.upskill.springboot.Mappers.CategoryMapper;
 import org.upskill.springboot.Mappers.ItemMapper;
 import org.upskill.springboot.Models.Advertisement;
 import org.upskill.springboot.Models.Item;
@@ -114,7 +114,7 @@ public class AdvertisementService implements IAdvertisementService {
     /**
      * Updates an existing advertisement.
      *
-     * @param id the ID of the advertisement to update
+     * @param id               the ID of the advertisement to update
      * @param advertisementDto the updated advertisement data transfer object
      * @return the updated advertisement data transfer object
      */
@@ -131,7 +131,10 @@ public class AdvertisementService implements IAdvertisementService {
      */
     @Override
     public AdvertisementDTO deleteAdvertisement(String id) {
-        return null;
+        AdvertisementDTO adDTO = validateAdDeletion(id);
+
+        this.advertisementRepository.deleteById(id);
+        return adDTO;
     }
 
 
@@ -157,5 +160,32 @@ public class AdvertisementService implements IAdvertisementService {
         Optional<UserDTO> user = Optional.ofNullable(userService.getUserById(advertisementDTO.getClientId()));
 
         return true;
+    }
+
+
+    /**
+     * Validates the deletion of an advertisement by its ID.
+     * Ensures that the advertisement can be deleted by checking its existence,
+     * status and associated requests.
+     *
+     * @param id the ID of the advertisement to be deleted
+     * @return the advertisement data transfer object
+     * @throws NotFoundException if the advertisement does not exist
+     * @throws InvalidActionException if the advertisement is not active or has requests
+     */
+    private AdvertisementDTO validateAdDeletion(String id) {
+        Advertisement advertisement = this.advertisementRepository.findById(id).orElseThrow(() -> new NotFoundException("Advertisement with id " + id + " not found"));
+
+        // Do not allow the deletion of an advertisement that is not active
+        if (!advertisement.getStatus().equals(Advertisement.AdvertisementStatus.ACTIVE)) {
+            throw new InvalidActionException("The advertisement with id " + id + " is not active, therefore it cannot be deleted.");
+        }
+
+        // Do not allow the deletion of an advertisement that has requests
+        if (advertisementRepository.hasRequests(id)) {
+            throw new InvalidActionException("The advertisement with id " + id + " has requests, therefore it cannot be deleted.");
+        }
+
+        return AdvertisementMapper.toDTO(advertisement);
     }
 }

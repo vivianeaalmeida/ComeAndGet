@@ -96,4 +96,16 @@ public class AdvertisementController extends BaseController {
         }
     }
 
+    /**
+     * Deletes an advertisement by its ID.
+     * If the advertisement exists and meets the deletion criteria, it is removed from the system.
+     *
+     * @param id The ID of the advertisement to be deleted.
+     * @return A ResponseEntity with HTTP status NO CONTENT if the deletion is successful.
+     */
+    @DeleteMapping("/advertisements/{id}")
+    public ResponseEntity<Void> deleteAdvertisement(@PathVariable String id) {
+       advertisementService.deleteAdvertisement(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

@@ -9,11 +9,23 @@ import org.upskill.springboot.Models.User;
 import org.upskill.springboot.Repositories.UserRepository;
 import org.upskill.springboot.Services.Interfaces.IUserService;
 
+/**
+ * Service class for managing users.
+ */
 @Service
 public class UserService implements IUserService {
+    /**
+     * The user repository.
+     */
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * Creates a new user.
+     *
+     * @param userDTO the user data transfer object
+     * @return the created user data transfer object
+     */
     @Override
     public UserDTO createUser(UserDTO userDTO) {
         User user = UserMapper.toEntity(userDTO);
@@ -23,6 +35,13 @@ public class UserService implements IUserService {
         return UserMapper.toDTO(user);
     }
 
+    /**
+     * Retrieves a user by its ID.
+     *
+     * @param id the user ID
+     * @return the user data transfer object
+     * @throws NotFoundException if the user is not found
+     */
     @Override
     public UserDTO getUserById(String id) {
         return this.userRepository.findById(id)

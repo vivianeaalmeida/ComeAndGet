@@ -83,6 +83,22 @@ public class AdvertisementService implements IAdvertisementService {
 
     }
 
+
+    /**
+     * Retrieves all active advertisements with pagination.
+     *
+     * @param page the page number
+     * @param size the size of the page
+     * @return a page of active advertisement data transfer objects
+     */
+    @Override
+    public Page<AdvertisementDTO> getActiveAdvertisements(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+
+        return advertisementRepository.findActiveAdvertisements(pageRequest)
+                .map(AdvertisementMapper::toDTO);
+    }
+
     /**
      * Retrieves an advertisement by its ID.
      *
@@ -161,7 +177,7 @@ public class AdvertisementService implements IAdvertisementService {
      *
      * @param id the ID of the advertisement to be deleted
      * @return the advertisement data transfer object
-     * @throws NotFoundException if the advertisement does not exist
+     * @throws NotFoundException      if the advertisement does not exist
      * @throws InvalidActionException if the advertisement is not active or has requests
      */
     private AdvertisementDTO validateAdDeletion(String id) {

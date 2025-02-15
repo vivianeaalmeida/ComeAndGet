@@ -9,9 +9,11 @@ public interface IAdvertisementService {
 
     Page<AdvertisementDTO> getAllAdvertisements(int page, int size);
 
-    AdvertisementDTO getAdvertisementById(long id);
+    Page<AdvertisementDTO> getActiveAdvertisements(int page, int size);
 
-    AdvertisementDTO updateAdvertisement (long id, AdvertisementDTO advertisementDto);
+    AdvertisementDTO getAdvertisementById(String id);
 
-    AdvertisementDTO deleteAdvertisement (long id);
+    AdvertisementDTO updateAdvertisement (String id, AdvertisementDTO advertisementDto);
+
+    AdvertisementDTO deleteAdvertisement (String id);
 }

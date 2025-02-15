@@ -54,7 +54,6 @@ public class Advertisement {
      * The initial date when the advertisement was created.
      * This is a required field.
      */
-    @NonNull
     private LocalDate initialDate;
 
     /**
@@ -62,7 +61,6 @@ public class Advertisement {
      * This is a required field.
      * The status is stored in the database as a numeric value.
      */
-    @NonNull
     @Enumerated(EnumType.ORDINAL)
     private AdvertisementStatus status;
 

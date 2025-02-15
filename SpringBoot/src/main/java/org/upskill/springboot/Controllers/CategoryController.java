@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.upskill.springboot.DTOs.CategoryDTO;
+import org.upskill.springboot.Exceptions.CategoryNotFoundException;
+import org.upskill.springboot.Exceptions.CategoryValidationException;
 import org.upskill.springboot.Services.CategoryService;
 
 import java.util.ArrayList;
@@ -92,5 +94,31 @@ public class CategoryController extends BaseController {
     public ResponseEntity<Void> deleteCategory(@PathVariable("id") String id) {
         categoryService.deleteCategory(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    /**
+     * Updates a category by its ID.
+     * If the category exists and meets the update criteria, it is updated in the system.
+     *
+     * @param id The ID of the category to be updated.
+     * @param request The CategoryDTO containing the updated category data.
+     * @return A ResponseEntity containing the updated CategoryDTO with a self HATEOAS link
+     * and HTTP status 200 (Ok) if the update is successful.
+     */
+    @PutMapping("/categories/{id}")
+    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable("id") String id, @RequestBody CategoryDTO request) {
+        try {
+            CategoryDTO categoryDTO = categoryService.updateCategory(id, request);
+
+            // self
+            categoryDTO.add(linkTo(methodOn(CategoryController.class)
+                    .updateCategory(id, request)).withSelfRel());
+
+            return new ResponseEntity<>(categoryDTO, HttpStatus.OK);
+        } catch (CategoryValidationException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (CategoryNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

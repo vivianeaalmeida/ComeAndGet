@@ -2,83 +2,157 @@ package org.upskill.springboot.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.upskill.springboot.DTOs.AdvertisementDTO;
 import org.upskill.springboot.DTOs.ItemDTO;
-import org.upskill.springboot.Exceptions.AdvertisementValidationException;
+import org.upskill.springboot.DTOs.UserDTO;
+import org.upskill.springboot.Exceptions.InvalidActionException;
 import org.upskill.springboot.Exceptions.InvalidLengthException;
+import org.upskill.springboot.Exceptions.NotFoundException;
 import org.upskill.springboot.Mappers.AdvertisementMapper;
 import org.upskill.springboot.Mappers.ItemMapper;
 import org.upskill.springboot.Models.Advertisement;
 import org.upskill.springboot.Models.Item;
 import org.upskill.springboot.Repositories.AdvertisementRepository;
-import org.upskill.springboot.Repositories.ItemRepository;
 import org.upskill.springboot.Services.Interfaces.IAdvertisementService;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
+
+/**
+ * Service class for managing advertisements.
+ */
 @Service
 public class AdvertisementService implements IAdvertisementService {
 
     @Autowired
-    AdvertisementRepository advertisementRepository;
+    private AdvertisementRepository advertisementRepository;
     @Autowired
-    ItemRepository itemRepository;
+    private ItemService itemService;
     @Autowired
-    ItemService itemService;
+    private UserService userService;
 
-    //    Advertisement Status is "active" by default.
-    //    Initial Date is automatically created with the current date.
-    //    The advertisement must provide the item details when creating an advertisement.
-    //    The system must create the associated item together with the advertisement.
-    //    The advertisement must not exist without an associated item.
-
+    /**
+     * Creates a new advertisement.
+     *
+     * @param advertisementDTO the advertisement data transfer object
+     * @return the created advertisement data transfer object
+     */
     @Override
     @Transactional // Garante que a operação seja atômica
     public AdvertisementDTO createAdvertisement(AdvertisementDTO advertisementDTO) {
-        // Validate the advertisement
+        // Validate the advertisement DTO
         validateAdvertisement(advertisementDTO);
 
+        // Converts the DTO of the advertisement to the entity of the advertisement
         Advertisement advertisement = AdvertisementMapper.toEntity(advertisementDTO);
         advertisement.setInitialDate(LocalDate.now());
         advertisement.setStatus(Advertisement.AdvertisementStatus.ACTIVE);
 
-        // Create and validate the Item
-        Item item = advertisementDTO.getItem();
-        itemService.validateItem(ItemMapper.toDTO(item)); // Valida o Item antes de salvar
-        ItemDTO itemDTO = itemService.createItem(ItemMapper.toDTO(item));
-        // Associate the item with the advertisement
-        advertisement.setItem(item);
+        ItemDTO itemDTO = advertisementDTO.getItem();
+        Item item = ItemMapper.toEntity(itemDTO);
+        // Validates the item DTO
+        itemService.validateItem(itemDTO);
 
-        // Save advertisement in the database
+        // Saves the item in the database
+        ItemDTO savedItemDTO = itemService.createItem(itemDTO);
+        Item savedItem = ItemMapper.toEntity(savedItemDTO);
+
+        // Define the item associated with the advertisement and save the advertisement in the database
+        advertisement.setItem(savedItem);
         advertisement = advertisementRepository.save(advertisement);
 
         return AdvertisementMapper.toDTO(advertisement);
     }
 
+
+    /**
+     * Retrieves all advertisements with pagination.
+     *
+     * @param page the page number
+     * @param size the size of the page
+     * @return a page of advertisement data transfer objects
+     */
     @Override
     public Page<AdvertisementDTO> getAllAdvertisements(int page, int size) {
-        return null;
+        return advertisementRepository.findAll(PageRequest.of(page, size))
+                .map(AdvertisementMapper::toDTO);
+
     }
 
+
+    /**
+     * Retrieves all active advertisements with pagination.
+     *
+     * @param page the page number
+     * @param size the size of the page
+     * @return a page of active advertisement data transfer objects
+     */
     @Override
-    public AdvertisementDTO getAdvertisementById(long id) {
-        return null;
+    public Page<AdvertisementDTO> getActiveAdvertisements(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+
+        return advertisementRepository.findActiveAdvertisements(pageRequest)
+                .map(AdvertisementMapper::toDTO);
     }
 
+    /**
+     * Retrieves an advertisement by its ID.
+     *
+     * @param id the ID of the advertisement
+     * @return the advertisement data transfer object
+     * @throws NotFoundException if the advertisement is not found
+     */
     @Override
-    public AdvertisementDTO updateAdvertisement(long id, AdvertisementDTO advertisementDto) {
-        return null;
+    public AdvertisementDTO getAdvertisementById(String id) {
+        return advertisementRepository.findById(id)
+                .map(AdvertisementMapper::toDTO)
+                .orElseThrow(() -> new NotFoundException("Advertisement not found"));
     }
 
+    /**
+     * Updates an existing advertisement.
+     *
+     * @param id               the ID of the advertisement to update
+     * @param advertisementDto the updated advertisement data transfer object
+     * @return the updated advertisement data transfer object
+     */
     @Override
-    public AdvertisementDTO deleteAdvertisement(long id) {
+    public AdvertisementDTO updateAdvertisement(String id, AdvertisementDTO advertisementDto) {
         return null;
     }
 
+    /**
+     * Deletes an advertisement by its ID.
+     *
+     * @param id the ID of the advertisement to delete
+     * @return the deleted advertisement data transfer object
+     */
+    @Override
+    public AdvertisementDTO deleteAdvertisement(String id) {
+        AdvertisementDTO adDTO = validateAdDeletion(id);
 
+        this.advertisementRepository.deleteById(id);
+        return adDTO;
+    }
+
+
+    /**
+     * Validates the advertisement data transfer object.
+     *
+     * @param advertisementDTO the advertisement data transfer object
+     * @return true if the advertisement is valid
+     * @throws InvalidLengthException if the title or description length is invalid
+     */
     public boolean validateAdvertisement(AdvertisementDTO advertisementDTO) {
+        if (advertisementDTO == null) {
+            throw new IllegalArgumentException("The advertisement must be provided.");
+        }
+
+
         // Check if the title is less than 5 or more than 50 characters
         if (advertisementDTO.getTitle().length() < 5 || advertisementDTO.getTitle().length() > 50) {
             throw new InvalidLengthException("The title must have between 5 and 50 characters.");
@@ -90,10 +164,35 @@ public class AdvertisementService implements IAdvertisementService {
         }
 
         // Check if the client associated with the advertisement is valid
-        if (advertisementDTO.getClientId() == null) {
-            throw new AdvertisementValidationException("The client ID must be provided.");
-        }
+        Optional<UserDTO> user = Optional.ofNullable(userService.getUserById(advertisementDTO.getClientId()));
 
         return true;
+    }
+
+
+    /**
+     * Validates the deletion of an advertisement by its ID.
+     * Ensures that the advertisement can be deleted by checking its existence,
+     * status and associated requests.
+     *
+     * @param id the ID of the advertisement to be deleted
+     * @return the advertisement data transfer object
+     * @throws NotFoundException      if the advertisement does not exist
+     * @throws InvalidActionException if the advertisement is not active or has requests
+     */
+    private AdvertisementDTO validateAdDeletion(String id) {
+        Advertisement advertisement = this.advertisementRepository.findById(id).orElseThrow(() -> new NotFoundException("Advertisement with id " + id + " not found"));
+
+        // Do not allow the deletion of an advertisement that is not active
+        if (!advertisement.getStatus().equals(Advertisement.AdvertisementStatus.ACTIVE)) {
+            throw new InvalidActionException("The advertisement with id " + id + " is not active, therefore it cannot be deleted.");
+        }
+
+        // Do not allow the deletion of an advertisement that has requests
+        if (advertisementRepository.hasRequests(id)) {
+            throw new InvalidActionException("The advertisement with id " + id + " has requests, therefore it cannot be deleted.");
+        }
+
+        return AdvertisementMapper.toDTO(advertisement);
     }
 }

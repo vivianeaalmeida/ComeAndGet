@@ -13,7 +13,7 @@
 - US11 - View advertisement *
 - US12 - Search advertisements *
 - US13 - Update advertisement *
-- git *
+- US14 - Delete advertisement
 - US15 - View my published advertisements
 - US16 - Create request
 - US17 - View request
@@ -152,7 +152,8 @@
 - **Acceptance Criteria**:
     - Only advertisements with available status can be updated.
     - Advertisement status and initialDate cannot be updated
-    - Advertisements with closed status have the possibility to extend the end date and reopen the advertisement.
+    - Advertisements with closed status cannot be updated.
+    - Advertisement status can be updated to closed, but if there are requests pending their status have to change to rejected.
 
 ---
 
@@ -161,7 +162,7 @@
 - **Description**: As a client and a manager, I want to delete an advertisement.
 - **Permissions/Role**: Client (the creator) / Manager
 - **Acceptance Criteria**:
-    - Only advertisements with active status can be deleted.
+    - Only advertisements with active status and no requests made can be deleted.
 
 ---
 

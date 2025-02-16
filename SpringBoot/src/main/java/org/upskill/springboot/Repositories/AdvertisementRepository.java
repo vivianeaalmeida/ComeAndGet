@@ -30,4 +30,6 @@ public interface AdvertisementRepository extends JpaRepository<Advertisement, St
      */
     Page<Advertisement> findByStatus(Advertisement.AdvertisementStatus status, Pageable pageable);
 
+
+    Page<Advertisement> findByClientId(String clientId, Pageable pageable);
 }

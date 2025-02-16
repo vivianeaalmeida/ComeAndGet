@@ -44,6 +44,16 @@ public interface IAdvertisementService {
     Page<AdvertisementDTO> getClosedAdvertisements(int page, int size);
 
     /**
+     * Retrieves a paginated list of advertisements by client ID.
+     *
+     * @param page the page number (zero-based index)
+     * @param size the number of items per page
+     * @param id the ID of the user
+     * @return a page of advertisements associated with the given user ID
+     */
+    Page<AdvertisementDTO> getAdvertisementsByClientId(int page, int size, String id);
+
+    /**
      * Creates a new advertisement.
      *
      * @param advertisementDTO the advertisement data transfer object containing the details of the advertisement

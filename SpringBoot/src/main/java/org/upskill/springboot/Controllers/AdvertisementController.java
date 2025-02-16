@@ -176,6 +176,44 @@ public class AdvertisementController extends BaseController {
         return new ResponseEntity<>(CollectionModel.of(advertisementsDTO.getContent(), links), HttpStatus.OK);
     }
 
+    /**
+     * Retrieves a paginated list of advertisements by client ID.
+     *
+     * @param clientId the ID of the client
+     * @param page Optional parameter for the page number (default is 0)
+     * @param size Optional parameter for the page size (default is 10)
+     * @return a ResponseEntity containing a CollectionModel of AdvertisementDTO with HATEOAS links,
+     *         including self, next, and previous page links and HTTP status OK if retrieval is successful
+     */
+    @GetMapping("/advertisements/{clientId}")
+    public ResponseEntity<CollectionModel<AdvertisementDTO>> getAdvertisementsByClientId(
+            @PathVariable String clientId,
+            @RequestParam Optional<Integer> page,
+            @RequestParam Optional<Integer> size
+    ) {
+        int _page = page.orElse(0);
+        int _size = size.orElse(10);
+
+        Page<AdvertisementDTO> advertisementsDTO = advertisementService.getAdvertisementsByClientId(_page, _size, clientId);
+
+        Link selfLink = linkTo(methodOn(AdvertisementController.class)
+                .getAdvertisementsByClientId(clientId, Optional.of(_page), Optional.of(_size))).withSelfRel();
+
+        List<Link> links = new ArrayList<>();
+        links.add(selfLink);
+
+        if (advertisementsDTO.hasNext()) {
+            links.add(linkTo(methodOn(AdvertisementController.class)
+                    .getAdvertisementsByClientId(clientId, Optional.of(_page + 1), Optional.of(_size))).withRel("next"));
+        }
+        if (advertisementsDTO.hasPrevious()) {
+            links.add(linkTo(methodOn(AdvertisementController.class)
+                    .getAdvertisementsByClientId(clientId, Optional.of(_page - 1), Optional.of(_size))).withRel("previous"));
+        }
+
+        return new ResponseEntity<>(CollectionModel.of(advertisementsDTO.getContent(), links), HttpStatus.OK);
+    }
+
 
     /**
      * Creates a new advertisement.

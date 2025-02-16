@@ -96,6 +96,23 @@ public class AdvertisementService implements IAdvertisementService {
     }
 
     /**
+     * Retrieves all advertisements by client ID with pagination.
+     *
+     * @param page the page number (zero-based index)
+     * @param size the number of items per page
+     * @param clientId the ID of the client
+     * @return a page of advertisements associated with the given client ID
+     */
+    @Override
+    public Page<AdvertisementDTO> getAdvertisementsByClientId(int page, int size, String clientId) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+
+        return advertisementRepository.findByClientId(clientId, pageRequest)
+                .map(AdvertisementMapper::toDTO);
+    }
+
+
+    /**
      * Creates a new advertisement.
      *
      * @param advertisementDTO the advertisement data transfer object

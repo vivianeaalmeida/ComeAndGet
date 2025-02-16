@@ -1,24 +1,28 @@
 <nav class="fixed top-0 w-full bg-white shadow-md z-50 h-20">
-  <div class="flex justify-between items-center h-full max-w-[80vw] mx-auto">
+  <div class="flex justify-between items-center h-full max-w-[90vw] mx-auto">
     <!-- Logo -->
     <div>
       <a routerLink="/home">
         <img src="../assets/Logo.png" alt="Logo" class="w-44" />
       </a>
     </div>
-    <div>
+
+    <!-- Barra de Pesquisa -->
+    <div class="relative w-full max-w-[600px] flex">
       <input
         type="search"
-        placeholder="Search item"
-        class="border py-2 px-20 pl-5 rounded-l-md border-lime-700 focus:outline-none"
+        placeholder="Search items"
+        class="w-full py-2 pl-4 pr-12 border rounded-l-full rounded-r-none bg-white text-gray-800 shadow-md focus:outline-none focus:border-lime-500 text-lg"
       />
       <button
-        class="border border-purple-700 focus:outline-none bg-lime-700 py-2 px-4 rounded-r-md hover:bg-lime-950"
+        class="bg-lime-800 text-white px-4 rounded-r-full border-l border-gray-700 flex justify-center items-center shadow-md"
         type="button"
       >
-        <i class="fa-solid fa-magnifying-glass fa-lg text-white"></i>
+        <i class="fa-solid fa-lg fa-magnifying-glass"></i>
       </button>
     </div>
+
+    <!--Inicio do botões-->
     <div class="items-center flex space-x-8">
       <a
         routerLink="/advertisements"
@@ -32,11 +36,37 @@
       >
         Blog
       </a>
-      <app-button
-        buttonText="Login Area"
-        fontSize="1rem"
-        padding=".5rem 1rem"
-      ></app-button>
+      <!-- Dropdown -->
+      <div
+        class="relative"
+        (mouseover)="toggleDropdown(true)"
+        (mouseleave)="toggleDropdown(false)"
+      >
+        <button
+          class="text-xl font-bold text-gray-800 hover:text-lime-700 flex items-center focus:outline-none"
+        >
+          Login Area <i class="fa-solid fa-chevron-down ml-2 text-sm"></i>
+        </button>
+
+        <!-- Itens do Dropdown (aparece ao passar o mouse) -->
+        <div
+          *ngIf="isDropdownOpen"
+          class="absolute bg-gray-100 shadow-md rounded-md w-40 right-0 transition-opacity duration-300"
+        >
+          <a
+            routerLink="/login"
+            class="block px-4 py-2 text-gray-800 hover:bg-lime-200 cursor-pointer rounded-md"
+          >
+            Login
+          </a>
+          <a
+            routerLink="/register"
+            class="block px-4 py-2 text-gray-800 hover:bg-lime-200 cursor-pointer rounded-md"
+          >
+            Register
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 </nav>

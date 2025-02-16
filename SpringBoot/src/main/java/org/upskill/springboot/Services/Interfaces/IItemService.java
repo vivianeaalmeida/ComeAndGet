@@ -1,13 +1,14 @@
 package org.upskill.springboot.Services.Interfaces;
 
 import org.upskill.springboot.DTOs.ItemDTO;
+import org.upskill.springboot.Models.Item;
 
 public interface IItemService {
     ItemDTO createItem(ItemDTO itemDTO);
 
-    ItemDTO getItemById(long id);
+    ItemDTO getItemById(String id);
 
-    ItemDTO updateItem (long id, ItemDTO itemDto);
+    ItemDTO updateItem (String id, ItemDTO itemDto);
 
-    ItemDTO deleteItem (long id);
+    void deleteItem (String id);
 }

@@ -134,19 +134,24 @@ public class AdvertisementService implements IAdvertisementService {
     }
 
     /**
-     * Deletes an advertisement by its ID.
+     * Deletes an advertisement by its ID (the item associated with the advertisement is also deleted)
      *
      * @param id the ID of the advertisement to delete
      * @return the deleted advertisement data transfer object
      */
     @Override
+    @Transactional
     public AdvertisementDTO deleteAdvertisement(String id) {
         AdvertisementDTO adDTO = validateAdDeletion(id);
 
+        // Delete advertisement
         this.advertisementRepository.deleteById(id);
+
+        // Delete item associated with the advertisement
+        this.itemService.deleteItem(adDTO.getItem().getId());
+
         return adDTO;
     }
-
 
     /**
      * Validates the advertisement data transfer object.

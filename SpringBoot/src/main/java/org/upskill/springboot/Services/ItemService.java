@@ -3,7 +3,9 @@ package org.upskill.springboot.Services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.upskill.springboot.DTOs.ItemDTO;
+import org.upskill.springboot.Exceptions.CategoryDeletionException;
 import org.upskill.springboot.Exceptions.CategoryNotFoundException;
+import org.upskill.springboot.Exceptions.ItemNotFoundException;
 import org.upskill.springboot.Exceptions.ItemValidationException;
 import org.upskill.springboot.Mappers.CategoryMapper;
 import org.upskill.springboot.Mappers.ItemMapper;
@@ -46,20 +48,22 @@ public class ItemService implements IItemService {
     }
 
     @Override
-    public ItemDTO getItemById(long id) {
+    public ItemDTO getItemById(String id) {
+        return itemRepository.findById(id)
+                .map(ItemMapper::toDTO)
+                .orElseThrow(ItemNotFoundException::new);
+    }
+
+    @Override
+    public ItemDTO updateItem(String id, ItemDTO itemDTO) {
         return null;
     }
 
     @Override
-    public ItemDTO updateItem(long id, ItemDTO itemDTO) {
-        return null;
+    public void deleteItem(String id) {
+        validateItemDeletion(id);
+        itemRepository.deleteById(id);
     }
-
-    @Override
-    public ItemDTO deleteItem(long id) {
-        return null;
-    }
-
 
     /**
      * Validates the item data transfer object.
@@ -98,5 +102,16 @@ public class ItemService implements IItemService {
             // Catch the exception and throw a more appropriate exception for validation
             throw new ItemValidationException("Category with ID " + itemDTO.getCategory().getId() + " is invalid.");
         }
+    }
+
+    /**
+     * Validates if a category can be deleted by checking its existence and ensuring it has no associated items.
+     *
+     * @param id The unique identifier of the category to be deleted.
+     * @return {@code true} if the category can be deleted.
+     */
+    private boolean validateItemDeletion(String id) {
+        getItemById(id);
+        return true;
     }
 }

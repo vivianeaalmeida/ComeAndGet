@@ -115,6 +115,16 @@ public class GlobalHandlerException {
     }
 
     // Item Exceptions
+    @ExceptionHandler(ItemNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleItemValidationException(ItemNotFoundException e) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                e.getMessage(),
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(ItemValidationException.class)
     public ResponseEntity<ErrorResponse> handleItemValidationException(ItemValidationException e) {
         ErrorResponse errorResponse = new ErrorResponse(

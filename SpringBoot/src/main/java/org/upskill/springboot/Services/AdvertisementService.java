@@ -59,7 +59,22 @@ public class AdvertisementService implements IAdvertisementService {
     public Page<AdvertisementDTO> getActiveAdvertisements(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
 
-        return advertisementRepository.findActiveAdvertisements(pageRequest)
+        return advertisementRepository.findByStatus(Advertisement.AdvertisementStatus.ACTIVE, pageRequest)
+                .map(AdvertisementMapper::toDTO);
+    }
+
+    /**
+     * Retrieves all closed advertisements with pagination.
+     *
+     * @param page the page number
+     * @param size the size of the page
+     * @return a page of closed advertisement data transfer objects
+     */
+    @Override
+    public Page<AdvertisementDTO> getClosedAdvertisements(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+
+        return advertisementRepository.findByStatus(Advertisement.AdvertisementStatus.CLOSED, pageRequest)
                 .map(AdvertisementMapper::toDTO);
     }
 

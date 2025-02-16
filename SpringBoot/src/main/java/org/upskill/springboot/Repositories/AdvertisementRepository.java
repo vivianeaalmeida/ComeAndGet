@@ -5,9 +5,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.upskill.springboot.Models.Advertisement;
-import org.upskill.springboot.Models.Request;
-
-import java.util.List;
 
 /**
  * Repository interface for performing CRUD operations on {@link Advertisement} entities.
@@ -32,4 +29,13 @@ public interface AdvertisementRepository extends JpaRepository<Advertisement, St
      * @return a page of advertisements with the given status
      */
     Page<Advertisement> findByStatus(Advertisement.AdvertisementStatus status, Pageable pageable);
+
+    /**
+     * Finds all advertisements by client id, with pagination.
+     *
+     * @param clientId   the clientId of advertisement
+     * @param pageable the pagination information (page number, page size, etc.)
+     * @return a page of advertisements with the given status
+     */
+    Page<Advertisement> findByClientId(String clientId, Pageable pageable);
 }

@@ -1,11 +1,9 @@
 package org.upskill.springboot.Models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 /**
@@ -38,16 +36,15 @@ public class Advertisement {
      * This is a required field with a minimum length of 5 characters and a maximum of 50 characters.
      */
     @NonNull
-    @Min(5)
-    @Max(50)
+    @Size(min = 5, max = 50, message = "Title must be between 5 and 50 characters.")
     private String title;
 
     /**
      * A detailed description of the advertisement.
-     * This is a required field with a minimum length of 5 characters and a maximum of 50 characters.
+     * This is a required field with a minimum length of 5 characters and a maximum of 200 characters.
      */
     @NonNull
-    @Size(min = 5, max = 50)
+    @Size(min = 5, max = 200)
     private String description;
 
     /**

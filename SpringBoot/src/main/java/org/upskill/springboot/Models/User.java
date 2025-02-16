@@ -1,10 +1,8 @@
 package org.upskill.springboot.Models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.*;
-
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 
 /**
  * Represents a user in the system.
@@ -31,8 +29,7 @@ public class User {
      * This is a required field with a minimum length of 5 characters and a maximum of 100 characters.
      */
     @NonNull
-    @Min(5)
-    @Max(100)
+    @Size(min = 5, max = 100, message = "Name must be between 5 and 100 characters.")
     public String name;
 
 
@@ -40,8 +37,7 @@ public class User {
      * The email of the user.
      * This is a required field with a minimum length of 5 characters and a maximum of 60 characters.
      */
-    @Min(5)
-    @Max(60)
+    @Size(min = 5, max = 60, message = "Email must be between 5 and 60 characters.")
     @NonNull
     public String email;
 

@@ -24,11 +24,12 @@ public interface AdvertisementRepository extends JpaRepository<Advertisement, St
 
 
     /**
-     * Finds all active advertisements with pagination.
+     * Finds all advertisements with the specified status, with pagination.
      *
+     * @param status   the status of the advertisements (ACTIVE or CLOSED)
      * @param pageable the pagination information (page number, page size, etc.)
-     * @return a page of active advertisements
+     * @return a page of advertisements with the given status
      */
-    @Query("SELECT DISTINCT a FROM Advertisement a WHERE a.status = org.upskill.springboot.Models.Advertisement.AdvertisementStatus.ACTIVE")
-    Page<Advertisement> findActiveAdvertisements(Pageable pageable);
+    Page<Advertisement> findByStatus(Advertisement.AdvertisementStatus status, Pageable pageable);
+
 }

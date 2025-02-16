@@ -133,7 +133,8 @@ public class AdvertisementController extends BaseController {
 
         return new ResponseEntity<>(advertisementDTO, HttpStatus.CREATED);
     }
-      
+
+    /**
      * Deletes an advertisement by its ID.
      * If the advertisement exists and meets the deletion criteria, it is removed from the system.
      *

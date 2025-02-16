@@ -19,8 +19,6 @@ import org.upskill.springboot.Models.Item;
 import org.upskill.springboot.Repositories.AdvertisementRepository;
 import org.upskill.springboot.Services.Interfaces.IAdvertisementService;
 
-import java.time.LocalDate;
-
 /**
  * Service class for managing advertisements.
  */

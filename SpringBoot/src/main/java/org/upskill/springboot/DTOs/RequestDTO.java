@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.upskill.springboot.Enums.Status;
+
 import java.time.LocalDate;
 
 @Getter
@@ -12,8 +12,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RequestDTO {
-    private String clientId;
-    private Status status;
+    private String userId;
+    private String status;
     private String advertisementId;
     private LocalDate date;
 }

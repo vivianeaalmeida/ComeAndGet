@@ -9,5 +9,8 @@ public interface IRequestService {
     RequestDTO getRequestById(String id);
     RequestDTO createRequest(RequestDTO requestDTO);
     RequestDTO updateRequest(String id, RequestDTO requestDTO);
+
+    RequestDTO patchRequest(String id, RequestDTO requestDTO);
+
     void deleteRequest(String id);
 }

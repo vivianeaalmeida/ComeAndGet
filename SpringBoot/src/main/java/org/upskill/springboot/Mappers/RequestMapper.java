@@ -7,8 +7,8 @@ public class RequestMapper {
 
     public static RequestDTO toDTO(Request request) {
         RequestDTO requestDTO = new RequestDTO();
-        //STATUS
-        requestDTO.setClientId(request.getClientId());
+        requestDTO.setStatus(request.getStatus().toString());
+        requestDTO.setUserId(request.getUser().getId());
         requestDTO.setDate(request.getDate());
         requestDTO.setAdvertisementId(request.getAdvertisement().getId());
         return requestDTO;
@@ -17,10 +17,10 @@ public class RequestMapper {
 
     public static Request toEntity(RequestDTO requestDTO) {
         Request request = new Request();
-        //STATUS
-        request.setClientId(requestDTO.getClientId());
+        if(requestDTO.getStatus() != null) {
+            request.setStatus(Request.RequestStatus.valueOf(requestDTO.getStatus().toUpperCase()));
+        }
         request.setDate(requestDTO.getDate());
-        //request.setAdvertisement(requestDTO.getAdvertisement().);
         return request;
     }
 

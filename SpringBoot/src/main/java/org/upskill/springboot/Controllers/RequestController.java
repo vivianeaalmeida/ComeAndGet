@@ -4,14 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.upskill.springboot.DTOs.RequestDTO;
-import org.upskill.springboot.Services.RequestService;
+import org.upskill.springboot.Services.Interfaces.IRequestService;
 
 import java.util.List;
 
 @RestController
 public class RequestController {
     @Autowired
-    private RequestService requestService;
+    private IRequestService requestService;
 
     @GetMapping("/request")
     public ResponseEntity <List<RequestDTO>> getRequest() {
@@ -36,6 +36,14 @@ public class RequestController {
         RequestDTO responseDTO = requestService.updateRequest(id, requestDTO);
         return ResponseEntity.ok(responseDTO);
     }
+
+    @PatchMapping("/request/{id}")
+    public ResponseEntity<RequestDTO> patchRequest(@PathVariable String id, @RequestBody RequestDTO requestDTO) {
+        RequestDTO responseDTO = requestService.patchRequest(id, requestDTO);
+        return ResponseEntity.ok(responseDTO);
+    }
+
+
 
     @DeleteMapping("/request/{id}")
     public ResponseEntity<String> deleteRequest(@PathVariable String id) {

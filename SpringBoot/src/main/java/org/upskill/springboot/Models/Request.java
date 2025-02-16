@@ -44,11 +44,13 @@ public class Request {
     private Advertisement advertisement;
 
     /**
-     * The ID of the client who made the request.
+     * The ID of the user who made the request.
      * This is a required field.
      */
     @NonNull
-    private String clientId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     /**
      * The date the request was created.

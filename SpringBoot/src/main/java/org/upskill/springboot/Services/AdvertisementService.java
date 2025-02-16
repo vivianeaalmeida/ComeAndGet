@@ -235,7 +235,7 @@ public class AdvertisementService implements IAdvertisementService {
         validateTitleAndDescription(advertisementUpdateDTO.getTitle(), advertisementUpdateDTO.getDescription());
 
         // Check if the advertisement has requests. If so, the advertisement cannot be updated
-        List <Request> requests = advertisementRepository.getRequestsByAdvertisementId(advertisementUpdateDTO.getId());
+        List <Request> requests = requestRepository.getRequestsByAdvertisementId(advertisementUpdateDTO.getId());
         if (!requests.isEmpty()) {
             throw new AdvertisementInvalidActionException("The advertisement with id " + id +
                     " has requests, therefore it cannot be updated.");
@@ -291,7 +291,7 @@ public class AdvertisementService implements IAdvertisementService {
      * @param advertisementId the ID of the advertisement
      */
     private void rejectRequests(String advertisementId) {
-        List<Request> requests = advertisementRepository.getRequestsByAdvertisementId(advertisementId);
+        List<Request> requests = requestRepository.getRequestsByAdvertisementId(advertisementId);
 
         //Set the request status to REJECTED
         for (Request request : requests) {

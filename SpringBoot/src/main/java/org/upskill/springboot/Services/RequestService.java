@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.upskill.springboot.DTOs.AdvertisementDTO;
 import org.upskill.springboot.DTOs.RequestDTO;
+import org.upskill.springboot.DTOs.RequestResponseDTO;
 import org.upskill.springboot.DTOs.UserDTO;
 import org.upskill.springboot.Exceptions.AdvertisementValidationException;
 import org.upskill.springboot.Exceptions.NotNullException;
@@ -44,9 +45,9 @@ public class RequestService implements IRequestService {
      * @return a list of RequestDTO objects representing all requests
      */
     @Override
-    public List<RequestDTO> getRequests() {
+    public List<RequestResponseDTO> getRequests() {
         List<Request> requests = requestRepository.findAll();
-        List<RequestDTO> requestDTOs = new ArrayList<>();
+        List<RequestResponseDTO> requestDTOs = new ArrayList<>();
         for (Request request : requests) {
             requestDTOs.add(RequestMapper.toDTO(request));
         }
@@ -61,7 +62,7 @@ public class RequestService implements IRequestService {
      * @throws RequestNotFoundException if no request is found with the given ID
      */
     @Override
-    public RequestDTO getRequestById(String id) {
+    public RequestResponseDTO getRequestById(String id) {
         Request request = requestRepository.findById(id).orElseThrow(() -> new RequestNotFoundException("Request not found with id: " + id));
         return RequestMapper.toDTO(request);
     }
@@ -74,7 +75,7 @@ public class RequestService implements IRequestService {
      * @throws AdvertisementValidationException if the advertisement associated with the request is not active
      */
     @Override
-    public RequestDTO createRequest(RequestDTO requestDTO) {
+    public RequestResponseDTO createRequest(RequestDTO requestDTO) {
         AdvertisementDTO advertisementDTO = advertisementService.getAdvertisementById(requestDTO.getAdvertisementId());
         UserDTO userDTO = userService.getUserById(requestDTO.getUserId());
         if (advertisementDTO.getStatus().equals(Advertisement.AdvertisementStatus.ACTIVE.toString())) {
@@ -100,7 +101,7 @@ public class RequestService implements IRequestService {
      * @throws NotNullException if the status of the request is null
      */
     @Override
-    public RequestDTO updateRequest(String id, RequestDTO requestDTO) {
+    public RequestResponseDTO updateRequest(String id, RequestDTO requestDTO) {
         Optional<Request> requestOpt = requestRepository.findById(id);
         if (requestOpt.isPresent()) {
             Request request = requestOpt.get();
@@ -126,7 +127,7 @@ public class RequestService implements IRequestService {
      * @throws RequestNotFoundException if the request with the given ID does not exist
      */
     @Override
-    public RequestDTO patchRequest(String id, RequestDTO requestDTO) {
+    public RequestResponseDTO patchRequest(String id, RequestDTO requestDTO) {
         Optional<Request> requestOpt = requestRepository.findById(id);
         if (requestOpt.isPresent()) {
             Request request = requestOpt.get();

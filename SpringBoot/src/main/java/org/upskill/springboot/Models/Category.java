@@ -2,7 +2,6 @@ package org.upskill.springboot.Models;
 
 import jakarta.persistence.*;
 import lombok.*;
-import javax.validation.constraints.Size;
 
 /**
  * Represents a category in the system.

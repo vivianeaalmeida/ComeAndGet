@@ -7,36 +7,36 @@
       "RelativeMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|solutionrelative:dotnet\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|c:\\users\\dinossauro\\desktop\\comeandget\\dotnet\\dotnet\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|solutionrelative:dotnet\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|c:\\users\\dinossauro\\desktop\\comeandget\\dotnet\\dotnet\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|solutionrelative:dotnet\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|c:\\users\\dinossauro\\desktop\\comeandget\\dotnet\\dotnet\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|solutionrelative:dotnet\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|c:\\users\\dinossauro\\desktop\\comeandget\\dotnet\\dotnet\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|solutionrelative:dotnet\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|c:\\users\\dinossauro\\desktop\\comeandget\\dotnet\\dotnet\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|solutionrelative:dotnet\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|c:\\users\\dinossauro\\desktop\\comeandget\\dotnet\\dotnet\\dtos\\login.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|solutionrelative:dotnet\\dtos\\login.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|c:\\users\\dinossauro\\desktop\\comeandget\\dotnet\\dotnet\\dtos\\register.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|solutionrelative:dotnet\\dtos\\register.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|c:\\users\\dinossauro\\desktop\\comeandget\\dotnet\\dotnet\\data\\usercontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|solutionrelative:dotnet\\data\\usercontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|c:\\users\\dinossauro\\desktop\\comeandget\\dotnet\\dotnet\\dtos\\userrole.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|solutionrelative:dotnet\\dtos\\userrole.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|c:\\users\\dinossauro\\desktop\\comeandget\\dotnet\\dotnet\\dtos\\login.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|solutionrelative:dotnet\\dtos\\login.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|c:\\users\\dinossauro\\desktop\\comeandget\\dotnet\\dotnet\\data\\usercontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|solutionrelative:dotnet\\data\\usercontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|c:\\users\\dinossauro\\desktop\\comeandget\\dotnet\\dotnet\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|solutionrelative:dotnet\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|c:\\users\\dinossauro\\desktop\\comeandget\\dotnet\\dotnet\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{715C2EE6-0874-4776-AD00-66AD95B4F76E}|DotNet\\DotNet.csproj|solutionrelative:dotnet\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -46,11 +46,24 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\Users\\Dinossauro\\Desktop\\ComeAndGet\\DotNet\\DotNet\\Models\\User.cs",
+              "RelativeDocumentMoniker": "DotNet\\Models\\User.cs",
+              "ToolTip": "C:\\Users\\Dinossauro\\Desktop\\ComeAndGet\\DotNet\\DotNet\\Models\\User.cs",
+              "RelativeToolTip": "DotNet\\Models\\User.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-16T21:44:46.675Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "UserController.cs",
               "DocumentMoniker": "C:\\Users\\Dinossauro\\Desktop\\ComeAndGet\\DotNet\\DotNet\\Controllers\\UserController.cs",
               "RelativeDocumentMoniker": "DotNet\\Controllers\\UserController.cs",
@@ -63,7 +76,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 8,
               "Title": "AdminController.cs",
               "DocumentMoniker": "C:\\Users\\Dinossauro\\Desktop\\ComeAndGet\\DotNet\\DotNet\\Controllers\\AdminController.cs",
               "RelativeDocumentMoniker": "DotNet\\Controllers\\AdminController.cs",
@@ -82,22 +95,9 @@
               "RelativeDocumentMoniker": "DotNet\\Controllers\\AccountController.cs",
               "ToolTip": "C:\\Users\\Dinossauro\\Desktop\\ComeAndGet\\DotNet\\DotNet\\Controllers\\AccountController.cs",
               "RelativeToolTip": "DotNet\\Controllers\\AccountController.cs",
-              "ViewState": "AgIAAEwAAAAAAAAAAAAswFAAAAArAAAAAAAAAA==",
+              "ViewState": "AgIAACoAAAAAAAAAAAAAAEQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-16T20:41:06.916Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Users\\Dinossauro\\Desktop\\ComeAndGet\\DotNet\\DotNet\\appsettings.json",
-              "RelativeDocumentMoniker": "DotNet\\appsettings.json",
-              "ToolTip": "C:\\Users\\Dinossauro\\Desktop\\ComeAndGet\\DotNet\\DotNet\\appsettings.json",
-              "RelativeToolTip": "DotNet\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-02-16T20:24:51.102Z",
               "EditorCaption": ""
             },
             {
@@ -108,59 +108,59 @@
               "RelativeDocumentMoniker": "DotNet\\Data\\UserContext.cs",
               "ToolTip": "C:\\Users\\Dinossauro\\Desktop\\ComeAndGet\\DotNet\\DotNet\\Data\\UserContext.cs",
               "RelativeToolTip": "DotNet\\Data\\UserContext.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAA+AAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-16T20:21:10.471Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 5,
               "Title": "UserRole.cs",
               "DocumentMoniker": "C:\\Users\\Dinossauro\\Desktop\\ComeAndGet\\DotNet\\DotNet\\DTOs\\UserRole.cs",
               "RelativeDocumentMoniker": "DotNet\\DTOs\\UserRole.cs",
               "ToolTip": "C:\\Users\\Dinossauro\\Desktop\\ComeAndGet\\DotNet\\DotNet\\DTOs\\UserRole.cs",
               "RelativeToolTip": "DotNet\\DTOs\\UserRole.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-16T20:20:35.194Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 4,
               "Title": "Register.cs",
               "DocumentMoniker": "C:\\Users\\Dinossauro\\Desktop\\ComeAndGet\\DotNet\\DotNet\\DTOs\\Register.cs",
               "RelativeDocumentMoniker": "DotNet\\DTOs\\Register.cs",
               "ToolTip": "C:\\Users\\Dinossauro\\Desktop\\ComeAndGet\\DotNet\\DotNet\\DTOs\\Register.cs",
               "RelativeToolTip": "DotNet\\DTOs\\Register.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-16T20:20:09.975Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\Dinossauro\\Desktop\\ComeAndGet\\DotNet\\DotNet\\Program.cs",
               "RelativeDocumentMoniker": "DotNet\\Program.cs",
               "ToolTip": "C:\\Users\\Dinossauro\\Desktop\\ComeAndGet\\DotNet\\DotNet\\Program.cs",
               "RelativeToolTip": "DotNet\\Program.cs",
-              "ViewState": "AgIAACkAAAAAAAAAAAAiwDcAAAAkAAAAAAAAAA==",
+              "ViewState": "AgIAACkAAAAAAAAAAAAkwDgAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-14T14:43:22.608Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 3,
               "Title": "Login.cs",
               "DocumentMoniker": "C:\\Users\\Dinossauro\\Desktop\\ComeAndGet\\DotNet\\DotNet\\DTOs\\Login.cs",
               "RelativeDocumentMoniker": "DotNet\\DTOs\\Login.cs",
               "ToolTip": "C:\\Users\\Dinossauro\\Desktop\\ComeAndGet\\DotNet\\DotNet\\DTOs\\Login.cs",
               "RelativeToolTip": "DotNet\\DTOs\\Login.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-16T20:19:55.792Z",
               "EditorCaption": ""

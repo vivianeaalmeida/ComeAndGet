@@ -64,33 +64,5 @@ namespace DotNet.Controllers {
 
             return BadRequest(result.Errors);
         }
-
-
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] Login model) {
-            var user = await userManager.FindByNameAsync(model.Username);
-            if (user != null && await userManager.CheckPasswordAsync(user, model.Password)) {
-                var userRoles = await userManager.GetRolesAsync(user);
-
-                var authClaims = new List<Claim>
-                {
-                    new Claim(JwtRegisteredClaimNames.Sub, user.UserName!),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-                };
-
-                authClaims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role)));
-
-                var token = new JwtSecurityToken(
-                    issuer: configuration["Jwt:Issuer"],
-                    expires: DateTime.Now.AddMinutes(double.Parse(configuration["Jwt:ExpiryMinutes"]!)),
-                    claims: authClaims,
-                    signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!)),
-                    SecurityAlgorithms.HmacSha256));
-
-                return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
-            }
-
-            return Unauthorized();
-        }
     }
 }

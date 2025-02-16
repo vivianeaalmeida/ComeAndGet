@@ -38,14 +38,6 @@ public class RequestController {
         return ResponseEntity.ok(responseDTO);
     }
 
-    @PatchMapping("/request/{id}")
-    public ResponseEntity<RequestResponseDTO> patchRequest(@PathVariable String id, @RequestBody RequestDTO requestDTO) {
-        RequestResponseDTO responseDTO = requestService.patchRequest(id, requestDTO);
-        return ResponseEntity.ok(responseDTO);
-    }
-
-
-
     @DeleteMapping("/request/{id}")
     public ResponseEntity<String> deleteRequest(@PathVariable String id) {
         requestService.deleteRequest(id);

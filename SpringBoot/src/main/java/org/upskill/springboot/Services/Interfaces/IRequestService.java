@@ -2,6 +2,7 @@ package org.upskill.springboot.Services.Interfaces;
 
 import org.upskill.springboot.DTOs.RequestDTO;
 import org.upskill.springboot.DTOs.RequestResponseDTO;
+import org.upskill.springboot.DTOs.RequestStatusDTO;
 
 import java.util.List;
 
@@ -46,10 +47,11 @@ public interface IRequestService {
      * Partially updates a request.
      *
      * @param id           the ID of the request to be partially updated
-     * @param requestDTO   the request data transfer object containing the updated details
+     * @param idAdvertisement  the ID of the advertisement
+     * @param requestStatusDTO   the object with the new status
      * @return the partially updated request response data transfer object
      */
-    RequestResponseDTO patchRequest(String id, RequestDTO requestDTO);
+    RequestResponseDTO patchRequest(String id, String idAdvertisement, RequestStatusDTO requestStatusDTO);
 
     /**
      * Deletes a request by its ID.

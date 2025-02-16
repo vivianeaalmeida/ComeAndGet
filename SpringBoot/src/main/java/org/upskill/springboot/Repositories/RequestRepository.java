@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.upskill.springboot.Models.Request;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repository interface for performing CRUD operations on {@link Request} entities.
@@ -23,4 +24,6 @@ public interface RequestRepository extends JpaRepository<Request, String> {
      */
     @Query("SELECT r FROM Request r WHERE r.advertisement.id = :advertisementId")
     List<Request> getRequestsByAdvertisementId(String advertisementId);
+
+    Optional<Request> findByIdAndAdvertisementId(String id, String advertisementId);
 }

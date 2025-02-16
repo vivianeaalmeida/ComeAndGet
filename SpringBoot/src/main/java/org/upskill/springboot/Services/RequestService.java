@@ -2,10 +2,7 @@ package org.upskill.springboot.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.upskill.springboot.DTOs.AdvertisementDTO;
-import org.upskill.springboot.DTOs.RequestDTO;
-import org.upskill.springboot.DTOs.RequestResponseDTO;
-import org.upskill.springboot.DTOs.UserDTO;
+import org.upskill.springboot.DTOs.*;
 import org.upskill.springboot.Exceptions.AdvertisementValidationException;
 import org.upskill.springboot.Exceptions.NotNullException;
 import org.upskill.springboot.Exceptions.RequestNotFoundException;
@@ -122,23 +119,18 @@ public class RequestService implements IRequestService {
      * Partially updates the request with the provided ID with new data.
      *
      * @param id the ID of the request to update
-     * @param requestDTO the RequestDTO object containing the updated request data
+     * @param idAdvertisement  the ID of the advertisement
+     * @param requestStatusDTO  the object with the new status
      * @return the partially updated RequestDTO object
      * @throws RequestNotFoundException if the request with the given ID does not exist
      */
     @Override
-    public RequestResponseDTO patchRequest(String id, RequestDTO requestDTO) {
-        Optional<Request> requestOpt = requestRepository.findById(id);
+    public RequestResponseDTO patchRequest(String id, String idAdvertisement, RequestStatusDTO requestStatusDTO) {
+        Optional<Request> requestOpt = requestRepository.findByIdAndAdvertisementId(id, idAdvertisement);
         if (requestOpt.isPresent()) {
             Request request = requestOpt.get();
-            if (requestDTO.getStatus() != null) {
-                request.setStatus(Request.RequestStatus.valueOf(requestDTO.getStatus().toUpperCase()));
-            }
-            if (requestDTO.getUserId() != null) {
-                setUser(requestDTO, request);
-            }
-            if (requestDTO.getAdvertisementId() != null) {
-                setAdvertisement(requestDTO, request);
+            if (requestStatusDTO.getStatus() != null) {
+                request.setStatus(Request.RequestStatus.valueOf(requestStatusDTO.getStatus().toUpperCase()));
             }
             return RequestMapper.toDTO(requestRepository.save(request));
         } else {

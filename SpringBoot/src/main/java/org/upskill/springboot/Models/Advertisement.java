@@ -89,6 +89,18 @@ public class Advertisement {
     }
 
     /**
+     * Sets the data to the current date if null
+     * @param initialDate date of the advertisement
+     */
+    public void setInitialDate(LocalDate initialDate) {
+        if (initialDate == null) {
+            this.initialDate = LocalDate.now();
+        } else {
+            this.initialDate = initialDate;
+        }
+    }
+
+    /**
      * Closes the advertisement if it has expired.
      * The advertisement is considered expired if it has been active for more than 30 days from the initial date.
      * @return true if the advertisement is expired and successfully closed,

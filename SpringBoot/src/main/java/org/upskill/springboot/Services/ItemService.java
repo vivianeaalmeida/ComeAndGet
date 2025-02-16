@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.upskill.springboot.DTOs.ItemDTO;
 import org.upskill.springboot.Exceptions.CategoryValidationException;
 import org.upskill.springboot.Exceptions.ItemValidationException;
+import org.upskill.springboot.Mappers.CategoryMapper;
 import org.upskill.springboot.Mappers.ItemMapper;
 import org.upskill.springboot.Models.Category;
 import org.upskill.springboot.Models.Item;
@@ -27,7 +28,7 @@ public class ItemService implements IItemService {
      * The category repository.
      */
     @Autowired
-    CategoryRepository categoryRepository;
+    CategoryService categoryService;
 
     /**
      * Creates a new item.
@@ -73,6 +74,7 @@ public class ItemService implements IItemService {
         if (itemDTO == null) {
             throw new IllegalArgumentException("The item must be provided.");
         }
+
         // Image validation
         if (itemDTO.getImage() == null || itemDTO.getImage().isEmpty()) {
             throw new ItemValidationException("The image URL must be provided.");
@@ -87,17 +89,10 @@ public class ItemService implements IItemService {
         if (itemDTO.getCategory().getId() == null) {
             throw new ItemValidationException("The category ID must be provided.");
         }
-        Category category = categoryRepository.findById(itemDTO.getCategory().getId())
-                .orElseThrow(() -> new CategoryValidationException("Category not found with ID: " + itemDTO.getCategory().getId()));
-    }
 
-    /**
-     * Checks if there are items in a category.
-     *
-     * @param categoryId the ID of the category
-     * @return true if there are items in the category
-     */
-    public boolean hasItemsInCategory(String categoryId) {
-        return itemRepository.countByCategory_Id(categoryId) > 0;
+        // Category validation by calling method in CategoryService
+        Category category = categoryService.getCategoryById(itemDTO.getCategory().getId());
+        System.out.println(category.getDesignation());
+        itemDTO.setCategory(CategoryMapper.toDTO(category));
     }
 }

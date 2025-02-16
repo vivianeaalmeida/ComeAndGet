@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.upskill.springboot.DTOs.AdvertisementDTO;
 import org.upskill.springboot.DTOs.ItemDTO;
 import org.upskill.springboot.DTOs.UserDTO;
+import org.upskill.springboot.Exceptions.ClientNotFoundException;
 import org.upskill.springboot.Exceptions.InvalidLengthException;
 import org.upskill.springboot.Exceptions.NotFoundException;
 import org.upskill.springboot.Mappers.AdvertisementMapper;
@@ -18,8 +19,6 @@ import org.upskill.springboot.Repositories.AdvertisementRepository;
 import org.upskill.springboot.Services.Interfaces.IAdvertisementService;
 
 import java.time.LocalDate;
-import java.util.Optional;
-
 
 /**
  * Service class for managing advertisements.
@@ -33,39 +32,6 @@ public class AdvertisementService implements IAdvertisementService {
     private ItemService itemService;
     @Autowired
     private UserService userService;
-
-    /**
-     * Creates a new advertisement.
-     *
-     * @param advertisementDTO the advertisement data transfer object
-     * @return the created advertisement data transfer object
-     */
-    @Override
-    @Transactional // Garante que a operação seja atômica
-    public AdvertisementDTO createAdvertisement(AdvertisementDTO advertisementDTO) {
-        // Validate the advertisement DTO
-        validateAdvertisement(advertisementDTO);
-
-        // Converts the DTO of the advertisement to the entity of the advertisement
-        Advertisement advertisement = AdvertisementMapper.toEntity(advertisementDTO);
-        advertisement.setInitialDate(LocalDate.now());
-        advertisement.setStatus(Advertisement.AdvertisementStatus.ACTIVE);
-
-        ItemDTO itemDTO = advertisementDTO.getItem();
-        Item item = ItemMapper.toEntity(itemDTO);
-        // Validates the item DTO
-        itemService.validateItem(itemDTO);
-
-        // Saves the item in the database
-        ItemDTO savedItemDTO = itemService.createItem(itemDTO);
-        Item savedItem = ItemMapper.toEntity(savedItemDTO);
-
-        // Define the item associated with the advertisement and save the advertisement in the database
-        advertisement.setItem(savedItem);
-        advertisement = advertisementRepository.save(advertisement);
-
-        return AdvertisementMapper.toDTO(advertisement);
-    }
 
 
     /**
@@ -94,6 +60,39 @@ public class AdvertisementService implements IAdvertisementService {
         return advertisementRepository.findById(id)
                 .map(AdvertisementMapper::toDTO)
                 .orElseThrow(() -> new NotFoundException("Advertisement not found"));
+    }
+
+    /**
+     * Creates a new advertisement.
+     *
+     * @param advertisementDTO the advertisement data transfer object
+     * @return the created advertisement data transfer object
+     */
+    @Override
+    @Transactional
+    public AdvertisementDTO createAdvertisement(AdvertisementDTO advertisementDTO) {
+        // Validates the advertisement data
+        validateAdvertisement(advertisementDTO);
+
+        // Validates the ItemDTO
+        ItemDTO itemDTO = advertisementDTO.getItem();
+        itemService.validateItem(itemDTO);
+
+        // Creates the item and returns the ItemDTO after is saved in the DB
+        ItemDTO savedItemDTO = itemService.createItem(itemDTO);
+
+        // Converts the ItemDTO back to the Item entity
+        Item item = ItemMapper.toEntity(savedItemDTO);  // Converts to Item entity
+
+        // Converts the AdvertisementDTO to the Advertisement entity and associates the item
+        Advertisement advertisement = AdvertisementMapper.toEntity(advertisementDTO);
+        advertisement.setItem(item);
+
+        // Saves the advertisement in the database
+        advertisement = advertisementRepository.save(advertisement);
+
+        // Returns the AdvertisementDTO
+        return AdvertisementMapper.toDTO(advertisement);
     }
 
     /**
@@ -132,7 +131,6 @@ public class AdvertisementService implements IAdvertisementService {
             throw new IllegalArgumentException("The advertisement must be provided.");
         }
 
-
         // Check if the title is less than 5 or more than 50 characters
         if (advertisementDTO.getTitle().length() < 5 || advertisementDTO.getTitle().length() > 50) {
             throw new InvalidLengthException("The title must have between 5 and 50 characters.");
@@ -144,7 +142,10 @@ public class AdvertisementService implements IAdvertisementService {
         }
 
         // Check if the client associated with the advertisement is valid
-        Optional<UserDTO> user = Optional.ofNullable(userService.getUserById(advertisementDTO.getClientId()));
+        UserDTO user = userService.getUserById(advertisementDTO.getClientId());
+        if (user == null) {
+            throw new ClientNotFoundException("Client client not found");
+        }
 
         return true;
     }

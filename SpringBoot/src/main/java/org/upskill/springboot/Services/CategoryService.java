@@ -12,6 +12,7 @@ import org.upskill.springboot.Exceptions.DuplicateCategoryException;
 import org.upskill.springboot.Mappers.CategoryMapper;
 import org.upskill.springboot.Models.Category;
 import org.upskill.springboot.Repositories.CategoryRepository;
+import org.upskill.springboot.Repositories.ItemRepository;
 import org.upskill.springboot.Services.Interfaces.ICategoryService;
 
 /**
@@ -25,7 +26,7 @@ public class CategoryService implements ICategoryService {
     private CategoryRepository categoryRepository;
 
     @Autowired
-    private ItemService itemService;
+    private ItemRepository itemRepository;
 
     /**
      * Retrieves a paginated list of the existing categories.
@@ -46,7 +47,7 @@ public class CategoryService implements ICategoryService {
      * @param id The unique identifier of the category.
      * @return The Category corresponding to the id.
      */
-    private Category getCategoryById(String id)  {
+    public Category getCategoryById(String id)  {
         return categoryRepository.findById(id)
                 .orElseThrow(CategoryNotFoundException::new);
     }
@@ -149,11 +150,9 @@ public class CategoryService implements ICategoryService {
     private boolean validateCategoryDeletion(String id) {
         getCategoryById(id);
 
-        if (itemService.hasItemsInCategory(id)) {
+        if (itemRepository.countByCategory_Id(id) > 0) {
             throw new CategoryDeletionException("Cannot delete category because it has associated items.");
         }
         return true;
     }
-
-
 }

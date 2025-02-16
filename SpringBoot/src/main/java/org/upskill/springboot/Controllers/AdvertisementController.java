@@ -28,23 +28,6 @@ public class AdvertisementController extends BaseController {
     private AdvertisementService advertisementService;
 
     /**
-     * Creates a new advertisement.
-     *
-     * @param request the advertisement data transfer object
-     * @return the created advertisement data transfer object with HTTP status CREATED
-     */
-    @PostMapping("/advertisements")
-    public ResponseEntity<AdvertisementDTO> createAdvertisement(@RequestBody AdvertisementDTO request) {
-        AdvertisementDTO advertisementDTO = advertisementService.createAdvertisement(request);
-
-        // self
-        advertisementDTO.add(linkTo(methodOn(AdvertisementController.class)
-                .createAdvertisement(request)).withSelfRel());
-
-        return new ResponseEntity<>(advertisementDTO, HttpStatus.CREATED);
-    }
-
-    /**
      * Retrieves all advertisements with pagination.
      *
      * @param page the page number
@@ -96,4 +79,20 @@ public class AdvertisementController extends BaseController {
         }
     }
 
+    /**
+     * Creates a new advertisement.
+     *
+     * @param request the advertisement data transfer object
+     * @return the created advertisement data transfer object with HTTP status CREATED
+     */
+    @PostMapping("/advertisements")
+    public ResponseEntity<AdvertisementDTO> createAdvertisement(@RequestBody AdvertisementDTO request) {
+        AdvertisementDTO advertisementDTO = advertisementService.createAdvertisement(request);
+
+        // self
+        advertisementDTO.add(linkTo(methodOn(AdvertisementController.class)
+                .createAdvertisement(request)).withSelfRel());
+
+        return new ResponseEntity<>(advertisementDTO, HttpStatus.CREATED);
+    }
 }

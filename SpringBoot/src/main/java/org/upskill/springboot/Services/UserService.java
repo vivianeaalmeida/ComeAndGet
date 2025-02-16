@@ -3,7 +3,7 @@ package org.upskill.springboot.Services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.upskill.springboot.DTOs.UserDTO;
-import org.upskill.springboot.Exceptions.NotFoundException;
+import org.upskill.springboot.Exceptions.AdvertisementNotFoundException;
 import org.upskill.springboot.Mappers.UserMapper;
 import org.upskill.springboot.Models.User;
 import org.upskill.springboot.Repositories.UserRepository;
@@ -40,13 +40,13 @@ public class UserService implements IUserService {
      *
      * @param id the user ID
      * @return the user data transfer object
-     * @throws NotFoundException if the user is not found
+     * @throws AdvertisementNotFoundException if the user is not found
      */
     @Override
     public UserDTO getUserById(String id) {
         return this.userRepository.findById(id)
                 .map(UserMapper::toDTO)
-                .orElseThrow(() -> new NotFoundException("User with id " + id + " not found."));
+                .orElseThrow(() -> new AdvertisementNotFoundException("User with id " + id + " not found."));
     }
 
 }

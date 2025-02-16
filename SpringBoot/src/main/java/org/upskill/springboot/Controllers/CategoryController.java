@@ -8,8 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.upskill.springboot.DTOs.CategoryDTO;
-import org.upskill.springboot.Exceptions.CategoryNotFoundException;
-import org.upskill.springboot.Exceptions.CategoryValidationException;
 import org.upskill.springboot.Services.CategoryService;
 
 import java.util.ArrayList;
@@ -107,18 +105,12 @@ public class CategoryController extends BaseController {
      */
     @PutMapping("/categories/{id}")
     public ResponseEntity<CategoryDTO> updateCategory(@PathVariable("id") String id, @RequestBody CategoryDTO request) {
-        try {
-            CategoryDTO categoryDTO = categoryService.updateCategory(id, request);
+        CategoryDTO categoryDTO = categoryService.updateCategory(id, request);
 
-            // self
-            categoryDTO.add(linkTo(methodOn(CategoryController.class)
-                    .updateCategory(id, request)).withSelfRel());
+        // self
+        categoryDTO.add(linkTo(methodOn(CategoryController.class)
+                .updateCategory(id, request)).withSelfRel());
 
-            return new ResponseEntity<>(categoryDTO, HttpStatus.OK);
-        } catch (CategoryValidationException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (CategoryNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(categoryDTO, HttpStatus.OK);
     }
 }

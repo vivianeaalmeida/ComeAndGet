@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.upskill.springboot.DTOs.AdvertisementDTO;
-import org.upskill.springboot.Exceptions.NotFoundException;
+import org.upskill.springboot.Exceptions.AdvertisementNotFoundException;
 import org.upskill.springboot.Services.AdvertisementService;
 
 import java.util.ArrayList;
@@ -35,25 +35,20 @@ public class AdvertisementController extends BaseController {
      */
     @GetMapping("/advertisements/{id}")
     public ResponseEntity<AdvertisementDTO> getAdvertisementById(@PathVariable String id) {
-        try {
-            AdvertisementDTO advertisementDTO = advertisementService.getAdvertisementById(id);
+        AdvertisementDTO advertisementDTO = advertisementService.getAdvertisementById(id);
 
-            // link to self
-            advertisementDTO.add(linkTo(methodOn(AdvertisementController.class).getAdvertisementById(id)).withSelfRel());
+        // link to self
+        advertisementDTO.add(linkTo(methodOn(AdvertisementController.class).getAdvertisementById(id)).withSelfRel());
 
-            // link to advertisments list
-            advertisementDTO.add(linkTo(methodOn(AdvertisementController.class)
-                    .getAdvertisements(Optional.of(0), Optional.of(10))).withRel("advertisements"));
-            advertisementDTO.add(linkTo(methodOn(AdvertisementController.class)
-                    .getActiveAdvertisements(Optional.of(0), Optional.of(10))).withRel("active-advertisements"));
-            advertisementDTO.add(linkTo(methodOn(AdvertisementController.class)
-                    .getClosedAdvertisements(Optional.of(0), Optional.of(10))).withRel("closed-advertisements"));
+        // link to advertisments list
+        advertisementDTO.add(linkTo(methodOn(AdvertisementController.class)
+                .getAdvertisements(Optional.of(0), Optional.of(10))).withRel("advertisements"));
+        advertisementDTO.add(linkTo(methodOn(AdvertisementController.class)
+                .getActiveAdvertisements(Optional.of(0), Optional.of(10))).withRel("active-advertisements"));
+        advertisementDTO.add(linkTo(methodOn(AdvertisementController.class)
+                .getClosedAdvertisements(Optional.of(0), Optional.of(10))).withRel("closed-advertisements"));
 
-            return new ResponseEntity<>(advertisementDTO, HttpStatus.OK);
-
-        } catch (NotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(advertisementDTO, HttpStatus.OK);
     }
 
     /**

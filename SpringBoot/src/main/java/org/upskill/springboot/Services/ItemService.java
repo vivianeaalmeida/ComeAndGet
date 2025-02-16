@@ -3,13 +3,12 @@ package org.upskill.springboot.Services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.upskill.springboot.DTOs.ItemDTO;
-import org.upskill.springboot.Exceptions.CategoryValidationException;
+import org.upskill.springboot.Exceptions.CategoryNotFoundException;
 import org.upskill.springboot.Exceptions.ItemValidationException;
 import org.upskill.springboot.Mappers.CategoryMapper;
 import org.upskill.springboot.Mappers.ItemMapper;
 import org.upskill.springboot.Models.Category;
 import org.upskill.springboot.Models.Item;
-import org.upskill.springboot.Repositories.CategoryRepository;
 import org.upskill.springboot.Repositories.ItemRepository;
 import org.upskill.springboot.Services.Interfaces.IItemService;
 
@@ -90,9 +89,14 @@ public class ItemService implements IItemService {
             throw new ItemValidationException("The category ID must be provided.");
         }
 
-        // Category validation by calling method in CategoryService
-        Category category = categoryService.getCategoryById(itemDTO.getCategory().getId());
-        System.out.println(category.getDesignation());
-        itemDTO.setCategory(CategoryMapper.toDTO(category));
+        // Validate category by calling the CategoryService and throws different exception
+        try {
+            Category category = categoryService.getCategoryById(itemDTO.getCategory().getId());
+            itemDTO.setCategory(CategoryMapper.toDTO(category));
+            itemDTO.setCategory(CategoryMapper.toDTO(category));
+        } catch (CategoryNotFoundException e) {
+            // Catch the exception and throw a more appropriate exception for validation
+            throw new ItemValidationException("Category with ID " + itemDTO.getCategory().getId() + " is invalid.");
+        }
     }
 }

@@ -8,10 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.upskill.springboot.DTOs.AdvertisementDTO;
 import org.upskill.springboot.DTOs.ItemDTO;
 import org.upskill.springboot.DTOs.UserDTO;
-import org.upskill.springboot.Exceptions.ClientNotFoundException;
-import org.upskill.springboot.Exceptions.InvalidActionException;
-import org.upskill.springboot.Exceptions.InvalidLengthException;
-import org.upskill.springboot.Exceptions.NotFoundException;
+import org.upskill.springboot.Exceptions.*;
 import org.upskill.springboot.Mappers.AdvertisementMapper;
 import org.upskill.springboot.Mappers.ItemMapper;
 import org.upskill.springboot.Models.Advertisement;
@@ -34,6 +31,20 @@ public class AdvertisementService implements IAdvertisementService {
 
 
     /**
+     * Retrieves an advertisement by its ID.
+     *
+     * @param id the ID of the advertisement
+     * @return the advertisement data transfer object
+     * @throws AdvertisementNotFoundException if the advertisement is not found
+     */
+    @Override
+    public AdvertisementDTO getAdvertisementById(String id) {
+        return advertisementRepository.findById(id)
+                .map(AdvertisementMapper::toDTO)
+                .orElseThrow(() -> new AdvertisementNotFoundException("Advertisement not found"));
+    }
+
+    /**
      * Retrieves all advertisements with pagination.
      *
      * @param page the page number
@@ -46,7 +57,6 @@ public class AdvertisementService implements IAdvertisementService {
                 .map(AdvertisementMapper::toDTO);
 
     }
-
 
     /**
      * Retrieves all active advertisements with pagination.
@@ -76,20 +86,6 @@ public class AdvertisementService implements IAdvertisementService {
 
         return advertisementRepository.findByStatus(Advertisement.AdvertisementStatus.CLOSED, pageRequest)
                 .map(AdvertisementMapper::toDTO);
-    }
-
-    /**
-     * Retrieves an advertisement by its ID.
-     *
-     * @param id the ID of the advertisement
-     * @return the advertisement data transfer object
-     * @throws NotFoundException if the advertisement is not found
-     */
-    @Override
-    public AdvertisementDTO getAdvertisementById(String id) {
-        return advertisementRepository.findById(id)
-                .map(AdvertisementMapper::toDTO)
-                .orElseThrow(() -> new NotFoundException("Advertisement not found"));
     }
 
     /**
@@ -157,7 +153,7 @@ public class AdvertisementService implements IAdvertisementService {
      *
      * @param advertisementDTO the advertisement data transfer object
      * @return true if the advertisement is valid
-     * @throws InvalidLengthException if the title or description length is invalid
+     * @throws AdvertisementInvalidLengthException if the title or description length is invalid
      */
     public boolean validateAdvertisement(AdvertisementDTO advertisementDTO) {
         if (advertisementDTO == null) {
@@ -166,12 +162,12 @@ public class AdvertisementService implements IAdvertisementService {
 
         // Check if the title is less than 5 or more than 50 characters
         if (advertisementDTO.getTitle().length() < 5 || advertisementDTO.getTitle().length() > 50) {
-            throw new InvalidLengthException("The title must have between 5 and 50 characters.");
+            throw new AdvertisementValidationException("The title must have between 5 and 50 characters.");
         }
 
         // Check if the title is less than 5 or more than 50 characters
         if (advertisementDTO.getDescription().length() < 5 || advertisementDTO.getDescription().length() > 50) {
-            throw new InvalidLengthException("The description must have between 5 and 50 characters.");
+            throw new AdvertisementValidationException("The description must have between 5 and 50 characters.");
         }
 
         // Check if the client associated with the advertisement is valid
@@ -191,20 +187,21 @@ public class AdvertisementService implements IAdvertisementService {
      *
      * @param id the ID of the advertisement to be deleted
      * @return the advertisement data transfer object
-     * @throws NotFoundException      if the advertisement does not exist
-     * @throws InvalidActionException if the advertisement is not active or has requests
+     * @throws AdvertisementNotFoundException      if the advertisement does not exist
+     * @throws AdvertisementInvalidActionException if the advertisement is not active or has requests
      */
     private AdvertisementDTO validateAdDeletion(String id) {
-        Advertisement advertisement = this.advertisementRepository.findById(id).orElseThrow(() -> new NotFoundException("Advertisement with id " + id + " not found"));
+        Advertisement advertisement = this.advertisementRepository.findById(id)
+                .orElseThrow(() -> new AdvertisementNotFoundException("Advertisement with id " + id + " not found"));
 
         // Do not allow the deletion of an advertisement that is not active
         if (!advertisement.getStatus().equals(Advertisement.AdvertisementStatus.ACTIVE)) {
-            throw new InvalidActionException("The advertisement with id " + id + " is not active, therefore it cannot be deleted.");
+            throw new AdvertisementInvalidActionException("The advertisement with id " + id + " is not active, therefore it cannot be deleted.");
         }
 
         // Do not allow the deletion of an advertisement that has requests
         if (advertisementRepository.hasRequests(id)) {
-            throw new InvalidActionException("The advertisement with id " + id + " has requests, therefore it cannot be deleted.");
+            throw new AdvertisementInvalidActionException("The advertisement with id " + id + " has requests, therefore it cannot be deleted.");
         }
 
         return AdvertisementMapper.toDTO(advertisement);

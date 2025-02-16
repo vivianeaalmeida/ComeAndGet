@@ -29,6 +29,17 @@ public class CategoryService implements ICategoryService {
     private ItemRepository itemRepository;
 
     /**
+     * Retrieves a category by its id. If the category does not exist, an exception is thrown.
+     *
+     * @param id The unique identifier of the category.
+     * @return The Category corresponding to the id.
+     */
+    public Category getCategoryById(String id)  {
+        return categoryRepository.findById(id)
+                .orElseThrow(CategoryNotFoundException::new);
+    }
+
+    /**
      * Retrieves a paginated list of the existing categories.
      *
      * @param page the page number (zero-based index)
@@ -39,17 +50,6 @@ public class CategoryService implements ICategoryService {
     public Page<CategoryDTO> getCategories(int page, int size) {
         return categoryRepository.findAll(PageRequest.of(page, size))
                 .map(CategoryMapper::toDTO);
-    }
-
-    /**
-     * Retrieves a category by its id. If the category does not exist, an exception is thrown.
-     *
-     * @param id The unique identifier of the category.
-     * @return The Category corresponding to the id.
-     */
-    public Category getCategoryById(String id)  {
-        return categoryRepository.findById(id)
-                .orElseThrow(CategoryNotFoundException::new);
     }
 
     /**

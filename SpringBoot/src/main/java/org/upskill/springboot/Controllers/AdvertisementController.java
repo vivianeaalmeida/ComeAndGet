@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.upskill.springboot.DTOs.AdvertisementDTO;
-import org.upskill.springboot.Exceptions.AdvertisementNotFoundException;
 import org.upskill.springboot.Services.AdvertisementService;
 
 import java.util.ArrayList;

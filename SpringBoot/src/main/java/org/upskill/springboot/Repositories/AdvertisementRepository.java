@@ -6,8 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.upskill.springboot.Models.Advertisement;
 
-import java.util.List;
-
 /**
  * Repository interface for performing CRUD operations on {@link Advertisement} entities.
  * Extends {@link JpaRepository} to leverage built-in methods for data access.

@@ -3,8 +3,6 @@ package org.upskill.springboot.DTOs;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.hateoas.RepresentationModel;
-import org.upskill.springboot.Models.Advertisement;
-import org.upskill.springboot.Models.Item;
 
 import java.time.LocalDate;
 
@@ -21,7 +19,7 @@ public class AdvertisementDTO extends RepresentationModel<AdvertisementDTO> {
     /**
      * The unique identifier for the advertisement.
      */
-    private String id;  // Unique identifier for the advertisement
+    private String id;
 
     /**
      * The title of the advertisement.

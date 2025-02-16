@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.hateoas.RepresentationModel;
-import org.upskill.springboot.Models.Category;
-import org.upskill.springboot.Models.Item;
 
 /**
  * Data Transfer Object (DTO) for Advertisement.

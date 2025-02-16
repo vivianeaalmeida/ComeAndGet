@@ -140,7 +140,6 @@ public class AdvertisementService implements IAdvertisementService {
     public AdvertisementDTO updateAdvertisement(String id, AdvertisementUpdateDTO advertisementUpdateDTO) {
         // Valida o AdvertisementUpdateDTO
         validateAdvertisementUpdate(id, advertisementUpdateDTO);
-        validateTitleAndDescription(advertisementUpdateDTO.getTitle(), advertisementUpdateDTO.getDescription());
 
         // Obtém o anúncio original
         AdvertisementDTO advertisementDTO = getAdvertisementById(id);
@@ -194,15 +193,7 @@ public class AdvertisementService implements IAdvertisementService {
             throw new IllegalArgumentException("The advertisement must be provided.");
         }
 
-        // Check if the title is less than 5 or more than 50 characters
-        if (advertisementDTO.getTitle().length() < 5 || advertisementDTO.getTitle().length() > 50) {
-            throw new AdvertisementValidationException("The title must have between 5 and 50 characters.");
-        }
-
-        // Check if the title is less than 5 or more than 50 characters
-        if (advertisementDTO.getDescription().length() < 5 || advertisementDTO.getDescription().length() > 50) {
-            throw new AdvertisementValidationException("The description must have between 5 and 50 characters.");
-        }
+        this.validateTitleAndDescription(advertisementDTO.getTitle(), advertisementDTO.getDescription());
 
         // Check if the client associated with the advertisement is valid
         UserDTO user = userService.getUserById(advertisementDTO.getClientId());
@@ -241,6 +232,14 @@ public class AdvertisementService implements IAdvertisementService {
     private boolean validateAdvertisementUpdate(String id, AdvertisementUpdateDTO advertisementUpdateDTO) {
         AdvertisementDTO advertisementDTO = this.getAdvertisementById(id);
         Advertisement advertisement = AdvertisementMapper.toEntity(advertisementDTO);
+        validateTitleAndDescription(advertisementUpdateDTO.getTitle(), advertisementUpdateDTO.getDescription());
+
+        // Check if the advertisement has requests. If so, the advertisement cannot be updated
+        List <Request> requests = advertisementRepository.getRequestsByAdvertisementId(advertisementUpdateDTO.getId());
+        if (!requests.isEmpty()) {
+            throw new AdvertisementInvalidActionException("The advertisement with id " + id +
+                    " has requests, therefore it cannot be updated.");
+        }
 
         // Check if the advertisement is closed. If so, the advertisement cannot be updated
         if (advertisement.getStatus().equals(Advertisement.AdvertisementStatus.CLOSED)) {

@@ -32,11 +32,4 @@ public interface AdvertisementRepository extends JpaRepository<Advertisement, St
      * @return a page of advertisements with the given status
      */
     Page<Advertisement> findByStatus(Advertisement.AdvertisementStatus status, Pageable pageable);
-
-    Page<Advertisement> findByClientId(String clientId, Pageable pageable);
-
-    @Query("SELECT r FROM Request r WHERE r.advertisement.id = :advertisementId")
-    List<Request> getRequestsByAdvertisementId(String advertisementId);
-
-
 }

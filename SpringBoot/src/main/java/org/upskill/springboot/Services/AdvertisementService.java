@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.upskill.springboot.DTOs.AdvertisementDTO;
+import org.upskill.springboot.DTOs.AdvertisementUpdateDTO;
 import org.upskill.springboot.DTOs.ItemDTO;
 import org.upskill.springboot.DTOs.UserDTO;
 import org.upskill.springboot.Exceptions.*;
@@ -13,8 +14,12 @@ import org.upskill.springboot.Mappers.AdvertisementMapper;
 import org.upskill.springboot.Mappers.ItemMapper;
 import org.upskill.springboot.Models.Advertisement;
 import org.upskill.springboot.Models.Item;
+import org.upskill.springboot.Models.Request;
 import org.upskill.springboot.Repositories.AdvertisementRepository;
+import org.upskill.springboot.Repositories.RequestRepository;
 import org.upskill.springboot.Services.Interfaces.IAdvertisementService;
+
+import java.util.List;
 
 /**
  * Service class for managing advertisements.
@@ -28,6 +33,8 @@ public class AdvertisementService implements IAdvertisementService {
     private ItemService itemService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private RequestRepository requestRepository;
 
 
     /**
@@ -141,13 +148,35 @@ public class AdvertisementService implements IAdvertisementService {
     /**
      * Updates an existing advertisement.
      *
-     * @param id               the ID of the advertisement to update
-     * @param advertisementDto the updated advertisement data transfer object
+     * @param id                     the ID of the advertisement to update
+     * @param advertisementUpdateDTO the advertisement data transfer object containing the updated details
      * @return the updated advertisement data transfer object
      */
     @Override
-    public AdvertisementDTO updateAdvertisement(String id, AdvertisementDTO advertisementDto) {
-        return null;
+    @Transactional
+    public AdvertisementDTO updateAdvertisement(String id, AdvertisementUpdateDTO advertisementUpdateDTO) {
+        // Valida o AdvertisementUpdateDTO
+        validateAdvertisementUpdate(id, advertisementUpdateDTO);
+        validateTitleAndDescription(advertisementUpdateDTO.getTitle(), advertisementUpdateDTO.getDescription());
+
+        // Obtém o anúncio original
+        AdvertisementDTO advertisementDTO = getAdvertisementById(id);
+
+        // Atualiza o anúncio com os novos dados
+        Advertisement advertisement = AdvertisementMapper.toEntity(advertisementDTO);
+        advertisement.setTitle(advertisementUpdateDTO.getTitle());
+        advertisement.setDescription(advertisementUpdateDTO.getDescription());
+
+        // Se o status for alterado para CLOSED, rejeita todas as solicitações associadas
+        if (advertisementUpdateDTO.getStatus().equalsIgnoreCase("CLOSED")) {
+            rejectRequests(advertisement.getId());
+            advertisement.setStatus(Advertisement.AdvertisementStatus.CLOSED);
+        }
+
+        // Salva o anúncio atualizado no banco de dados
+        advertisement = advertisementRepository.save(advertisement);
+
+        return AdvertisementMapper.toDTO(advertisement);
     }
 
     /**
@@ -201,6 +230,50 @@ public class AdvertisementService implements IAdvertisementService {
         return true;
     }
 
+    private boolean validateTitleAndDescription(String title, String description) {
+        // Check if the title is less than 5 or more than 50 characters
+        if (title.length() < 5 || title.length() > 50) {
+            throw new AdvertisementValidationException("The title must have between 5 and 50 characters.");
+        }
+
+        // Check if the description is less than 5 or more than 50 characters
+        if (description.length() < 5 || description.length() > 50) {
+            throw new AdvertisementValidationException("The description must have between 5 and 50 characters.");
+        }
+
+        return true;
+    }
+
+
+    /**
+     * Validates the update of an advertisement by its ID.
+     * Ensures that the advertisement can be updated by checking its existence,
+     * status and associated requests.
+     *
+     * @param id the ID of the advertisement to be updated
+     * @return the advertisement data transfer object
+     * @throws AdvertisementNotFoundException      if the advertisement does not exist
+     * @throws AdvertisementInvalidActionException if the advertisement is not active or is closed
+     */
+    private boolean validateAdvertisementUpdate(String id, AdvertisementUpdateDTO advertisementUpdateDTO) {
+        AdvertisementDTO advertisementDTO = this.getAdvertisementById(id);
+        Advertisement advertisement = AdvertisementMapper.toEntity(advertisementDTO);
+
+        // Check if the advertisement is closed. If so, the advertisement cannot be updated
+        if (advertisement.getStatus().equals(Advertisement.AdvertisementStatus.CLOSED)) {
+            throw new AdvertisementInvalidActionException("The advertisement with id " + id + " is closed, therefore " +
+                    "it cannot be updated.");
+        }
+
+        // Validates the status
+        if (!advertisementUpdateDTO.getStatus().equalsIgnoreCase("ACTIVE") &&
+                !advertisementUpdateDTO.getStatus().equalsIgnoreCase("CLOSED")) {
+            throw new AdvertisementInvalidActionException("Invalid status. Only ACTIVE or CLOSED statuses are allowed.");
+        }
+
+        return true;
+    }
+
 
     /**
      * Validates the deletion of an advertisement by its ID.
@@ -230,5 +303,20 @@ public class AdvertisementService implements IAdvertisementService {
     }
 
 
+    /**
+     * Rejects all requests associated with an advertisement by its ID.
+     *
+     * @param advertisementId the ID of the advertisement
+     */
+    private void rejectRequests(String advertisementId) {
+        List<Request> requests = advertisementRepository.getRequestsByAdvertisementId(advertisementId);
 
+        //Set the request status to REJECTED
+        for (Request request : requests) {
+            request.setStatus(Request.RequestStatus.REJECTED);
+        }
+
+        // Save the updated requests
+        requestRepository.saveAll(requests);
+    }
 }

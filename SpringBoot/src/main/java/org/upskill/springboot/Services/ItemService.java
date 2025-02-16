@@ -32,6 +32,19 @@ public class ItemService implements IItemService {
     CategoryService categoryService;
 
     /**
+     * Retrieves ab item by its id. If the item does not exist, an exception is thrown.
+     *
+     * @param id The unique identifier of the item.
+     * @return The ItemDTO corresponding to the id.
+     */
+    @Override
+    public ItemDTO getItemById(String id) {
+        return itemRepository.findById(id)
+                .map(ItemMapper::toDTO)
+                .orElseThrow(ItemNotFoundException::new);
+    }
+
+    /**
      * Creates a new item.
      *
      * @param itemDTO the item data transfer object
@@ -48,17 +61,15 @@ public class ItemService implements IItemService {
     }
 
     @Override
-    public ItemDTO getItemById(String id) {
-        return itemRepository.findById(id)
-                .map(ItemMapper::toDTO)
-                .orElseThrow(ItemNotFoundException::new);
-    }
-
-    @Override
     public ItemDTO updateItem(String id, ItemDTO itemDTO) {
         return null;
     }
 
+    /**
+     * Deletes an item from the system by its ID.
+     * Ensures that the item is deleted according to the validation method.
+     * @param id  The unique identifier of the item to be deleted
+     */
     @Override
     public void deleteItem(String id) {
         validateItemDeletion(id);

@@ -34,6 +34,7 @@ public class CategoryService implements ICategoryService {
      * @param id The unique identifier of the category.
      * @return The Category corresponding to the id.
      */
+    @Override
     public Category getCategoryById(String id)  {
         return categoryRepository.findById(id)
                 .orElseThrow(CategoryNotFoundException::new);
@@ -100,7 +101,7 @@ public class CategoryService implements ICategoryService {
     /**
      * Deletes a category from the system by its ID.
      * Ensures that the category is deleted according to the validation method.
-     * @param id
+     * @param id  The unique identifier of the category to be deleted
      */
     @Override
     public void deleteCategory(String id) {

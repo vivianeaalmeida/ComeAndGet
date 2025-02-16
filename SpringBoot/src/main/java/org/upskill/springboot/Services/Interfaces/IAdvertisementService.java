@@ -3,6 +3,8 @@ package org.upskill.springboot.Services.Interfaces;
 import org.springframework.data.domain.Page;
 import org.upskill.springboot.DTOs.AdvertisementDTO;
 import org.upskill.springboot.DTOs.AdvertisementUpdateDTO;
+import org.upskill.springboot.DTOs.RequestDTO;
+import org.upskill.springboot.DTOs.RequestResponseDTO;
 
 /**
  * Service interface for managing advertisements.
@@ -78,4 +80,22 @@ public interface IAdvertisementService {
      * @return the deleted advertisement data transfer object
      */
     AdvertisementDTO deleteAdvertisement(String id);
+
+    /**
+     * Creates a new advertisement based on the provided data.
+     *
+     * @param id The unique identifier of the advertisement.
+     * @param advertisementRequestDTO An object containing the request details for creating the advertisement.
+     * @return A {@code RequestResponseDTO} object containing the response of the request.
+     */
+    RequestResponseDTO createAdvertisementRequest(String id, RequestDTO advertisementRequestDTO);
+
+    /**
+     * Retrieves the advertisement request details based on the provided advertisement ID and request ID.
+     *
+     * @param idAdvertisement The unique identifier of the advertisement.
+     * @param idRequest The unique identifier of the request associated with the advertisement.
+     * @return A {@link RequestResponseDTO} object containing the details of the advertisement request.
+     */
+    RequestResponseDTO getAdvertisementRequestById(String idAdvertisement, String idRequest);
 }

@@ -7,9 +7,7 @@ import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.upskill.springboot.DTOs.AdvertisementDTO;
-import org.upskill.springboot.DTOs.AdvertisementUpdateDTO;
-import org.upskill.springboot.DTOs.CategoryDTO;
+import org.upskill.springboot.DTOs.*;
 import org.upskill.springboot.Services.AdvertisementService;
 
 import java.util.ArrayList;
@@ -264,5 +262,24 @@ public class AdvertisementController extends BaseController {
     public ResponseEntity<Void> deleteAdvertisement(@PathVariable String id) {
         advertisementService.deleteAdvertisement(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    /**
+     * Create a new advertisement request.
+     *
+     * @param id The unique identifier of the advertisement.
+     * @param requestDTO The request data for creating the advertisement request.
+     * @return A {@code ResponseEntity<RequestResponseDTO>} containing the response data.
+     */
+    @PostMapping("/advertisements/{id}/requests")
+    public ResponseEntity<RequestResponseDTO> createAdvertisementRequest(@PathVariable String id, @RequestBody RequestDTO requestDTO) {
+        RequestResponseDTO response = advertisementService.createAdvertisementRequest(id, requestDTO);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/advertisements/{adId}/requests/{requestId}")
+    public ResponseEntity<RequestResponseDTO> getAdvertisementRequestById(@PathVariable String adId, @PathVariable String requestId) {
+        RequestResponseDTO response = advertisementService.getAdvertisementRequestById(adId, requestId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

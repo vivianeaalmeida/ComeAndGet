@@ -5,10 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.upskill.springboot.DTOs.AdvertisementDTO;
-import org.upskill.springboot.DTOs.AdvertisementUpdateDTO;
-import org.upskill.springboot.DTOs.ItemDTO;
-import org.upskill.springboot.DTOs.UserDTO;
+import org.upskill.springboot.DTOs.*;
 import org.upskill.springboot.Exceptions.*;
 import org.upskill.springboot.Mappers.AdvertisementMapper;
 import org.upskill.springboot.Mappers.ItemMapper;
@@ -18,6 +15,7 @@ import org.upskill.springboot.Models.Request;
 import org.upskill.springboot.Repositories.AdvertisementRepository;
 import org.upskill.springboot.Repositories.RequestRepository;
 import org.upskill.springboot.Services.Interfaces.IAdvertisementService;
+import org.upskill.springboot.Services.Interfaces.IRequestService;
 
 import java.util.List;
 
@@ -33,6 +31,8 @@ public class AdvertisementService implements IAdvertisementService {
     private ItemService itemService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private IRequestService requestService;
     @Autowired
     private RequestRepository requestRepository;
 
@@ -145,6 +145,7 @@ public class AdvertisementService implements IAdvertisementService {
         return AdvertisementMapper.toDTO(advertisement);
     }
 
+
     /**
      * Updates an existing advertisement.
      *
@@ -219,6 +220,33 @@ public class AdvertisementService implements IAdvertisementService {
         }
 
         return true;
+    }
+
+    /**
+     * Creates a new advertisement based on the provided data.
+     *
+     * @param id The unique identifier of the advertisement.
+     * @param advertisementRequestDTO An object containing the request details for creating the advertisement.
+     * @return A {@code RequestResponseDTO} object containing the response of the request.
+     */
+    public RequestResponseDTO createAdvertisementRequest(String id, RequestDTO advertisementRequestDTO){
+        advertisementRequestDTO.setAdvertisementId(id);
+        return requestService.createRequest(advertisementRequestDTO);
+    }
+
+    /**
+     * Retrieves the advertisement request details based on the provided advertisement ID and request ID.
+     *
+     * @param idAdvertisement The unique identifier of the advertisement.
+     * @param idRequest The unique identifier of the request associated with the advertisement.
+     * @return A {@link RequestResponseDTO} object containing the details of the advertisement request.
+     */
+    public RequestResponseDTO getAdvertisementRequestById(String idAdvertisement, String idRequest){
+        RequestResponseDTO response = requestService.getRequestById(idRequest);
+        if(!response.getAdvertisementId().equals(idAdvertisement)){
+            throw new RequestNotFoundException("Advertisement id invalid.");
+        }
+        return response;
     }
 
     private boolean validateTitleAndDescription(String title, String description) {
@@ -318,4 +346,7 @@ public class AdvertisementService implements IAdvertisementService {
         // Save the updated requests
         requestRepository.saveAll(requests);
     }
+
+
+
 }

@@ -28,6 +28,35 @@ public class AdvertisementController extends BaseController {
     private AdvertisementService advertisementService;
 
     /**
+     * Retrieves an advertisement by its ID.
+     *
+     * @param id the ID of the advertisement
+     * @return the advertisement data transfer object with HTTP status OK, or HTTP status NOT FOUND if not found
+     */
+    @GetMapping("/advertisements/{id}")
+    public ResponseEntity<AdvertisementDTO> getAdvertisementById(@PathVariable String id) {
+        try {
+            AdvertisementDTO advertisementDTO = advertisementService.getAdvertisementById(id);
+
+            // link to self
+            advertisementDTO.add(linkTo(methodOn(AdvertisementController.class).getAdvertisementById(id)).withSelfRel());
+
+            // link to advertisments list
+            advertisementDTO.add(linkTo(methodOn(AdvertisementController.class)
+                    .getAdvertisements(Optional.of(0), Optional.of(10))).withRel("advertisements"));
+            advertisementDTO.add(linkTo(methodOn(AdvertisementController.class)
+                    .getActiveAdvertisements(Optional.of(0), Optional.of(10))).withRel("active-advertisements"));
+            advertisementDTO.add(linkTo(methodOn(AdvertisementController.class)
+                    .getClosedAdvertisements(Optional.of(0), Optional.of(10))).withRel("closed-advertisements"));
+
+            return new ResponseEntity<>(advertisementDTO, HttpStatus.OK);
+
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /**
      * Retrieves all advertisements with pagination.
      *
      * @param page the page number
@@ -44,6 +73,10 @@ public class AdvertisementController extends BaseController {
         int _size = size.orElse(10);
 
         Page<AdvertisementDTO> advertisementsDTO = advertisementService.getAllAdvertisements(_page, _size);
+
+        advertisementsDTO.forEach(advertisement ->
+                advertisement.add(linkTo(methodOn(AdvertisementController.class)
+                        .getAdvertisementById(advertisement.getId())).withSelfRel()));
 
         Link selfLink = linkTo(methodOn(AdvertisementController.class)
                 .getAdvertisements(Optional.of(_page), Optional.of(_size))).withSelfRel();
@@ -83,6 +116,10 @@ public class AdvertisementController extends BaseController {
 
         Page<AdvertisementDTO> advertisementsDTO = advertisementService.getActiveAdvertisements(_page, _size);
 
+        advertisementsDTO.forEach(advertisement ->
+                advertisement.add(linkTo(methodOn(AdvertisementController.class)
+                        .getAdvertisementById(advertisement.getId())).withSelfRel()));
+
         Link selfLink = linkTo(methodOn(AdvertisementController.class)
                 .getAdvertisements(Optional.of(_page), Optional.of(_size))).withSelfRel();
 
@@ -121,6 +158,10 @@ public class AdvertisementController extends BaseController {
 
         Page<AdvertisementDTO> advertisementsDTO = advertisementService.getClosedAdvertisements(_page, _size);
 
+        advertisementsDTO.forEach(advertisement ->
+                advertisement.add(linkTo(methodOn(AdvertisementController.class)
+                        .getAdvertisementById(advertisement.getId())).withSelfRel()));
+
         Link selfLink = linkTo(methodOn(AdvertisementController.class)
                 .getAdvertisements(Optional.of(_page), Optional.of(_size))).withSelfRel();
 
@@ -139,21 +180,6 @@ public class AdvertisementController extends BaseController {
         return new ResponseEntity<>(CollectionModel.of(advertisementsDTO.getContent(), links), HttpStatus.OK);
     }
 
-    /**
-     * Retrieves an advertisement by its ID.
-     *
-     * @param id the ID of the advertisement
-     * @return the advertisement data transfer object with HTTP status OK, or HTTP status NOT FOUND if not found
-     */
-    @GetMapping("/advertisements/{id}")
-    public ResponseEntity<AdvertisementDTO> getAdvertisementById(@PathVariable String id) {
-        try {
-            AdvertisementDTO advertisementDTO = advertisementService.getAdvertisementById(id);
-            return new ResponseEntity<>(advertisementDTO, HttpStatus.OK);
-        } catch (NotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
 
     /**
      * Creates a new advertisement.

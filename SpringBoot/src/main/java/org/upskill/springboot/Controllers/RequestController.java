@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.upskill.springboot.DTOs.RequestDTO;
+import org.upskill.springboot.DTOs.RequestResponseDTO;
 import org.upskill.springboot.Services.Interfaces.IRequestService;
 
 import java.util.List;
@@ -14,32 +15,32 @@ public class RequestController {
     private IRequestService requestService;
 
     @GetMapping("/request")
-    public ResponseEntity <List<RequestDTO>> getRequest() {
-        List<RequestDTO> listResponseDTO = requestService.getRequests();
+    public ResponseEntity <List<RequestResponseDTO>> getRequest() {
+        List<RequestResponseDTO> listResponseDTO = requestService.getRequests();
         return ResponseEntity.ok(listResponseDTO);
     }
 
     @GetMapping("/request/{id}")
-    public ResponseEntity<RequestDTO> getRequest(@PathVariable String id) {
-        RequestDTO responseDTO = requestService.getRequestById(id);
+    public ResponseEntity<RequestResponseDTO> getRequest(@PathVariable String id) {
+        RequestResponseDTO responseDTO = requestService.getRequestById(id);
         return ResponseEntity.ok(responseDTO);
     }
 
     @PostMapping("/request")
-    public ResponseEntity<RequestDTO> postRequest(@RequestBody RequestDTO requestDTO) {
-        RequestDTO responseDTO = requestService.createRequest(requestDTO);
+    public ResponseEntity<RequestResponseDTO> postRequest(@RequestBody RequestDTO requestDTO) {
+        RequestResponseDTO responseDTO = requestService.createRequest(requestDTO);
         return ResponseEntity.ok(responseDTO);
     }
 
     @PutMapping("/request/{id}")
-    public ResponseEntity<RequestDTO> putRequest(@PathVariable String id, @RequestBody RequestDTO requestDTO) {
-        RequestDTO responseDTO = requestService.updateRequest(id, requestDTO);
+    public ResponseEntity<RequestResponseDTO> putRequest(@PathVariable String id, @RequestBody RequestDTO requestDTO) {
+        RequestResponseDTO responseDTO = requestService.updateRequest(id, requestDTO);
         return ResponseEntity.ok(responseDTO);
     }
 
     @PatchMapping("/request/{id}")
-    public ResponseEntity<RequestDTO> patchRequest(@PathVariable String id, @RequestBody RequestDTO requestDTO) {
-        RequestDTO responseDTO = requestService.patchRequest(id, requestDTO);
+    public ResponseEntity<RequestResponseDTO> patchRequest(@PathVariable String id, @RequestBody RequestDTO requestDTO) {
+        RequestResponseDTO responseDTO = requestService.patchRequest(id, requestDTO);
         return ResponseEntity.ok(responseDTO);
     }
 

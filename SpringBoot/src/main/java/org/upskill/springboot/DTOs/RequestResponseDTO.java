@@ -5,12 +5,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestDTO {
+public class RequestResponseDTO {
+    private String id;
     private String userId;
     private String status;
     private String advertisementId;
+    private LocalDate date;
 }

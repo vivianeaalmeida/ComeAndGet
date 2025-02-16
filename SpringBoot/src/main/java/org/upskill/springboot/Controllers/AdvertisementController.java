@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.upskill.springboot.DTOs.AdvertisementDTO;
+import org.upskill.springboot.DTOs.AdvertisementUpdateDTO;
+import org.upskill.springboot.DTOs.CategoryDTO;
 import org.upskill.springboot.Services.AdvertisementService;
 
 import java.util.ArrayList;
@@ -191,6 +193,27 @@ public class AdvertisementController extends BaseController {
 
         return new ResponseEntity<>(advertisementDTO, HttpStatus.CREATED);
     }
+
+
+    /**
+     * Updates an existing advertisement by its ID.
+     *
+     * @param id The unique identifier of the advertisement to be updated.
+     * @param request The AdvertisementUpdateDTO object containing the advertisement data to be updated.
+     * @return A ResponseEntity containing the updated AdvertisementDTO with a self HATEOAS link
+     * and HTTP status 200 (Ok) if the update is successful.
+     */
+    @PutMapping("/advertisements/{id}")
+    public ResponseEntity<AdvertisementDTO> updateAdvertisement(@PathVariable("id") String id, @RequestBody AdvertisementUpdateDTO request) {
+        AdvertisementDTO advertisementDTO = advertisementService.updateAdvertisement(id, request);
+
+        // self
+        advertisementDTO.add(linkTo(methodOn(AdvertisementController.class)
+                .updateAdvertisement(id, request)).withSelfRel());
+
+        return new ResponseEntity<>(advertisementDTO, HttpStatus.OK);
+    }
+
 
     /**
      * Deletes an advertisement by its ID.

@@ -29,18 +29,17 @@ public class AdvertisementService implements IAdvertisementService {
     private AdvertisementRepository advertisementRepository;
     @Autowired
     private ItemService itemService;
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     private final RequestService requestService;
     @Autowired
     private RequestRepository requestRepository;
 
     @Autowired
-    public AdvertisementService(@Lazy RequestService requestService) {
+    public AdvertisementService(@Lazy UserService userService, @Lazy RequestService requestService) {
+        this.userService = userService;
         this.requestService = requestService;
     }
-
 
     /**
      * Retrieves an advertisement by its ID.

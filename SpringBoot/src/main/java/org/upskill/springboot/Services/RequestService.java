@@ -155,6 +155,21 @@ public class RequestService implements IRequestService {
     }
 
     /**
+     * Retrieves a list of requests associated with a specific user ID and maps them to DTOs.
+     *
+     * @param userId the unique identifier of the user
+     * @return a list of {@link RequestResponseDTO} objects representing the user's requests
+     */
+    public List<RequestResponseDTO> getRequestsByUserId(String userId){
+        List<Request> requests = requestRepository.findRequestByUser_Id(userId);
+        List<RequestResponseDTO> requestDTOs = new ArrayList<>();
+        for (Request request : requests) {
+            requestDTOs.add(RequestMapper.toDTO(request));
+        }
+        return requestDTOs;
+    }
+
+    /**
      * Sets the advertisement for the request using the provided RequestDTO.
      *
      * @param requestDTO the RequestDTO object containing the advertisement ID

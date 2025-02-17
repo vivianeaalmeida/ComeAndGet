@@ -1,13 +1,17 @@
 package org.upskill.springboot.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.upskill.springboot.DTOs.RequestResponseDTO;
 import org.upskill.springboot.DTOs.UserDTO;
 import org.upskill.springboot.Exceptions.AdvertisementNotFoundException;
 import org.upskill.springboot.Mappers.UserMapper;
 import org.upskill.springboot.Models.User;
 import org.upskill.springboot.Repositories.UserRepository;
 import org.upskill.springboot.Services.Interfaces.IUserService;
+
+import java.util.List;
 
 /**
  * Service class for managing users.
@@ -19,6 +23,12 @@ public class UserService implements IUserService {
      */
     @Autowired
     private UserRepository userRepository;
+
+    private final RequestService requestService;
+
+    public UserService(@Lazy RequestService requestService) {
+        this.requestService = requestService;
+    }
 
     /**
      * Creates a new user.
@@ -49,4 +59,14 @@ public class UserService implements IUserService {
                 .orElseThrow(() -> new AdvertisementNotFoundException("User with id " + id + " not found."));
     }
 
+    /**
+     * Retrieves a list of request DTOs for a given user ID by delegating the call to the request service.
+     *
+     * @param id the unique identifier of the user
+     * @return a list of {@link RequestResponseDTO} objects representing the user's requests
+     */
+    @Override
+    public List<RequestResponseDTO> getRequestsByUserId(String id){
+        return this.requestService.getRequestsByUserId(id);
+    }
 }

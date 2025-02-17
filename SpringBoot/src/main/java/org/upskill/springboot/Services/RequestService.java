@@ -211,6 +211,7 @@ public class RequestService implements IRequestService {
         }
         if (adDTO.getClientId().equals(requestDTO.getUserId())) {
             throw new IllegalArgumentException("The user cannot create requests for their own advertisement.");
+
         }
 
         if (!adDTO.getStatus().equals(Advertisement.AdvertisementStatus.ACTIVE.toString())) {

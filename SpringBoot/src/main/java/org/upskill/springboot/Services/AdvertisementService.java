@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.upskill.springboot.DTOs.*;
@@ -223,7 +224,7 @@ public class AdvertisementService implements IAdvertisementService {
         advertisement.setDescription(advertisementUpdateDTO.getDescription());
 
         // If status is changed to closed, rejects all requests
-        if (advertisementUpdateDTO.getStatus().equalsIgnoreCase("CLOSED")) {
+        if (advertisement.getStatus() == Advertisement.AdvertisementStatus.CLOSED) {
             requestService.rejectRequests(advertisement.getId());
             advertisement.setStatus(Advertisement.AdvertisementStatus.CLOSED);
         }
@@ -367,21 +368,26 @@ public class AdvertisementService implements IAdvertisementService {
 
         // Check if the advertisement has requests. If so, the advertisement cannot be updated
         if (requestService.hasRequestsInAdvertisement(advertisement.getId())) {
-            throw new AdvertisementInvalidActionException("The advertisement with id " + id +
+            throw new AdvertisementValidationException("The advertisement with id " + id +
                     " has requests, therefore it cannot be updated.");
         }
 
         // Check if the advertisement is closed. If so, the advertisement cannot be updated
-        if (advertisement.getStatus().equals(Advertisement.AdvertisementStatus.CLOSED)) {
-            throw new AdvertisementInvalidActionException("The advertisement with id " + id + " is closed, therefore " +
+        if (!advertisement.getStatus().equals(Advertisement.AdvertisementStatus.ACTIVE)) {
+            throw new AdvertisementValidationException("The advertisement with id " + id + " is no longer active, therefore " +
                     "it cannot be updated.");
         }
 
-        // Validates the status
-        if (!advertisementUpdateDTO.getStatus().equalsIgnoreCase("ACTIVE") &&
-                !advertisementUpdateDTO.getStatus().equalsIgnoreCase("CLOSED")) {
-            throw new AdvertisementInvalidActionException("Invalid status. Only ACTIVE or CLOSED statuses are allowed.");
+        // Validates status
+        try {
+            Advertisement.AdvertisementStatus status = Advertisement.AdvertisementStatus.valueOf(advertisementUpdateDTO.getStatus().toUpperCase());
+            if (status == Advertisement.AdvertisementStatus.INACTIVE) {
+                throw new AdvertisementValidationException("Status INACTIVE is not allowed.");
+            }
+        } catch (IllegalArgumentException e) {
+            throw new AdvertisementValidationException("Invalid status. Only ACTIVE or CLOSED status are allowed.");
         }
+
 
         return true;
     }
@@ -442,5 +448,26 @@ public class AdvertisementService implements IAdvertisementService {
             throw new AdvertisementValidationException("Municipality not found");
         }
         return true;
+    }
+
+    /**
+     * Close expired advertisements and reject pending or accepted requests associated with them.
+     * This method is scheduled to run every day at midnight.
+     */
+    @Scheduled(cron = "0 0 0 * * ?")  // Cron expression for every day at midnight
+    public void closeExpiredAdvertisements() {
+        // Get all advertisements and filter out inactive ones
+        List<Advertisement> advertisements = advertisementRepository.findByStatus(Advertisement.AdvertisementStatus.ACTIVE);
+
+        for (Advertisement advertisement : advertisements) {
+            // Close advertisement if expired
+            if (advertisement.getStatus() == Advertisement.AdvertisementStatus.ACTIVE
+                    && advertisement.closeIfExpired()) {
+                advertisementRepository.save(advertisement);  // Save the advertisement with the updated status
+
+                // Reject requests associated with the advertisement
+                requestService.rejectRequests(advertisement.getId());
+            }
+        }
     }
 }

@@ -41,4 +41,6 @@ public interface RequestRepository extends JpaRepository<Request, String> {
      */
     List<Request> findRequestByUser_Id(String userId);
 
+    boolean existsByAdvertisement_IdAndUser_Id(String id, String userId);
+
 }

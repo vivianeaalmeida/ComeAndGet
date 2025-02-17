@@ -73,29 +73,32 @@ public class RequestService implements IRequestService {
      */
     @Override
     public RequestResponseDTO createRequest(RequestDTO requestDTO) {
+        validateRequest(requestDTO);
+
         AdvertisementDTO advertisementDTO = advertisementService.getAdvertisementById(requestDTO.getAdvertisementId());
         UserDTO userDTO = userService.getUserById(requestDTO.getUserId());
-        if (advertisementDTO.getStatus().equals(Advertisement.AdvertisementStatus.ACTIVE.toString())) {
-            Request request = RequestMapper.toEntity(requestDTO);
-            Advertisement adEntity = AdvertisementMapper.toEntity(advertisementDTO);
-            request.setAdvertisement(adEntity);
-            User userEntity = UserMapper.toEntity(userDTO);
-            request.setUser(userEntity);
-            request.setDate(LocalDate.now());
-            return RequestMapper.toDTO(requestRepository.save(request));
-        } else {
-            throw new AdvertisementValidationException("Advertisement is not active.");
-        }
+
+        Request request = RequestMapper.toEntity(requestDTO);
+
+        Advertisement adEntity = AdvertisementMapper.toEntity(advertisementDTO);
+
+        request.setAdvertisement(adEntity);
+        User userEntity = UserMapper.toEntity(userDTO);
+
+        request.setUser(userEntity);
+        request.setDate(LocalDate.now());
+
+        return RequestMapper.toDTO(requestRepository.save(request));
     }
 
     /**
      * Updates the request with the provided ID with new data.
      *
-     * @param id the ID of the request to update
+     * @param id         the ID of the request to update
      * @param requestDTO the RequestDTO object containing the updated request data
      * @return the updated RequestDTO object
      * @throws RequestNotFoundException if the request with the given ID does not exist
-     * @throws NotNullException if the status of the request is null
+     * @throws NotNullException         if the status of the request is null
      */
     @Override
     public RequestResponseDTO updateRequest(String id, RequestDTO requestDTO) {
@@ -118,9 +121,9 @@ public class RequestService implements IRequestService {
     /**
      * Partially updates the request with the provided ID with new data.
      *
-     * @param id the ID of the request to update
+     * @param id               the ID of the request to update
      * @param idAdvertisement  the ID of the advertisement
-     * @param requestStatusDTO  the object with the new status
+     * @param requestStatusDTO the object with the new status
      * @return the partially updated RequestDTO object
      * @throws RequestNotFoundException if the request with the given ID does not exist
      */
@@ -173,7 +176,7 @@ public class RequestService implements IRequestService {
      * Sets the advertisement for the request using the provided RequestDTO.
      *
      * @param requestDTO the RequestDTO object containing the advertisement ID
-     * @param request the Request entity to update with the advertisement
+     * @param request    the Request entity to update with the advertisement
      */
     private void setAdvertisement(RequestDTO requestDTO, Request request) {
         AdvertisementDTO adDTO = advertisementService.getAdvertisementById(requestDTO.getAdvertisementId());
@@ -184,10 +187,35 @@ public class RequestService implements IRequestService {
      * Sets the user for the request using the provided RequestDTO.
      *
      * @param requestDTO the RequestDTO object containing the user ID
-     * @param request the Request entity to update with the user
+     * @param request    the Request entity to update with the user
      */
     private void setUser(RequestDTO requestDTO, Request request) {
         UserDTO userDTO = userService.getUserById(requestDTO.getUserId());
         request.setUser(UserMapper.toEntity(userDTO));
+    }
+
+    /**
+     * Validates the request based on various conditions such as whether the user has already made a request
+     * for the advertisement, if the user is the owner of the advertisement, and if the advertisement is active.
+     *
+     * @param requestDTO the {@link RequestDTO} object containing the request details
+     * @return {@code true} if the request is valid, otherwise an exception is thrown
+     * @throws IllegalStateException if the user has already made a request for the advertisement
+     * @throws IllegalArgumentException if the user is the owner of the advertisement
+     * @throws AdvertisementValidationException if the advertisement is not active
+     */
+    private boolean validateRequest(RequestDTO requestDTO) {
+        AdvertisementDTO adDTO = advertisementService.getAdvertisementById(requestDTO.getAdvertisementId());
+        if (requestRepository.existsByAdvertisement_IdAndUser_Id(adDTO.getId(), requestDTO.getUserId())) {
+            throw new IllegalStateException("The user has already made a request for this advertisement.");
+        }
+        if (adDTO.getClientId().equals(requestDTO.getUserId())) {
+            throw new IllegalArgumentException("The user cannot create requests for their own advertisement.");
+        }
+
+        if (!adDTO.getStatus().equals(Advertisement.AdvertisementStatus.ACTIVE.toString())) {
+            throw new AdvertisementValidationException("Advertisement is not active.");
+        }
+        return true;
     }
 }

@@ -1,15 +1,9 @@
-﻿using DotNet.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using DotNet.Models;
 
 namespace DotNet.Data {
-    public class UserContext : IdentityDbContext<IdentityUser> {
-
-
+    public class UserContext : IdentityDbContext<ApplicationUser> {
         public UserContext(DbContextOptions<UserContext> options) : base(options) { }
-
-        public DbSet<User> Users { get; set; }
     }
 }

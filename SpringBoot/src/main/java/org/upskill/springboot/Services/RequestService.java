@@ -158,6 +158,21 @@ public class RequestService implements IRequestService {
     }
 
     /**
+     * Retrieves a list of requests associated with a specific user ID and maps them to DTOs.
+     *
+     * @param userId the unique identifier of the user
+     * @return a list of {@link RequestResponseDTO} objects representing the user's requests
+     */
+    public List<RequestResponseDTO> getRequestsByUserId(String userId){
+        List<Request> requests = requestRepository.findRequestByUser_Id(userId);
+        List<RequestResponseDTO> requestDTOs = new ArrayList<>();
+        for (Request request : requests) {
+            requestDTOs.add(RequestMapper.toDTO(request));
+        }
+        return requestDTOs;
+    }
+
+    /**
      * Sets the advertisement for the request using the provided RequestDTO.
      *
      * @param requestDTO the RequestDTO object containing the advertisement ID
@@ -179,13 +194,24 @@ public class RequestService implements IRequestService {
         request.setUser(UserMapper.toEntity(userDTO));
     }
 
+    /**
+     * Validates the request based on various conditions such as whether the user has already made a request
+     * for the advertisement, if the user is the owner of the advertisement, and if the advertisement is active.
+     *
+     * @param requestDTO the {@link RequestDTO} object containing the request details
+     * @return {@code true} if the request is valid, otherwise an exception is thrown
+     * @throws IllegalStateException if the user has already made a request for the advertisement
+     * @throws IllegalArgumentException if the user is the owner of the advertisement
+     * @throws AdvertisementValidationException if the advertisement is not active
+     */
     private boolean validateRequest(RequestDTO requestDTO) {
         AdvertisementDTO adDTO = advertisementService.getAdvertisementById(requestDTO.getAdvertisementId());
         if (requestRepository.existsByAdvertisement_IdAndUser_Id(adDTO.getId(), requestDTO.getUserId())) {
-            throw new IllegalStateException("O usuário já fez um request para esse anúncio.");
+            throw new IllegalStateException("The user has already made a request for this advertisement.");
         }
         if (adDTO.getClientId().equals(requestDTO.getUserId())) {
-            throw new IllegalArgumentException("O usuário não pode criar requests para seu proprio anuncio");
+            throw new IllegalArgumentException("The user cannot create requests for their own advertisement.");
+
         }
 
         if (!adDTO.getStatus().equals(Advertisement.AdvertisementStatus.ACTIVE.toString())) {

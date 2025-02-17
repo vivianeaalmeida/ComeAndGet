@@ -59,4 +59,6 @@ public interface IRequestService {
      * @param id the ID of the request to be deleted
      */
     void deleteRequest(String id);
+
+    List<RequestResponseDTO> getRequestsByUserId(String userId);
 }

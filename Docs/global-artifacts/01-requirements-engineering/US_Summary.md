@@ -15,7 +15,7 @@
 - US13 - Update advertisement *
 - US14 - Delete advertisement
 - US15 - View my published advertisements
-- US16 - Create request
+- US16 - Create request on advertisement
 - US17 - View request
 - US18 - View my list of requests
 - US19 - View requests on my advertisements
@@ -176,7 +176,7 @@
 
 ---
 
-## US16 - Create a request
+## US16 - Create request on advertisement
 - **Endpoint**: `POST /advertisements/{id}/requests`
 - **Description**: As a client, I want to create a request on an advertisement so that I can request the item being donated.
 - **Permissions/Role**: Client

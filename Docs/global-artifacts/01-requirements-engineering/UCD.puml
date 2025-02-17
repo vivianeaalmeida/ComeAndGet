@@ -9,15 +9,13 @@ skinparam actorStyle hollow
   actor "Manager"
 
 
-
-
 rectangle " " as usecase1 {
 
     rectangle "All Users Area " as usecase2 #Lightpink{
 
-            usecase "US09 -  As a user, I want to view active advertisements list" as US09
-            usecase "US11 -  As a user, I want to view advertisement details" as US11
-            usecase "US12 -  As a user, I want to search advertisements" as US12
+            usecase "US09 - View active advertisements" as US09
+            usecase "US11 - View advertisement" as US11
+            usecase "US12 - Search advertisements" as US12
 
             "Client" --> US09
             "Client" --> US11
@@ -32,25 +30,32 @@ rectangle " " as usecase1 {
 
     rectangle "Unregistered User Area " as usecase3 #Lightgreen{
 
-            usecase "US01 - As an unregistered user,\n I want to register in the application" as US01
-            usecase "US02 - As an unauthenticated user,\n I want to log in to the application" as US02
+            usecase "US01 - Register new user" as US01
+            usecase "US02 - Login" as US02
 
             "Unregistered\nUser" --> US01
             "Unregistered\nUser" --> US02
          }
 
-     rectangle "Client Area " as usecase4 #Lightyellow{
+    rectangle "Registered Users (Client/Manager) Area " as usecase4 #Lightcyan{
 
-            usecase "US04 - As a client or manager, I want to\n view a list of all available categories" as US04
-            usecase "US07 - As a client, I want\n to create an advertisement" as US07
-            usecase "US13 - As a client (advertisement owner)\n, I want to update advertisement’s name,\n location, and end date" as US13
-            usecase "US15 - As a client, I want to\n view my published advertisements" as US15
-            usecase "US14 - As a client or manager,\n I want to delete an advertisement" as US14
-            usecase "US16 -  As a client, I want\n to create a donation request on an\n advertisement" as US16
-            usecase "US17 -   As a client, I want\n to view the details of a donation request" as US17
-            usecase "US18 -  As a client, I want\n to view the list of donation requests I have\n made" as US18
-            usecase "US19 -   As a client (advertisement owner),\n I want to view all active donation\n requests made to my advertisements" as US19
-            usecase "US20 -   As a client (requester or\n advertisement owner), I want\n to update a request" as US20
+            usecase "US04 - View categories list" as US04
+
+            "Client" --> US04
+            "Manager" --> US04
+         }
+
+     rectangle "Client Area " as usecase5 #Lightyellow{
+
+
+            usecase "US07 - Create advertisement" as US07
+            usecase "US13 - Update advertisement" as US13
+            usecase "US15 - View my published advertisements" as US15
+            usecase "US16 - Create request on advertisement" as US16
+            usecase "US17 - View request" as US17
+            usecase "US18 - View my request details" as US18
+            usecase "US19 - View requests on my advertisements" as US19
+            usecase "US20 - Update request" as US20
 
             "Client" --> US15
             "Client" --> US20
@@ -58,23 +63,22 @@ rectangle " " as usecase1 {
             "Client" --> US17
             "Client" --> US16
             "Client" --> US15
-            "Client" --> US14
             "Client" --> US13
-            "Client" --> US04
             "Client" --> US07
-            "Manager" --> US04
-            "Manager" --> US14
 
         }
 
-    rectangle "Manager Area " as usecase5 #Lightblue{
+    rectangle "Manager Area " as usecase6 #Lightblue{
 
-            usecase "US03 - As a manager, I want to create a category" as US03
-            usecase "US05 - As a manager, I want to update a category" as US05
-            usecase "US06 - As a manager, I want to delete a category" as US06
+            usecase "US03 - Create category" as US03
+            usecase "US05 - Update category" as US05
+            usecase "US06 - Delete category" as US06
+            usecase "US14 - Delete/inactive advertisement" as US14
+
             "Manager" --> US03
             "Manager" --> US05
             "Manager" --> US06
+            "Manager" --> US14
         }
 }
 @enduml

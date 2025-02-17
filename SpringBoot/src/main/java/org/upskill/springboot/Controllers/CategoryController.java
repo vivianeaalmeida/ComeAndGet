@@ -41,7 +41,7 @@ public class CategoryController extends BaseController {
     ) {
         // Define pagination default values
         int _page = page.orElse(0);
-        int _size = page.orElse(10);
+        int _size = size.orElse(10);
 
         Page<CategoryDTO> categoriesDTO = categoryService.getCategories(_page, _size);
 

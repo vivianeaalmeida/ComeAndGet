@@ -28,10 +28,11 @@ public class AdvertisementService implements IAdvertisementService {
 
     @Autowired
     private AdvertisementRepository advertisementRepository;
+  
     @Autowired
     private ItemService itemService;
-    @Autowired
-    private UserService userService;
+  
+    private final UserService userService;
 
     private final RequestService requestService;
 
@@ -43,6 +44,9 @@ public class AdvertisementService implements IAdvertisementService {
 
     @Autowired
     public AdvertisementService(@Lazy RequestService requestService) {
+
+    public AdvertisementService(@Lazy UserService userService, @Lazy RequestService requestService) {
+        this.userService = userService;
         this.requestService = requestService;
     }
 

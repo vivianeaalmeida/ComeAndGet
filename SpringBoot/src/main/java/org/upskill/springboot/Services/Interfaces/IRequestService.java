@@ -1,5 +1,6 @@
 package org.upskill.springboot.Services.Interfaces;
 
+import org.springframework.data.domain.Page;
 import org.upskill.springboot.DTOs.RequestDTO;
 import org.upskill.springboot.DTOs.RequestResponseDTO;
 import org.upskill.springboot.DTOs.RequestStatusDTO;
@@ -16,7 +17,7 @@ public interface IRequestService {
      *
      * @return a list of all request response data transfer objects
      */
-    List<RequestResponseDTO> getRequests();
+    Page<RequestResponseDTO> getRequests(int page, int size);
 
     /**
      * Retrieves a specific request by its ID.
@@ -59,4 +60,6 @@ public interface IRequestService {
      * @param id the ID of the request to be deleted
      */
     void deleteRequest(String id);
+
+    List<RequestResponseDTO> getRequestsByUserId(String userId);
 }

@@ -13,7 +13,7 @@
 - US11 - View advertisement *
 - US12 - Search advertisements *
 - US13 - Update advertisement *
-- US14 - Delete advertisement
+- US14 - Delete/inactive advertisement
 - US15 - View my published advertisements
 - US16 - Create request on advertisement
 - US17 - View request
@@ -49,9 +49,8 @@
 - **Description**: As a manager, I want to create new categories so that users can classify their advertisements properly.
 - **Permissions/Role**: Manager
 - **Acceptance Criteria**:
-  - The category name must be unique
-  - The category name must have a minimum length of 5 characters (optional)
-  - The system should validate that the category name is not null or empty.
+  - The category name must be unique and not empty
+  - The category designation must be between 5 and 50 characters
 
 ---
 
@@ -60,7 +59,7 @@
 - **Description**: As a user, I want to view a list of all available categories so that I can classify advertisements correctly and search by item category.
 - **Permissions/Role**: All
 - **Acceptance Criteria**:
-  - The system should return a list of categories with their respective names.
+  - N/A.
 
 ---
 
@@ -70,7 +69,7 @@
 - **Permissions/Role**: Manager
 - **Acceptance Criteria**:
   - The category name must be unique and not empty.
-  - The category name must have a minimum length of 5 characters (optional)
+  - The category designation must be between 5 and 50 characters
 
 ---
 
@@ -89,7 +88,7 @@
 - **Permissions/Role**: Client
 - **Acceptance Criteria**:
   - Advertisement Status is "available" by default.
-  - Initial Date is automatically created with the current date.
+  - Advertisement date is automatically created with the current date.
   - The user must provide the item details when creating an advertisement.
   - The system must create the associated item together with the advertisement.
   - The advertisement must not exist without an associated item.
@@ -111,7 +110,7 @@
 - **Description**: As a user, I want to view the list of active advertisements so that I can explore the items that are available for donation.
 - **Permissions/Role**: All
 - **Acceptance Criteria**:
-    - The list displays key details for each product, such as product name, category, condition, and donation method.
+    - The list displays key details for each advertisement.
     - The list is paginated or scrollable if it contains a large number of items (optional).
 
 ---
@@ -131,38 +130,38 @@
 - **Description**: As a user, I want to view more details about a specific advertisement so that I can get additional information.
 - **Permissions/Role**: All
 - **Acceptance Criteria**:
-    - The page must contain all the advertisement details and the contact of the donor (only registered users can get the contact).
+    - N/A
 
 ---
 
 ## US12 - Search advertisements
-- **Endpoint**: `/advertisement/available?category=[arg1]&keyword=[arg2]&location=[arg3]`
-- **Description**: As a user, I want to search for active advertisements by category, keyword, and location so that I can better find the items I’m interested in.
+- **Endpoint**: `/advertisement/available?category=[arg1]&keyword=[arg2]&municipality=[arg3]`
+- **Description**: As a user, I want to search for active advertisements by category, keyword, and municipality so that I can better find the items I’m interested in.
 - **Permissions/Role**: All
 - **Acceptance Criteria**:
-    - The list displays key details for each advertisement, such as product name, category, condition, status.
+    - The list displays key details for each advertisement.
     - The list is paginated or scrollable if it contains a large number of items (optional).
 
 ---
 
 ## US13 - Update advertisement
 - **Endpoint**: `PUT /advertisements/{id}`
-- **Description**: As a client, I want to update advertisement’s designation, location, end date and the respective item so that it remains relevant and accurate.
+- **Description**: As a client, I want to update advertisement’s title, designation and status so that it remains relevant and accurate.
 - **Permissions/Role**: Client (the creator)
 - **Acceptance Criteria**:
-    - Only advertisements with available status can be updated.
-    - Advertisement status and initialDate cannot be updated
-    - Advertisements with closed status cannot be updated.
-    - Advertisement status can be updated to closed, but if there are requests pending their status have to change to rejected.
+    - Only advertisements with active status can be updated.
+    - Only title, designation and status can be updated
+    - Advertisement status can only be updated to closed.
+    - Advertisement status can be updated to closed, but if there are requests with status pending or accepted their status have to change to rejected.
 
 ---
 
-## US14 - Delete advertisement
-- **Endpoint**: `DELETE /advertisements/{id}`
-- **Description**: As a client and a manager, I want to delete an advertisement.
-- **Permissions/Role**: Client (the creator) / Manager
+## US14 - Deactivate an advertisement
+- **Endpoint**: `PATCH /advertisements/{id}/status/inactive`
+- **Description**: As a manager I want to deactivate an advertisement so that inappropriate advertisements can be removed from visibility.
+- **Permissions/Role**: Manager
 - **Acceptance Criteria**:
-    - Only advertisements with active status and no requests made can be deleted.
+    - Advertisement that have a request with status donated cannot be deactivated.
 
 ---
 
@@ -171,7 +170,7 @@
 - **Description**: As a client, I want to see a list of my published advertisements so that I can manage them if necessary
 - **Permissions/Role**: Client
 - **Acceptance Criteria**:
-  - The client should be able to view all their published listings.
+  - The client should be able to view all their published advertisements (active or closed) ordered by descending date.
   - The list is paginated or scrollable if it contains a large number of items (optional).
 
 ---
@@ -181,9 +180,10 @@
 - **Description**: As a client, I want to create a request on an advertisement so that I can request the item being donated.
 - **Permissions/Role**: Client
 - **Acceptance Criteria**:
-    - The donation request must be linked to an advertisement with active status.
+    - The request must be made to an advertisement with active status.
     - The system should notify the advertisement owner when a request is made.
-    - A client cannot create multiple donation requests for the same advertisement.
+    - A client cannot create multiple requests for the same advertisement.
+    - The owner of the advertisement cannot be able to made request to their own advertisements.
 
 ---
 
@@ -192,9 +192,8 @@
 - **Description**: As a client, I want to view the details of a request so that I can track its status and relevant information.
 - **Permissions/Role**: Client (requester or advertisement owner)
 - **Acceptance Criteria**:
-    - The requester can view the details of their own donation requests.
-    - The advertisement owner can view donation requests made to their advertisements.
-    - The response must include the request status, creation date, and associated advertisement details.
+    - The requester can view the details of their own requests.
+    - The advertisement owner can view requests made to their advertisements.
 
 ---
 
@@ -203,8 +202,8 @@
 - **Description**: As a client, I want to view the list of requests I have made on advertisements so that I can track their status and manage them
 - **Permissions/Role**: Client
 - **Acceptance Criteria**:
-    - The client should be able to view a list of requests they have made on advertisements. 
-    - Each request should display its status
+    - The client should be able to view a list of requests they have made on advertisements ordered by descending date.
+    - Each request should display its status.
     - Clicking on a request should show its details and the associated advertisement.
 
 ---
@@ -228,4 +227,9 @@
     - Only the requester or the advertisement owner can update the status of the request.
     - The system should notify the involved parties when the status changes.
     - When the status is changed to finished the advertisement status is changed to finished.
+    - It must only exist a request with status donated per advertisement.
+    - Request with donated, canceled and rejected status cannot be changed by anyone.
+    - The requester can change is request to canceled.
+    - The advertisement owner can change the pending requests to rejected. It can also change a pending request to accepted, but it must only exist one accepted request per advertisement.
+    - Changing a request to donated closes the corresponding advertisement (advertisement status must be updated to closed)
 ---

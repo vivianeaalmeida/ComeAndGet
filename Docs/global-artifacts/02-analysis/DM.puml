@@ -12,8 +12,8 @@ hide methods
 
 class User {
     name
-    emailAddress
-    phoneNumber
+    email
+    phone
 }
 
 class Role {
@@ -32,9 +32,8 @@ class Category {
 
 class Advertisement{
     designation
-    initialDate
-    finalDate
-    address
+    date
+    municipality
     status
     '(active, closed)
 }
@@ -43,14 +42,8 @@ class Request {
     status
     '(pending, canceled, rejected, accepted, donated)
     date
-    email
-    phone
 }
 
-note bottom of Request
-Status: Pending, Canceled, Rejected,
-Accepted, Donated
-endnote
 
 class Tip {
     title
@@ -60,10 +53,13 @@ class Tip {
 class Like {
 }
 
-
+note bottom of Request
+Status: Pending, Canceled, Rejected,
+Accepted, Donated
+endnote
 
 note bottom of Advertisement
-Status: Active, Closed
+Status: Active, Closed, Inactive
 endnote
 
 Item "0..*" -left- "1" Category : belongs to a \t >
@@ -73,5 +69,5 @@ User "1" -- "0..*" Request : references <
 Request "0..*" -- "1" Advertisement : receives <
 User "1" -- "0..*" Like : makes >
 Like "0..*" -left- "1" Tip : references >
-"User" "0..*" - "1" Role : has \t >
+User "0..*" - "1" Role : has \t >
 @enduml

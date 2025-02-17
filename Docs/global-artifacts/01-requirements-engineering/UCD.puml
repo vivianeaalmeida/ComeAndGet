@@ -73,7 +73,7 @@ rectangle " " as usecase1 {
             usecase "US03 - Create category" as US03
             usecase "US05 - Update category" as US05
             usecase "US06 - Delete category" as US06
-            usecase "US14 - Delete/inactive advertisement" as US14
+            usecase "US14 - Deactivate an advertisement" as US14
 
             "Manager" --> US03
             "Manager" --> US05

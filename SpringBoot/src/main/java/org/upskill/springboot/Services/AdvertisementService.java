@@ -16,6 +16,7 @@ import org.upskill.springboot.Models.Request;
 import org.upskill.springboot.Repositories.AdvertisementRepository;
 import org.upskill.springboot.Repositories.RequestRepository;
 import org.upskill.springboot.Services.Interfaces.IAdvertisementService;
+import org.upskill.springboot.WebClient.MunicipalityWebClient;
 
 import java.util.List;
 
@@ -33,14 +34,17 @@ public class AdvertisementService implements IAdvertisementService {
     private UserService userService;
 
     private final RequestService requestService;
+
     @Autowired
     private RequestRepository requestRepository;
+
+    @Autowired
+    private MunicipalityWebClient municipalityWebClient;
 
     @Autowired
     public AdvertisementService(@Lazy RequestService requestService) {
         this.requestService = requestService;
     }
-
 
     /**
      * Retrieves an advertisement by its ID.
@@ -51,9 +55,13 @@ public class AdvertisementService implements IAdvertisementService {
      */
     @Override
     public AdvertisementDTO getAdvertisementById(String id) {
-        return advertisementRepository.findById(id)
-                .map(AdvertisementMapper::toDTO)
+        Advertisement advertisement = advertisementRepository.findById(id)
                 .orElseThrow(() -> new AdvertisementNotFoundException("Advertisement not found"));
+
+        AdvertisementDTO advertisementDTO = AdvertisementMapper.toDTO(advertisement);
+        setMunicipality(advertisementDTO, advertisement);
+
+        return advertisementDTO;
     }
 
     /**
@@ -66,8 +74,11 @@ public class AdvertisementService implements IAdvertisementService {
     @Override
     public Page<AdvertisementDTO> getAllAdvertisements(int page, int size) {
         return advertisementRepository.findAll(PageRequest.of(page, size))
-                .map(AdvertisementMapper::toDTO);
-
+                .map(advertisement -> {
+                    AdvertisementDTO advertisementDTO = AdvertisementMapper.toDTO(advertisement);
+                    setMunicipality(advertisementDTO, advertisement);
+                    return advertisementDTO;
+                });
     }
 
     /**
@@ -82,7 +93,11 @@ public class AdvertisementService implements IAdvertisementService {
         PageRequest pageRequest = PageRequest.of(page, size);
 
         return advertisementRepository.findByStatus(Advertisement.AdvertisementStatus.ACTIVE, pageRequest)
-                .map(AdvertisementMapper::toDTO);
+                .map(advertisement -> {
+                    AdvertisementDTO advertisementDTO = AdvertisementMapper.toDTO(advertisement);
+                    setMunicipality(advertisementDTO, advertisement);
+                    return advertisementDTO;
+                });
     }
 
     /**
@@ -97,7 +112,11 @@ public class AdvertisementService implements IAdvertisementService {
         PageRequest pageRequest = PageRequest.of(page, size);
 
         return advertisementRepository.findByStatus(Advertisement.AdvertisementStatus.CLOSED, pageRequest)
-                .map(AdvertisementMapper::toDTO);
+                .map(advertisement -> {
+                    AdvertisementDTO advertisementDTO = AdvertisementMapper.toDTO(advertisement);
+                    setMunicipality(advertisementDTO, advertisement);
+                    return advertisementDTO;
+                });
     }
 
     /**
@@ -142,12 +161,16 @@ public class AdvertisementService implements IAdvertisementService {
         // Converts the AdvertisementDTO to the Advertisement entity and associates the item
         Advertisement advertisement = AdvertisementMapper.toEntity(advertisementDTO);
         advertisement.setItem(item);
+        advertisement.setMunicipality(advertisementDTO.getMunicipality());
 
         // Saves the advertisement in the database
         advertisement = advertisementRepository.save(advertisement);
 
+        AdvertisementDTO savedAdvertisementDTO = AdvertisementMapper.toDTO(advertisement);
+        savedAdvertisementDTO.setMunicipality(advertisement.getMunicipality());
+
         // Returns the AdvertisementDTO
-        return AdvertisementMapper.toDTO(advertisement);
+        return savedAdvertisementDTO;
     }
 
 
@@ -161,27 +184,31 @@ public class AdvertisementService implements IAdvertisementService {
     @Override
     @Transactional
     public AdvertisementDTO updateAdvertisement(String id, AdvertisementUpdateDTO advertisementUpdateDTO) {
-        // Valida o AdvertisementUpdateDTO
+        // Validates AdvertisementUpdateDTO
         validateAdvertisementUpdate(id, advertisementUpdateDTO);
 
-        // Obtém o anúncio original
+        // Get advertisement
         AdvertisementDTO advertisementDTO = getAdvertisementById(id);
 
-        // Atualiza o anúncio com os novos dados
+        // Updated advertisement
         Advertisement advertisement = AdvertisementMapper.toEntity(advertisementDTO);
         advertisement.setTitle(advertisementUpdateDTO.getTitle());
         advertisement.setDescription(advertisementUpdateDTO.getDescription());
 
-        // Se o status for alterado para CLOSED, rejeita todas as solicitações associadas
+        // If status is changed to closed, rejects all requests
         if (advertisementUpdateDTO.getStatus().equalsIgnoreCase("CLOSED")) {
             rejectRequests(advertisement.getId());
             advertisement.setStatus(Advertisement.AdvertisementStatus.CLOSED);
         }
 
-        // Salva o anúncio atualizado no banco de dados
+        // Saves advertisement
         advertisement = advertisementRepository.save(advertisement);
 
-        return AdvertisementMapper.toDTO(advertisement);
+        // Converts to DTO and sets municipality
+        AdvertisementDTO savedAdvertisementDTO = AdvertisementMapper.toDTO(advertisement);
+        savedAdvertisementDTO.setMunicipality(advertisement.getMunicipality());
+
+        return savedAdvertisementDTO;
     }
 
     /**
@@ -216,7 +243,8 @@ public class AdvertisementService implements IAdvertisementService {
             throw new IllegalArgumentException("The advertisement must be provided.");
         }
 
-        this.validateTitleAndDescription(advertisementDTO.getTitle(), advertisementDTO.getDescription());
+        validateTitleAndDescription(advertisementDTO.getTitle(), advertisementDTO.getDescription());
+        validateAdvertisementMunicipality(advertisementDTO);
 
         // Check if the client associated with the advertisement is valid
         UserDTO user = userService.getUserById(advertisementDTO.getClientId());
@@ -351,6 +379,34 @@ public class AdvertisementService implements IAdvertisementService {
 
 
     /**
+     * Method to validate the advertisement municipality
+     * @param advertisementDTO
+     * @return true if municipality exists
+     */
+    private boolean validateAdvertisementMunicipality(AdvertisementDTO advertisementDTO) {
+        String municipalityName = advertisementDTO.getMunicipality();
+        System.out.println(municipalityName);
+        try {
+            MunicipalityDTO municipalityDTO = municipalityWebClient.getMunicipalityByDesignation(municipalityName);
+            advertisementDTO.setMunicipality(municipalityDTO.getDesignation());
+
+        } catch (MunicipalityNotFound e) {
+            throw new AdvertisementValidationException("Municipality not found");
+        }
+        return true;
+    }
+
+    /**
+     * Sets the municipality to the AdvertisementDTO.
+     *
+     * @param advertisementDTO the AdvertisementDTO
+     * @param advertisement the advertisement with the municipality
+     */
+    private void setMunicipality(AdvertisementDTO advertisementDTO, Advertisement advertisement) {
+        advertisementDTO.setMunicipality(advertisement.getMunicipality());
+    }
+
+    /**
      * Rejects all requests associated with an advertisement by its ID.
      *
      * @param advertisementId the ID of the advertisement
@@ -360,13 +416,12 @@ public class AdvertisementService implements IAdvertisementService {
 
         //Set the request status to REJECTED
         for (Request request : requests) {
-            request.setStatus(Request.RequestStatus.REJECTED);
+            if (request.getStatus() != Request.RequestStatus.CANCELED) {
+                request.setStatus(Request.RequestStatus.REJECTED);
+            }
         }
 
         // Save the updated requests
         requestRepository.saveAll(requests);
     }
-
-
-
 }

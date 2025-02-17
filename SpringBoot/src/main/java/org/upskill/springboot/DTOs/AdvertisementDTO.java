@@ -37,6 +37,11 @@ public class AdvertisementDTO extends RepresentationModel<AdvertisementDTO> {
     private LocalDate initialDate;
 
     /**
+     * The municipality of the advertisement
+     */
+    private String municipality;
+
+    /**
      * The current status of the advertisement (ACTIVE or CLOSED).
      */
     private String status;

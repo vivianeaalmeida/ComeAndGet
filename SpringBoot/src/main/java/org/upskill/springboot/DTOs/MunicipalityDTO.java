@@ -10,7 +10,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MunicipalityDTO {
-
     /**
      * The designation of a municipality.
      */

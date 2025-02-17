@@ -54,6 +54,13 @@ public class Advertisement {
     private LocalDate initialDate;
 
     /**
+     * The municipality designation of the advertisement
+     * This is a required field
+     */
+    @NonNull
+    private String municipality;
+
+    /**
      * The current status of the advertisement (ACTIVE or CLOSED).
      * This is a required field.
      * The status is stored in the database as a numeric value.

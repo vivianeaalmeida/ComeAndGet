@@ -2,6 +2,7 @@ package org.upskill.springboot.Repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.upskill.springboot.Models.Request;
 
@@ -57,4 +58,15 @@ public interface RequestRepository extends JpaRepository<Request, String> {
      * @return true if a request exists for the given advertisement and user, false otherwise
      */
     boolean existsByAdvertisement_IdAndUser_Id(String advertisement_id, String user_Id);
+
+
+    /**
+     * Checks if there are any requests in the "DONATED" state for a specific advertisement.
+     *
+     * @param advertisementId The ID of the advertisement
+     * @return {@code true} if there are any "DONATED" requests for the advertisement, {@code false} otherwise.
+     */
+    @Query("SELECT COUNT(r) > 0 FROM Request r WHERE r.advertisement.id = :advertisementId AND r.status = 4")
+    boolean existsDonatedRequestForAdvertisement(String advertisementId);
+
 }

@@ -7,7 +7,7 @@ import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.upskill.springboot.DTOs.AdvertisementDTO;
+import org.upskill.springboot.DTOs.*;
 import org.upskill.springboot.Services.AdvertisementService;
 
 import java.util.ArrayList;
@@ -174,6 +174,44 @@ public class AdvertisementController extends BaseController {
         return new ResponseEntity<>(CollectionModel.of(advertisementsDTO.getContent(), links), HttpStatus.OK);
     }
 
+    /**
+     * Retrieves a paginated list of advertisements by client ID.
+     *
+     * @param clientId the ID of the client
+     * @param page Optional parameter for the page number (default is 0)
+     * @param size Optional parameter for the page size (default is 10)
+     * @return a ResponseEntity containing a CollectionModel of AdvertisementDTO with HATEOAS links,
+     *         including self, next, and previous page links and HTTP status OK if retrieval is successful
+     */
+    @GetMapping("/advertisements/{clientId}")
+    public ResponseEntity<CollectionModel<AdvertisementDTO>> getAdvertisementsByClientId(
+            @PathVariable String clientId,
+            @RequestParam Optional<Integer> page,
+            @RequestParam Optional<Integer> size
+    ) {
+        int _page = page.orElse(0);
+        int _size = size.orElse(10);
+
+        Page<AdvertisementDTO> advertisementsDTO = advertisementService.getAdvertisementsByClientId(_page, _size, clientId);
+
+        Link selfLink = linkTo(methodOn(AdvertisementController.class)
+                .getAdvertisementsByClientId(clientId, Optional.of(_page), Optional.of(_size))).withSelfRel();
+
+        List<Link> links = new ArrayList<>();
+        links.add(selfLink);
+
+        if (advertisementsDTO.hasNext()) {
+            links.add(linkTo(methodOn(AdvertisementController.class)
+                    .getAdvertisementsByClientId(clientId, Optional.of(_page + 1), Optional.of(_size))).withRel("next"));
+        }
+        if (advertisementsDTO.hasPrevious()) {
+            links.add(linkTo(methodOn(AdvertisementController.class)
+                    .getAdvertisementsByClientId(clientId, Optional.of(_page - 1), Optional.of(_size))).withRel("previous"));
+        }
+
+        return new ResponseEntity<>(CollectionModel.of(advertisementsDTO.getContent(), links), HttpStatus.OK);
+    }
+
 
     /**
      * Creates a new advertisement.
@@ -192,6 +230,27 @@ public class AdvertisementController extends BaseController {
         return new ResponseEntity<>(advertisementDTO, HttpStatus.CREATED);
     }
 
+
+    /**
+     * Updates an existing advertisement by its ID.
+     *
+     * @param id The unique identifier of the advertisement to be updated.
+     * @param request The AdvertisementUpdateDTO object containing the advertisement data to be updated.
+     * @return A ResponseEntity containing the updated AdvertisementDTO with a self HATEOAS link
+     * and HTTP status 200 (Ok) if the update is successful.
+     */
+    @PutMapping("/advertisements/{id}")
+    public ResponseEntity<AdvertisementDTO> updateAdvertisement(@PathVariable("id") String id, @RequestBody AdvertisementUpdateDTO request) {
+        AdvertisementDTO advertisementDTO = advertisementService.updateAdvertisement(id, request);
+
+        // self
+        advertisementDTO.add(linkTo(methodOn(AdvertisementController.class)
+                .updateAdvertisement(id, request)).withSelfRel());
+
+        return new ResponseEntity<>(advertisementDTO, HttpStatus.OK);
+    }
+
+
     /**
      * Deletes an advertisement by its ID.
      * If the advertisement exists and meets the deletion criteria, it is removed from the system.
@@ -203,5 +262,48 @@ public class AdvertisementController extends BaseController {
     public ResponseEntity<Void> deleteAdvertisement(@PathVariable String id) {
         advertisementService.deleteAdvertisement(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    /**
+     * Create a new advertisement request.
+     *
+     * @param id The unique identifier of the advertisement.
+     * @param requestDTO The request data for creating the advertisement request.
+     * @return A {@code ResponseEntity<RequestResponseDTO>} containing the response data.
+     */
+    @PostMapping("/advertisements/{id}/requests")
+    public ResponseEntity<RequestResponseDTO> createAdvertisementRequest(@PathVariable String id, @RequestBody RequestDTO requestDTO) {
+        RequestResponseDTO response = advertisementService.createAdvertisementRequest(id, requestDTO);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    /**
+     * Retrieve an advertisement request by its advertisement ID and request ID.
+     *
+     * @param adId The unique identifier of the advertisement.
+     * @param requestId The unique identifier of the request associated with the advertisement.
+     * @return A {@link ResponseEntity} containing the {@link RequestResponseDTO} with the advertisement request details,
+     *         and an HTTP status of 200 OK if the request is successful.
+     */
+    @GetMapping("/advertisements/{adId}/requests/{requestId}")
+    public ResponseEntity<RequestResponseDTO> getAdvertisementRequestById(@PathVariable String adId, @PathVariable String requestId) {
+        RequestResponseDTO response = advertisementService.getAdvertisementRequestById(adId, requestId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    /**
+     * Endpoint to update the status of a request for a specific advertisement.
+     * This method handles a PATCH request and invokes the service to update the request's status for the specified advertisement.
+     *
+     * @param adId The unique identifier of the advertisement.
+     * @param requestId The unique identifier of the request.
+     * @param requestDTO The object containing the new status information for the request.
+     *
+     * @return A {@link ResponseEntity} containing a {@link RequestResponseDTO} object with the details of the operation's response, including HTTP status.
+     */
+    @PatchMapping("/advertisements/{adId}/requests/{requestId}/status")
+    public ResponseEntity<RequestResponseDTO> patchAdvertisementRequestStatus(@PathVariable String adId, @PathVariable String requestId, @RequestBody RequestStatusDTO requestDTO) {
+        RequestResponseDTO response = advertisementService.patchAdvertisementRequestStatus(adId, requestId, requestDTO);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

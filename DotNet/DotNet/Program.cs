@@ -1,5 +1,6 @@
 using DotNet.Data;
 using DotNet.Models;
+using DotNet.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,10 @@ using Microsoft.IdentityModel.Tokens;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddScoped<AccountService>();
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<AdminService>();
+
 builder.Services.AddDbContext<UserContext>(options => options.UseSqlServer
     (builder.Configuration.GetConnectionString("UserDB"))
     );

@@ -1,36 +1,33 @@
-﻿using System.Linq;
-using System.Security.Claims;
+﻿using DotNet.DTOs;
+using DotNet.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using DotNet.DTOs; // Importando o DTO
 
 namespace DotNet.Controllers {
+    /// <summary>
+    /// Controller for handling admin-related operations.
+    /// </summary>
     [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class AdminController : ControllerBase {
+        private readonly AdminService _adminService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AdminController"/> class.
+        /// </summary>
+        /// <param name="adminService">The instance of AdminService.</param>
+        public AdminController(AdminService adminService) {
+            _adminService = adminService;
+        }
+
+        /// <summary>
+        /// Retrieves admin information.
+        /// </summary>
         [HttpGet]
         public IActionResult Get() {
-            var userName = User.Identity?.Name;
-            var email = User.FindFirst(ClaimTypes.Email)?.Value;
-            var name = User.FindFirst(ClaimTypes.Name)?.Value;
-            var phoneNumber = User.FindFirst(ClaimTypes.MobilePhone)?.Value;
-            var address = User.FindFirst("Address")?.Value; // Claim personalizada, se existir
-            var role = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "Admin";
-
-            var adminInfo = new UserInfoResponse {
-                Username = userName ?? string.Empty,
-                Email = email ?? string.Empty,
-                Name = name ?? string.Empty,
-                PhoneNumber = phoneNumber ?? string.Empty,
-                Address = address ?? string.Empty,
-                Role = role
-            };
-
-            return Ok(new {
-                Message = "You have accessed the Admin area.",
-                AdminInfo = adminInfo
-            });
+            var adminInfo = _adminService.GetAdminInfo();
+            return Ok(adminInfo);
         }
     }
 }

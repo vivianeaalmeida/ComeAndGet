@@ -1,32 +1,33 @@
-﻿using System.Linq;
-using System.Security.Claims;
-using DotNet.DTOs;
+﻿using DotNet.DTOs;
+using DotNet.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DotNet.Controllers {
+    /// <summary>
+    /// Handles user-related operations, such as retrieving user information.
+    /// </summary>
     [Authorize(Roles = "User")]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase {
+        private readonly UserService _userService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserController"/> class.
+        /// </summary>
+        /// <param name="userService">The instance of UserService.</param>
+        public UserController(UserService userService) {
+            _userService = userService;
+        }
+
+        /// <summary>
+        /// Retrieves user information.
+        /// </summary>
+        /// <returns>A JSON response containing the user information.</returns>
         [HttpGet]
         public IActionResult Get() {
-            var userName = User.Identity?.Name;
-            var email = User.FindFirst(ClaimTypes.Email)?.Value;
-            var name = User.FindFirst(ClaimTypes.Name)?.Value;
-            var phoneNumber = User.FindFirst(ClaimTypes.MobilePhone)?.Value;
-            var address = User.FindFirst("Address")?.Value; // Se houver uma claim personalizada de endereço
-            var role = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "User";
-
-            var userInfo = new UserInfoResponse {
-                Username = userName ?? string.Empty,
-                Email = email ?? string.Empty,
-                Name = name ?? string.Empty,
-                PhoneNumber = phoneNumber ?? string.Empty,
-                Address = address ?? string.Empty,
-                Role = role
-            };
-
+            var userInfo = _userService.GetUserInfo();
             return Ok(userInfo);
         }
     }

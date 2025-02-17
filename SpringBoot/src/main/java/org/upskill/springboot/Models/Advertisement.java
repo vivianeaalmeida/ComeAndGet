@@ -24,7 +24,8 @@ public class Advertisement {
      */
     public enum AdvertisementStatus {
         ACTIVE,
-        CLOSED
+        CLOSED,
+        INACTIVE
     }
 
     @Id

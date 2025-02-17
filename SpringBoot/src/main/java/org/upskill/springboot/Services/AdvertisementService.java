@@ -12,13 +12,9 @@ import org.upskill.springboot.Mappers.AdvertisementMapper;
 import org.upskill.springboot.Mappers.ItemMapper;
 import org.upskill.springboot.Models.Advertisement;
 import org.upskill.springboot.Models.Item;
-import org.upskill.springboot.Models.Request;
 import org.upskill.springboot.Repositories.AdvertisementRepository;
-import org.upskill.springboot.Repositories.RequestRepository;
 import org.upskill.springboot.Services.Interfaces.IAdvertisementService;
 import org.upskill.springboot.WebClient.MunicipalityWebClient;
-
-import java.util.List;
 
 /**
  * Service class for managing advertisements.
@@ -35,9 +31,6 @@ public class AdvertisementService implements IAdvertisementService {
     private final UserService userService;
 
     private final RequestService requestService;
-
-    @Autowired
-    private RequestRepository requestRepository;
 
     @Autowired
     private MunicipalityWebClient municipalityWebClient;
@@ -61,7 +54,7 @@ public class AdvertisementService implements IAdvertisementService {
                 .orElseThrow(() -> new AdvertisementNotFoundException("Advertisement not found"));
 
         AdvertisementDTO advertisementDTO = AdvertisementMapper.toDTO(advertisement);
-        setMunicipality(advertisementDTO, advertisement);
+        advertisementDTO.setMunicipality(advertisement.getMunicipality());
 
         return advertisementDTO;
     }
@@ -78,7 +71,7 @@ public class AdvertisementService implements IAdvertisementService {
         return advertisementRepository.findAll(PageRequest.of(page, size))
                 .map(advertisement -> {
                     AdvertisementDTO advertisementDTO = AdvertisementMapper.toDTO(advertisement);
-                    setMunicipality(advertisementDTO, advertisement);
+                    advertisementDTO.setMunicipality(advertisement.getMunicipality());
                     return advertisementDTO;
                 });
     }
@@ -97,7 +90,7 @@ public class AdvertisementService implements IAdvertisementService {
         return advertisementRepository.findByStatus(Advertisement.AdvertisementStatus.ACTIVE, pageRequest)
                 .map(advertisement -> {
                     AdvertisementDTO advertisementDTO = AdvertisementMapper.toDTO(advertisement);
-                    setMunicipality(advertisementDTO, advertisement);
+                    advertisementDTO.setMunicipality(advertisement.getMunicipality());
                     return advertisementDTO;
                 });
     }
@@ -116,7 +109,7 @@ public class AdvertisementService implements IAdvertisementService {
         return advertisementRepository.findByStatus(Advertisement.AdvertisementStatus.CLOSED, pageRequest)
                 .map(advertisement -> {
                     AdvertisementDTO advertisementDTO = AdvertisementMapper.toDTO(advertisement);
-                    setMunicipality(advertisementDTO, advertisement);
+                    advertisementDTO.setMunicipality(advertisement.getMunicipality());
                     return advertisementDTO;
                 });
     }
@@ -136,7 +129,6 @@ public class AdvertisementService implements IAdvertisementService {
         return advertisementRepository.findByClientId(clientId, pageRequest)
                 .map(AdvertisementMapper::toDTO);
     }
-
 
     /**
      * Creates a new advertisement.
@@ -171,10 +163,8 @@ public class AdvertisementService implements IAdvertisementService {
         AdvertisementDTO savedAdvertisementDTO = AdvertisementMapper.toDTO(advertisement);
         savedAdvertisementDTO.setMunicipality(advertisement.getMunicipality());
 
-        // Returns the AdvertisementDTO
         return savedAdvertisementDTO;
     }
-
 
     /**
      * Updates an existing advertisement.
@@ -199,7 +189,7 @@ public class AdvertisementService implements IAdvertisementService {
 
         // If status is changed to closed, rejects all requests
         if (advertisementUpdateDTO.getStatus().equalsIgnoreCase("CLOSED")) {
-            rejectRequests(advertisement.getId());
+            requestService.rejectRequests(advertisement.getId());
             advertisement.setStatus(Advertisement.AdvertisementStatus.CLOSED);
         }
 
@@ -214,23 +204,33 @@ public class AdvertisementService implements IAdvertisementService {
     }
 
     /**
-     * Deletes an advertisement by its ID (the item associated with the advertisement is also deleted)
+     * Changes the status of an advertisement to inactive.
      *
-     * @param id the ID of the advertisement to delete
-     * @return the deleted advertisement data transfer object
+     * @param id The unique identifier of the advertisement to be updated.
+     * @return The updated {@link AdvertisementDTO} with the new status set to INACTIVE.
      */
     @Override
     @Transactional
-    public AdvertisementDTO deleteAdvertisement(String id) {
-        AdvertisementDTO adDTO = validateAdDeletion(id);
+    public AdvertisementDTO patchAdvertisementStatusToInactive(String id) {
+        validatePatchStatusToInactive(id);
 
-        // Delete advertisement
-        this.advertisementRepository.deleteById(id);
+        AdvertisementDTO advertisementDTO = getAdvertisementById(id);
 
-        // Delete item associated with the advertisement
-        this.itemService.deleteItem(adDTO.getItem().getId());
+        Advertisement advertisement = AdvertisementMapper.toEntity(advertisementDTO);
+        advertisement.setMunicipality(advertisementDTO.getMunicipality());
 
-        return adDTO;
+        // Set status to INACTIVE
+        advertisement.setStatus(Advertisement.AdvertisementStatus.INACTIVE);
+
+        // Save updated advertisement
+        advertisement = advertisementRepository.save(advertisement);
+
+        requestService.rejectRequests(advertisement.getId());
+
+        AdvertisementDTO updatedAdvertisementDTO = AdvertisementMapper.toDTO(advertisement);
+        updatedAdvertisementDTO.setMunicipality(advertisement.getMunicipality());
+
+        return updatedAdvertisementDTO;
     }
 
     /**
@@ -352,36 +352,35 @@ public class AdvertisementService implements IAdvertisementService {
 
 
     /**
-     * Validates the deletion of an advertisement by its ID.
-     * Ensures that the advertisement can be deleted by checking its existence,
-     * status and associated requests.
+     * Validates the change of status of an advertisement to INACTIVE.
+     * Ensures that the advertisement can be updated by checking its existence,
+     * status, and associated requests.
      *
-     * @param id the ID of the advertisement to be deleted
+     * @param id the ID of the advertisement to be updated
      * @return the advertisement data transfer object
      * @throws AdvertisementNotFoundException      if the advertisement does not exist
-     * @throws AdvertisementInvalidActionException if the advertisement is not active or has requests
+     * @throws AdvertisementInvalidActionException if the advertisement is already inactive or has one request with the status donated
      */
-    private AdvertisementDTO validateAdDeletion(String id) {
+    private boolean validatePatchStatusToInactive(String id) {
+        // Fetch the advertisement from the repository by its ID
         Advertisement advertisement = this.advertisementRepository.findById(id)
                 .orElseThrow(() -> new AdvertisementNotFoundException("Advertisement with id " + id + " not found"));
 
-        // Do not allow the deletion of an advertisement that is not active
-        if (!advertisement.getStatus().equals(Advertisement.AdvertisementStatus.ACTIVE)) {
-            throw new AdvertisementInvalidActionException("The advertisement with id " + id + " is not active, therefore it cannot be deleted.");
+        if (advertisement.getStatus() == Advertisement.AdvertisementStatus.INACTIVE) {
+            throw new AdvertisementInvalidActionException("Advertisement is already inactive");
         }
 
-        // Do not allow the deletion of an advertisement that has requests
-        if (advertisementRepository.hasRequests(id)) {
-            throw new AdvertisementInvalidActionException("The advertisement with id " + id + " has requests, therefore it cannot be deleted.");
+        // Check if there are any requests with status 'DONATED' associated with this advertisement
+        if (requestService.hasDonatedRequestInAdvertisement(advertisement.getId())) {
+            throw new AdvertisementInvalidActionException("Cannot change the status of the advertisement with donated requests.");
         }
 
-        return AdvertisementMapper.toDTO(advertisement);
+        return true;
     }
-
 
     /**
      * Method to validate the advertisement municipality
-     * @param advertisementDTO
+     * @param advertisementDTO the advertisement DTO
      * @return true if municipality exists
      */
     private boolean validateAdvertisementMunicipality(AdvertisementDTO advertisementDTO) {
@@ -395,34 +394,5 @@ public class AdvertisementService implements IAdvertisementService {
             throw new AdvertisementValidationException("Municipality not found");
         }
         return true;
-    }
-
-    /**
-     * Sets the municipality to the AdvertisementDTO.
-     *
-     * @param advertisementDTO the AdvertisementDTO
-     * @param advertisement the advertisement with the municipality
-     */
-    private void setMunicipality(AdvertisementDTO advertisementDTO, Advertisement advertisement) {
-        advertisementDTO.setMunicipality(advertisement.getMunicipality());
-    }
-
-    /**
-     * Rejects all requests associated with an advertisement by its ID.
-     *
-     * @param advertisementId the ID of the advertisement
-     */
-    private void rejectRequests(String advertisementId) {
-        List<Request> requests = requestService.getRequestsByAdvertisement(advertisementId);
-
-        //Set the request status to REJECTED
-        for (Request request : requests) {
-            if (request.getStatus() != Request.RequestStatus.CANCELED) {
-                request.setStatus(Request.RequestStatus.REJECTED);
-            }
-        }
-
-        // Save the updated requests
-        requestRepository.saveAll(requests);
     }
 }

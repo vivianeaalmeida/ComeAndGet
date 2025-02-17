@@ -110,6 +110,6 @@ public class ItemService implements IItemService {
      * @return {@code true} if there are items associated with the category, {@code false} otherwise.
      */
     public boolean hasItemsInCategory(String categoryId) {
-        return itemRepository.countByCategory_Id(categoryId) > 0;
+        return itemRepository.existsByCategory_Id(categoryId);
     }
 }

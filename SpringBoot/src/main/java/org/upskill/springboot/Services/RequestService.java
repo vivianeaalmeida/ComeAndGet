@@ -225,7 +225,7 @@ public class RequestService implements IRequestService {
      * @return {@code true} if there are requests associated with the advertisement, {@code false} otherwise.
      */
     public boolean hasRequestsInAdvertisement(String advertisementId) {
-        return requestRepository.countByAdvertisement_Id(advertisementId) > 0;
+        return requestRepository.existsByAdvertisement_Id(advertisementId);
     }
 
     /**

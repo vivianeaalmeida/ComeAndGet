@@ -14,7 +14,7 @@ public class AuthService {
         this.webClient = webClientBuilder.baseUrl("http://localhost:5016/api/v1").build();
     }
 
-    public String authenticate(String email, String password) {
+    /*public String authenticate(String email, String password) {
         LoginRequest request = new LoginRequest(email, password);
 
         LoginResponse response = webClient.post()
@@ -26,4 +26,5 @@ public class AuthService {
                 .block(); // Espera a resposta de forma síncrona
 
         return response != null ? response.getToken():null;}
+        */
 }

@@ -183,7 +183,7 @@ public class AdvertisementController extends BaseController {
      * @return a ResponseEntity containing a CollectionModel of AdvertisementDTO with HATEOAS links,
      *         including self, next, and previous page links and HTTP status OK if retrieval is successful
      */
-    @GetMapping("/advertisements/{clientId}")
+    @GetMapping("users/{clientId}/advertisements")
     public ResponseEntity<CollectionModel<AdvertisementDTO>> getAdvertisementsByClientId(
             @PathVariable String clientId,
             @RequestParam Optional<Integer> page,

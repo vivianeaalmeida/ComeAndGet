@@ -11,11 +11,6 @@ import lombok.Setter;
 @Setter
 public class MunicipalityDTO {
     /**
-     * The unique identifier for the municipality.
-     */
-    private String id;
-
-    /**
      * The designation of a municipality.
      */
     private String designation;

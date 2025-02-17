@@ -37,28 +37,28 @@ public class AccountController : ControllerBase {
     /// </summary>
     /// <param name="role">The name of the role to add.</param>
     /// <returns>A JSON response indicating whether the role was added successfully.</returns>
-    [HttpPost("add-role")]
-    public async Task<IActionResult> AddRole([FromBody] string role) {
-        var result = await accountService.AddRoleAsync(role);
-        if (result.Succeeded) {
-            return Ok(new { message = "Role added successfully" });
-        }
-        return BadRequest(result.Errors);
-    }
+    //[HttpPost("add-role")]
+    //public async Task<IActionResult> AddRole([FromBody] string role) {
+    //    var result = await accountService.AddRoleAsync(role);
+    //    if (result.Succeeded) {
+    //        return Ok(new { message = "Role added successfully" });
+    //    }
+    //    return BadRequest(result.Errors);
+    //}
 
     /// <summary>
     /// Assigns a role to a user.
     /// </summary>
     /// <param name="model">The user-role assignment model.</param>
     /// <returns>A JSON response indicating whether the role was assigned successfully.</returns>
-    [HttpPost("assign-role")]
-    public async Task<IActionResult> AssignRole([FromBody] UserRoleDTO model) {
-        var result = await accountService.AssignRoleAsync(model);
-        if (result.Succeeded) {
-            return Ok(new { message = "Role assigned successfully" });
-        }
-        return BadRequest(result.Errors);
-    }
+    //[HttpPost("assign-role")]
+    //public async Task<IActionResult> AssignRole([FromBody] UserRoleDTO model) {
+    //    var result = await accountService.AssignRoleAsync(model);
+    //    if (result.Succeeded) {
+    //        return Ok(new { message = "Role assigned successfully" });
+    //    }
+    //    return BadRequest(result.Errors);
+    //}
 
     /// <summary>
     /// Logs in a user.

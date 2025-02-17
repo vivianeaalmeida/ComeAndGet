@@ -95,14 +95,9 @@ public class Advertisement {
 
     /**
      * Sets the data to the current date if null
-     * @param initialDate date of the advertisement
      */
-    public void setInitialDate(LocalDate initialDate) {
-        if (initialDate == null) {
-            this.initialDate = LocalDate.now();
-        } else {
-            this.initialDate = initialDate;
-        }
+    public void setInitialDate() {
+       this.initialDate = LocalDate.now();
     }
 
     /**

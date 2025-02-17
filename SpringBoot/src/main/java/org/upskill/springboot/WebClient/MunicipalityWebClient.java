@@ -13,7 +13,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.FileTime;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -25,33 +27,48 @@ public class MunicipalityWebClient {
 
     // variable to store municipalities in cache
     private List<String> municipalitiesCache;
-    private LocalDate lastUpdated;
 
     private String municipalitiesFile = "municipalities.json";
 
     @Autowired
     public MunicipalityWebClient(WebClient.Builder webClientBuilder) {
         this.webClientBuilder = webClientBuilder.baseUrl("https://json.geoapi.pt");
+        municipalitiesCache = new ArrayList<>();
     }
 
     public List<String> getMunicipalities() {
-        if (municipalitiesCache == null || isCacheExpired()) {
+        // If cache empty, reload from file or fetch new data
+        if (municipalitiesCache.isEmpty()) {
             municipalitiesCache = loadMunicipalitiesFromFile();
 
-            // If no file found or cache is expired, fetch new data
-            if (municipalitiesCache == null || municipalitiesCache.isEmpty()) {
-                municipalitiesCache = fetchMunicipalities();
-                saveMunicipalitiesToFile(municipalitiesCache);
-                lastUpdated = LocalDate.now();
+            // if municipalitiesCache is null or cache has expired (more than 30 days)
+            if (municipalitiesCache == null || isCacheExpired()) {
+                municipalitiesCache = fetchMunicipalities(); // fetch municipalities in external api
+                saveMunicipalitiesToFile(municipalitiesCache); // save results into file
             }
         }
         return municipalitiesCache;
     }
 
     private boolean isCacheExpired() {
-        // Check if last update is before 30 days ago
-        LocalDate oneMonthAgo = LocalDate.now().minusMonths(1);
-        return lastUpdated.isBefore(oneMonthAgo) || lastUpdated.isEqual(oneMonthAgo);
+        // Check if municipalities file exists and its last modified time is older than 30 days
+        File municipalitiesFile = new File(this.municipalitiesFile);
+        if (municipalitiesFile.exists()) {
+            try {
+                FileTime fileTime = Files.getLastModifiedTime(municipalitiesFile.toPath());
+                LocalDate lastModifiedDate = fileTime.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+                LocalDate currentDate = LocalDate.now();
+
+                // Check if the last modified date is before 30 days ago
+                LocalDate thirtyDaysAgo = currentDate.minusDays(30);
+
+                // If the last modified date is before 30 days ago, the cache is expired
+                return lastModifiedDate.isBefore(thirtyDaysAgo);
+            } catch (IOException e) {
+                throw new RuntimeException("Error checking file last modified time", e);
+            }
+        }
+        return true; // If the file doesn't exist, consider the cache expired
     }
 
     private List<String> fetchMunicipalities() {
@@ -94,6 +111,8 @@ public class MunicipalityWebClient {
 
     // Method to get municipality DTO by designation
     public MunicipalityDTO getMunicipalityByDesignation(String designation) {
+        getMunicipalities();
+
         Optional<String> municipalityDesignation = municipalitiesCache.stream()
                 .filter(municipality -> municipality.equalsIgnoreCase(designation))
                 .findFirst();

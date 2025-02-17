@@ -17,9 +17,7 @@ import org.upskill.springboot.Repositories.AdvertisementRepository;
 import org.upskill.springboot.Services.Interfaces.IAdvertisementService;
 import org.upskill.springboot.WebClient.MunicipalityWebClient;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -325,10 +323,6 @@ public class AdvertisementService implements IAdvertisementService {
 
         validateTitleAndDescription(advertisementDTO.getTitle(), advertisementDTO.getDescription());
         validateAdvertisementMunicipality(advertisementDTO);
-
-        if (!Objects.equals(advertisementDTO.getInitialDate(), LocalDate.now())) {
-            throw new AdvertisementValidationException("Advertisement must be created with the current date");
-        }
 
         // Check if status is active
         Advertisement.AdvertisementStatus statusEnum = Advertisement.AdvertisementStatus

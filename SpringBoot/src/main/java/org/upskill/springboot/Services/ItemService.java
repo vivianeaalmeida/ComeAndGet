@@ -3,7 +3,6 @@ package org.upskill.springboot.Services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.upskill.springboot.DTOs.ItemDTO;
-import org.upskill.springboot.Exceptions.CategoryDeletionException;
 import org.upskill.springboot.Exceptions.CategoryNotFoundException;
 import org.upskill.springboot.Exceptions.ItemNotFoundException;
 import org.upskill.springboot.Exceptions.ItemValidationException;
@@ -124,5 +123,15 @@ public class ItemService implements IItemService {
     private boolean validateItemDeletion(String id) {
         getItemById(id);
         return true;
+    }
+
+    /**
+     * Checks if there are items associated with a specific category.
+     *
+     * @param categoryId The identifier of the category.
+     * @return {@code true} if there are items associated with the category, {@code false} otherwise.
+     */
+    public boolean hasItemsInCategory(String categoryId) {
+        return itemRepository.countByCategory_Id(categoryId) > 0;
     }
 }

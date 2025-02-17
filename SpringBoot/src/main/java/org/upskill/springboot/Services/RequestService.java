@@ -217,4 +217,25 @@ public class RequestService implements IRequestService {
         }
         return true;
     }
+
+    /**
+     * Checks if there are requests associated with a specific advertisement.
+     *
+     * @param advertisementId The identifier of the advertisement.
+     * @return {@code true} if there are requests associated with the advertisement, {@code false} otherwise.
+     */
+    public boolean hasRequestsInAdvertisement(String advertisementId) {
+        return requestRepository.countByAdvertisement_Id(advertisementId) > 0;
+    }
+
+    /**
+     * Retrieves all requests associated with a specific advertisement.
+     *
+     * @param advertisementId The identifier of the advertisement.
+     * @return A list of {@link Request} objects associated with the advertisement.
+     *         Returns an empty list if no requests are found.
+     */
+    public List<Request> getRequestsByAdvertisement(String advertisementId) {
+        return requestRepository.getRequestsByAdvertisementId(advertisementId);
+    }
 }

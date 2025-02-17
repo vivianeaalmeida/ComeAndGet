@@ -25,6 +25,14 @@ public interface RequestRepository extends JpaRepository<Request, String> {
     List<Request> getRequestsByAdvertisementId(String advertisementId);
 
     /**
+     * Counts the number of requests associated with a specific advertisement.
+     *
+     * @param advertisementId The unique identifier of the advertisement for which the count of requests is required.
+     * @return The number of requests that belong to the specified advertisement.
+     */
+    int countByAdvertisement_Id(String advertisementId);
+
+    /**
      * Finds a request by its ID and associated advertisement ID.
      *
      * @param id the unique identifier of the request

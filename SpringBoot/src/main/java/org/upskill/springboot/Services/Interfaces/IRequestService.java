@@ -61,5 +61,4 @@ public interface IRequestService {
      */
     void deleteRequest(String id);
 
-    List<RequestResponseDTO> getRequestsByUserId(String userId);
 }

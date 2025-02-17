@@ -1,5 +1,7 @@
 package org.upskill.springboot.Repositories;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -39,7 +41,7 @@ public interface RequestRepository extends JpaRepository<Request, String> {
      * @param userId the unique identifier of the user
      * @return a list of {@link Request} entities linked to the given user ID
      */
-    List<Request> findRequestByUser_Id(String userId);
+    Page<Request> findRequestByUser_Id(String userId, Pageable pageable);
 
     /**
      * Checks if a request exists for a given advertisement and user.
@@ -49,4 +51,8 @@ public interface RequestRepository extends JpaRepository<Request, String> {
      * @return true if a request exists for the given advertisement and user, false otherwise
      */
     boolean existsByAdvertisement_IdAndUser_Id(String advertisement_id, String user_Id);
+
+
+    @Query("SELECT r FROM Request r INNER JOIN Advertisement ad ON r.advertisement.id = ad.id WHERE ad.clientId = :userId")
+    Page<Request> findRequestsFromAdvertisementOfUser(String userId,Pageable pageable);
 }

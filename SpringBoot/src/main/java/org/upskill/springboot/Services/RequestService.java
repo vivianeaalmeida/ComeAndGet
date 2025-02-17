@@ -156,18 +156,27 @@ public class RequestService implements IRequestService {
     }
 
     /**
-     * Retrieves a list of requests associated with a specific user ID and maps them to DTOs.
+     * Retrieves a page of requests associated with a specific user ID and maps them to DTOs.
      *
      * @param userId the unique identifier of the user
-     * @return a list of {@link RequestResponseDTO} objects representing the user's requests
+     * @return a page of {@link RequestResponseDTO} objects representing the user's requests
      */
-    public List<RequestResponseDTO> getRequestsByUserId(String userId){
-        List<Request> requests = requestRepository.findRequestByUser_Id(userId);
-        List<RequestResponseDTO> requestDTOs = new ArrayList<>();
-        for (Request request : requests) {
-            requestDTOs.add(RequestMapper.toDTO(request));
-        }
-        return requestDTOs;
+    public Page<RequestResponseDTO> getRequestsByUserId(String userId,int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Request> requests = requestRepository.findRequestByUser_Id(userId,pageRequest);
+        return requests.map(RequestMapper::toDTO);
+    }
+
+    /**
+     * Retrieves a page of requests associated with a specific user ID and maps them to DTOs.
+     *
+     * @param userId the unique identifier of the user
+     * @return a page of {@link RequestResponseDTO} objects representing the user's requests
+     */
+    public Page<RequestResponseDTO> getRequestsFromAdvertisementOfUser(String userId,int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Request> requests = requestRepository.findRequestsFromAdvertisementOfUser(userId,pageRequest);
+        return requests.map(RequestMapper::toDTO);
     }
 
     /**

@@ -2,6 +2,8 @@ package org.upskill.springboot.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.upskill.springboot.DTOs.RequestResponseDTO;
 import org.upskill.springboot.DTOs.UserDTO;
@@ -63,10 +65,21 @@ public class UserService implements IUserService {
      * Retrieves a list of request DTOs for a given user ID by delegating the call to the request service.
      *
      * @param id the unique identifier of the user
+     * @param page Optional parameter for the page number (default is 0)
+     * @param size Optional parameter for the page size (default is 10)
      * @return a list of {@link RequestResponseDTO} objects representing the user's requests
      */
     @Override
-    public List<RequestResponseDTO> getRequestsByUserId(String id){
-        return this.requestService.getRequestsByUserId(id);
+    public Page<RequestResponseDTO> getRequestsByUserId(String id,int page, int size){
+
+        return this.requestService.getRequestsByUserId(id, page, size);
     }
+
+    @Override
+    public Page<RequestResponseDTO> getRequestsFromAdvertisementOfUser(String id,int page, int size) {
+
+        return requestService.getRequestsFromAdvertisementOfUser(id, page, size);
+    }
+
+
 }

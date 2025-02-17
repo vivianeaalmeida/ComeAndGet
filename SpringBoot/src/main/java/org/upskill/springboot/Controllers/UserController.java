@@ -1,14 +1,21 @@
 package org.upskill.springboot.Controllers;
 
+import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.upskill.springboot.DTOs.AdvertisementDTO;
 import org.upskill.springboot.DTOs.RequestResponseDTO;
 import org.upskill.springboot.DTOs.UserDTO;
 import org.upskill.springboot.Services.UserService;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -38,48 +45,87 @@ public class UserController extends BaseController {
         UserDTO userDTO = this.userService.getUserById(id);
 
         userDTO.add(linkTo(methodOn(UserController.class).getUserById(id)).withSelfRel());
-//        userDTO.add(linkTo(methodOn(UserController.class).getUsers(Optional.of(1), Optional.of(10))).withRel("Users"));
         return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
     }
 
     @GetMapping("/users/{userId}/requests")
-    public ResponseEntity<List<RequestResponseDTO>> getRequestsByUserId(@PathVariable String userId) {
-        List<RequestResponseDTO> requestDTOs = this.userService.getRequestsByUserId(userId);
-        return new ResponseEntity<>(requestDTOs, HttpStatus.OK);
-    }
-
-    /*
-      public ResponseEntity<CollectionModel<AdvertisementDTO>> getAdvertisements(
-            @RequestParam Optional<Integer> page,
-            @RequestParam Optional<Integer> size
-    ) {
-        // Define pagination default values
+    public ResponseEntity<CollectionModel<RequestResponseDTO>> getRequestsByUserId(@PathVariable String userId,
+                                                                               @RequestParam Optional<Integer> page,
+                                                                               @RequestParam Optional<Integer> size) {
         int _page = page.orElse(0);
         int _size = size.orElse(10);
-
-        Page<AdvertisementDTO> advertisementsDTO = advertisementService.getAllAdvertisements(_page, _size);
-
-        advertisementsDTO.forEach(advertisement ->
-                advertisement.add(linkTo(methodOn(AdvertisementController.class)
-                        .getAdvertisementById(advertisement.getId())).withSelfRel()));
-
-        Link selfLink = linkTo(methodOn(AdvertisementController.class)
-                .getAdvertisements(Optional.of(_page), Optional.of(_size))).withSelfRel();
+        Page<RequestResponseDTO> response = this.userService.getRequestsByUserId(userId,_page, _size);
+        Link selfLink = linkTo(methodOn(UserController.class)
+                .getAdvertisementsRequestsByUserId(userId, Optional.of(_page), Optional.of(_size))).withSelfRel();
 
         List<Link> links = new ArrayList<>();
         links.add(selfLink);
 
-        if (advertisementsDTO.hasNext()) {
-            links.add(linkTo(methodOn(AdvertisementController.class)
-                    .getAdvertisements(Optional.of(_page + 1), Optional.of(_size))).withRel("next"));
+        if (response.hasNext()) {
+            links.add(linkTo(methodOn(UserController.class)
+                    .getAdvertisementsRequestsByUserId(userId, Optional.of(_page+1), Optional.of(_size))).withRel("next"));
         }
-        if (advertisementsDTO.hasPrevious()) {
-            links.add(linkTo(methodOn(AdvertisementController.class)
-                    .getAdvertisements(Optional.of(_page - 1), Optional.of(_size))).withRel("previous"));
+        if (response.hasPrevious()) {
+            links.add(linkTo(methodOn(UserController.class)
+                    .getAdvertisementsRequestsByUserId(userId, Optional.of(_page+1), Optional.of(_size))).withRel("previous"));
         }
 
-        return new ResponseEntity<>(CollectionModel.of(advertisementsDTO.getContent(), links), HttpStatus.OK);
+        return new ResponseEntity<>(CollectionModel.of(response.getContent(), links), HttpStatus.OK);
     }
+
+   @GetMapping("/users/{userId}/advertisements/requests")
+    public ResponseEntity<CollectionModel<RequestResponseDTO>>getAdvertisementsRequestsByUserId(
+            @PathVariable String userId,
+            @RequestParam Optional<Integer> page,
+            @RequestParam Optional<Integer> size
+    ) {
+        int _page = page.orElse(0);
+        int _size = size.orElse(10);
+        Page<RequestResponseDTO> response = userService.getRequestsFromAdvertisementOfUser(userId, _page, _size);
+
+
+       Link selfLink = linkTo(methodOn(UserController.class)
+               .getAdvertisementsRequestsByUserId(userId, Optional.of(_page), Optional.of(_size))).withSelfRel();
+
+       List<Link> links = new ArrayList<>();
+       links.add(selfLink);
+
+       if (response.hasNext()) {
+           links.add(linkTo(methodOn(UserController.class)
+                   .getAdvertisementsRequestsByUserId(userId, Optional.of(_page+1), Optional.of(_size))).withRel("next"));
+       }
+       if (response.hasPrevious()) {
+           links.add(linkTo(methodOn(UserController.class)
+                   .getAdvertisementsRequestsByUserId(userId, Optional.of(_page+1), Optional.of(_size))).withRel("previous"));
+       }
+
+       return new ResponseEntity<>(CollectionModel.of(response.getContent(), links), HttpStatus.OK);
+
+
+
+    }
+
+    /*
+        Link selfLink = linkTo(methodOn(RequestController.class)
+                .getRequests(Optional.of(_page), Optional.of(_size))).withSelfRel();
+
+        List<Link> links = new ArrayList<>();
+        links.add(selfLink);
+
+        if (requestsDTO.hasNext()) {
+            links.add(linkTo(methodOn(CategoryController.class)
+                    .getCategories(Optional.of(_page + 1), Optional.of(_size))).withRel("next"));
+        }
+        if (requestsDTO.hasPrevious()) {
+            links.add(linkTo(methodOn(CategoryController.class)
+                    .getCategories(Optional.of(_page - 1), Optional.of(_size))).withRel("previous"));
+        }
+
+        return new ResponseEntity<>(CollectionModel.of(requestsDTO.getContent(), links), HttpStatus.OK);
+    }
+
+
+
      */
 
 }

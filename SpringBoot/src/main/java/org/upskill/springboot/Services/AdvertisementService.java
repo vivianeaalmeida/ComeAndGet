@@ -3,6 +3,7 @@ package org.upskill.springboot.Services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,11 @@ import org.upskill.springboot.Models.Item;
 import org.upskill.springboot.Repositories.AdvertisementRepository;
 import org.upskill.springboot.Services.Interfaces.IAdvertisementService;
 import org.upskill.springboot.WebClient.MunicipalityWebClient;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Service class for managing advertisements.
@@ -53,6 +59,11 @@ public class AdvertisementService implements IAdvertisementService {
         Advertisement advertisement = advertisementRepository.findById(id)
                 .orElseThrow(() -> new AdvertisementNotFoundException("Advertisement not found"));
 
+        // Check if the advertisement is inactive (is treated as not found)
+        if (advertisement.getStatus() == Advertisement.AdvertisementStatus.INACTIVE) {
+            throw new AdvertisementNotFoundException("Advertisement not found");
+        }
+
         AdvertisementDTO advertisementDTO = AdvertisementMapper.toDTO(advertisement);
         advertisementDTO.setMunicipality(advertisement.getMunicipality());
 
@@ -60,7 +71,7 @@ public class AdvertisementService implements IAdvertisementService {
     }
 
     /**
-     * Retrieves all advertisements with pagination.
+     * Retrieves all advertisements (except inactives) with pagination.
      *
      * @param page the page number
      * @param size the size of the page
@@ -68,12 +79,24 @@ public class AdvertisementService implements IAdvertisementService {
      */
     @Override
     public Page<AdvertisementDTO> getAllAdvertisements(int page, int size) {
-        return advertisementRepository.findAll(PageRequest.of(page, size))
+        Page<Advertisement> advertisements = advertisementRepository.findAll(PageRequest.of(page, size));
+
+        // Get dto list of all advertisements without inactives
+        List<AdvertisementDTO> advertisementsDTO = advertisements.stream()
+                .filter(advertisement -> advertisement.getStatus() != Advertisement.AdvertisementStatus.INACTIVE)
                 .map(advertisement -> {
                     AdvertisementDTO advertisementDTO = AdvertisementMapper.toDTO(advertisement);
                     advertisementDTO.setMunicipality(advertisement.getMunicipality());
                     return advertisementDTO;
-                });
+                })
+                .collect(Collectors.toList());
+
+        // Calculate the total number of advertisements without the inactives
+        long totalVisibleAdvertisements = advertisements.stream()
+                .filter(advertisement -> advertisement.getStatus() != Advertisement.AdvertisementStatus.INACTIVE)
+                .count();
+
+        return new PageImpl<>(advertisementsDTO, PageRequest.of(page, size), totalVisibleAdvertisements);
     }
 
     /**
@@ -126,8 +149,21 @@ public class AdvertisementService implements IAdvertisementService {
     public Page<AdvertisementDTO> getAdvertisementsByClientId(int page, int size, String clientId) {
         PageRequest pageRequest = PageRequest.of(page, size);
 
-        return advertisementRepository.findByClientId(clientId, pageRequest)
-                .map(AdvertisementMapper::toDTO);
+        // Retrieve advertisements associated with the clientId
+        Page<Advertisement> advertisements = advertisementRepository.findByClientId(clientId, pageRequest);
+
+        // Filter out inactive advertisements and map the rest to DTOs
+        List<AdvertisementDTO> advertisementsDTO = advertisements.getContent().stream()
+                .filter(advertisement -> advertisement.getStatus() != Advertisement.AdvertisementStatus.INACTIVE) // Exclude inactive advertisements
+                .map(AdvertisementMapper::toDTO) // Map the active advertisements to DTOs
+                .collect(Collectors.toList());
+
+        // Calculate the total number of advertisements without the inactives
+        long totalVisibleAdvertisements = advertisements.stream()
+                .filter(advertisement -> advertisement.getStatus() != Advertisement.AdvertisementStatus.INACTIVE)
+                .count();
+
+        return new PageImpl<>(advertisementsDTO, pageRequest, totalVisibleAdvertisements);
     }
 
     /**
@@ -140,7 +176,7 @@ public class AdvertisementService implements IAdvertisementService {
     @Transactional
     public AdvertisementDTO createAdvertisement(AdvertisementDTO advertisementDTO) {
         // Validates the advertisement data
-        validateAdvertisement(advertisementDTO);
+        validateAdvertisementCreation(advertisementDTO);
 
         // Validates the ItemDTO
         ItemDTO itemDTO = advertisementDTO.getItem();
@@ -234,30 +270,6 @@ public class AdvertisementService implements IAdvertisementService {
     }
 
     /**
-     * Validates the advertisement data transfer object.
-     *
-     * @param advertisementDTO the advertisement data transfer object
-     * @return true if the advertisement is valid
-     * @throws AdvertisementInvalidLengthException if the title or description length is invalid
-     */
-    public boolean validateAdvertisement(AdvertisementDTO advertisementDTO) {
-        if (advertisementDTO == null) {
-            throw new IllegalArgumentException("The advertisement must be provided.");
-        }
-
-        validateTitleAndDescription(advertisementDTO.getTitle(), advertisementDTO.getDescription());
-        validateAdvertisementMunicipality(advertisementDTO);
-
-        // Check if the client associated with the advertisement is valid
-        UserDTO user = userService.getUserById(advertisementDTO.getClientId());
-        if (user == null) {
-            throw new ClientNotFoundException("Client client not found");
-        }
-
-        return true;
-    }
-
-    /**
      * Creates a new advertisement based on the provided data.
      *
      * @param id The unique identifier of the advertisement.
@@ -299,15 +311,37 @@ public class AdvertisementService implements IAdvertisementService {
         return requestService.patchRequest(idRequest, idAdvertisement, requestStatusDTO);
     }
 
-    private boolean validateTitleAndDescription(String title, String description) {
-        // Check if the title is less than 5 or more than 50 characters
-        if (title.length() < 5 || title.length() > 50) {
-            throw new AdvertisementValidationException("The title must have between 5 and 50 characters.");
+    /**
+     * Validates the advertisement data transfer object.
+     *
+     * @param advertisementDTO the advertisement data transfer object
+     * @return true if the advertisement is valid
+     * @throws AdvertisementInvalidLengthException if the title or description length is invalid
+     */
+    private boolean validateAdvertisementCreation(AdvertisementDTO advertisementDTO) {
+        if (advertisementDTO == null) {
+            throw new IllegalArgumentException("The advertisement must be provided.");
         }
 
-        // Check if the description is less than 5 or more than 50 characters
-        if (description.length() < 5 || description.length() > 50) {
-            throw new AdvertisementValidationException("The description must have between 5 and 50 characters.");
+        validateTitleAndDescription(advertisementDTO.getTitle(), advertisementDTO.getDescription());
+        validateAdvertisementMunicipality(advertisementDTO);
+
+        if (!Objects.equals(advertisementDTO.getInitialDate(), LocalDate.now())) {
+            throw new AdvertisementValidationException("Advertisement must be created with the current date");
+        }
+
+        // Check if status is active
+        Advertisement.AdvertisementStatus statusEnum = Advertisement.AdvertisementStatus
+                .valueOf(advertisementDTO.getStatus());
+
+        if (statusEnum != Advertisement.AdvertisementStatus.ACTIVE) {
+            throw new AdvertisementValidationException("Advertisement must have active status by default");
+        }
+
+        // Check if the client associated with the advertisement is valid
+        UserDTO user = userService.getUserById(advertisementDTO.getClientId());
+        if (user == null) {
+            throw new ClientNotFoundException("Client client not found");
         }
 
         return true;
@@ -350,6 +384,19 @@ public class AdvertisementService implements IAdvertisementService {
         return true;
     }
 
+    private boolean validateTitleAndDescription(String title, String description) {
+        // Check if the title is less than 5 or more than 50 characters
+        if (title.length() < 5 || title.length() > 50) {
+            throw new AdvertisementValidationException("The title must have between 5 and 50 characters.");
+        }
+
+        // Check if the description is less than 5 or more than 50 characters
+        if (description.length() < 5 || description.length() > 50) {
+            throw new AdvertisementValidationException("The description must have between 5 and 50 characters.");
+        }
+
+        return true;
+    }
 
     /**
      * Validates the change of status of an advertisement to INACTIVE.

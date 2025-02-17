@@ -1,5 +1,6 @@
 package org.upskill.springboot.WebClient;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -8,6 +9,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.upskill.springboot.DTOs.MunicipalityDTO;
 import org.upskill.springboot.Exceptions.MunicipalityNotFound;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -22,17 +27,23 @@ public class MunicipalityWebClient {
     private List<String> municipalitiesCache;
     private LocalDate lastUpdated;
 
+    private String municipalitiesFile = "municipalities.json";
+
     @Autowired
     public MunicipalityWebClient(WebClient.Builder webClientBuilder) {
         this.webClientBuilder = webClientBuilder.baseUrl("https://json.geoapi.pt");
     }
 
     public List<String> getMunicipalities() {
-        // Check if cache is expired
         if (municipalitiesCache == null || isCacheExpired()) {
-            // Update municipalities cache if cache does not exist or is expired
-            municipalitiesCache = fetchMunicipalities();
-            lastUpdated = LocalDate.now();
+            municipalitiesCache = loadMunicipalitiesFromFile();
+
+            // If no file found or cache is expired, fetch new data
+            if (municipalitiesCache == null || municipalitiesCache.isEmpty()) {
+                municipalitiesCache = fetchMunicipalities();
+                saveMunicipalitiesToFile(municipalitiesCache);
+                lastUpdated = LocalDate.now();
+            }
         }
         return municipalitiesCache;
     }
@@ -57,6 +68,28 @@ public class MunicipalityWebClient {
         } catch (Exception e) {
             throw new RuntimeException("Error accessing GEO API");
         }
+    }
+
+    private void saveMunicipalitiesToFile(List<String> municipalities) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            File municipalitiesFile = new File("municipalities.json");
+            objectMapper.writeValue(municipalitiesFile, municipalities);
+        } catch (IOException e) {
+            throw new RuntimeException("Error saving municipalities data to file", e);
+        }
+    }
+
+    private List<String> loadMunicipalitiesFromFile() {
+        if (Files.exists(Path.of(municipalitiesFile))) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                return objectMapper.readValue(new File(municipalitiesFile), List.class);
+            } catch (IOException e) {
+                throw new RuntimeException("Error reading municipalities data from file", e);
+            }
+        }
+        return null;
     }
 
     // Method to get municipality DTO by designation

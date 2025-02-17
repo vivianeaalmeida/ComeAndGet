@@ -250,18 +250,16 @@ public class AdvertisementController extends BaseController {
         return new ResponseEntity<>(advertisementDTO, HttpStatus.OK);
     }
 
-
     /**
-     * Deletes an advertisement by its ID.
-     * If the advertisement exists and meets the deletion criteria, it is removed from the system.
+     * Updates the status of an advertisement to INACTIVE.
      *
-     * @param id The ID of the advertisement to be deleted.
-     * @return A ResponseEntity with HTTP status NO CONTENT if the deletion is successful.
+     * @param id The ID of the advertisement to be updated.
+     * @return The updated advertisement DTO with status set to INACTIVE.
      */
-    @DeleteMapping("/advertisements/{id}")
-    public ResponseEntity<Void> deleteAdvertisement(@PathVariable String id) {
-        advertisementService.deleteAdvertisement(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @PatchMapping("/advertisements/{id}/status/inactive")
+    public ResponseEntity<AdvertisementDTO> patchAdvertisementStatusToInactive(@PathVariable String id) {
+        AdvertisementDTO advertisementDTO = advertisementService.patchAdvertisementStatusToInactive(id);
+        return new ResponseEntity<>(advertisementDTO, HttpStatus.OK);
     }
 
     /**

@@ -10,10 +10,10 @@ import org.upskill.springboot.Models.Item;
 public interface ItemRepository extends JpaRepository<Item, String> {
 
     /**
-     * Counts the number of items associated with a specific category.
+     * Checks if there are any items associated with a specific category.
      *
-     * @param categoryId The unique identifier of the category for which the count of items is required.
-     * @return The number of items that belong to the specified category.
+     * @param categoryId The unique identifier of the category.
+     * @return {@code true} if at least one item exists for the given category, otherwise {@code false}.
      */
-    int countByCategory_Id(String categoryId);
+    boolean existsByCategory_Id(String categoryId);
 }

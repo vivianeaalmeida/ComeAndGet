@@ -1,6 +1,7 @@
 package org.upskill.springboot.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -25,8 +26,12 @@ public class CategoryService implements ICategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    private final ItemService itemService;
+
     @Autowired
-    private ItemRepository itemRepository;
+    public CategoryService(@Lazy ItemService itemService) {
+        this.itemService = itemService;
+    }
 
     /**
      * Retrieves a category by its id. If the category does not exist, an exception is thrown.
@@ -151,7 +156,7 @@ public class CategoryService implements ICategoryService {
     private boolean validateCategoryDeletion(String id) {
         getCategoryById(id);
 
-        if (itemRepository.countByCategory_Id(id) > 0) {
+        if (itemService.hasItemsInCategory(id)) {
             throw new CategoryDeletionException("Cannot delete category because it has associated items.");
         }
         return true;

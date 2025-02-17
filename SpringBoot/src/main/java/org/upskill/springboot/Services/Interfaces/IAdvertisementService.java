@@ -71,12 +71,13 @@ public interface IAdvertisementService {
     AdvertisementDTO updateAdvertisement(String id, AdvertisementUpdateDTO advertisementUpdateDTO);
 
     /**
-     * Deletes an advertisement by its ID.
+     * Changes the status of an advertisement to inactive.
      *
-     * @param id the ID of the advertisement to be deleted
-     * @return the deleted advertisement data transfer object
+     * @param id The unique identifier of the advertisement to be updated.
+     * @return The updated {@link AdvertisementDTO} with the new status.
      */
-    AdvertisementDTO deleteAdvertisement(String id);
+    AdvertisementDTO patchAdvertisementStatusToInactive(String id);
+
 
     /**
      * Creates a new advertisement based on the provided data.

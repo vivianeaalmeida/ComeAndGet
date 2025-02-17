@@ -3,7 +3,6 @@ package org.upskill.springboot.Services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.upskill.springboot.DTOs.ItemDTO;
-import org.upskill.springboot.Exceptions.CategoryDeletionException;
 import org.upskill.springboot.Exceptions.CategoryNotFoundException;
 import org.upskill.springboot.Exceptions.ItemNotFoundException;
 import org.upskill.springboot.Exceptions.ItemValidationException;
@@ -66,17 +65,6 @@ public class ItemService implements IItemService {
     }
 
     /**
-     * Deletes an item from the system by its ID.
-     * Ensures that the item is deleted according to the validation method.
-     * @param id  The unique identifier of the item to be deleted
-     */
-    @Override
-    public void deleteItem(String id) {
-        validateItemDeletion(id);
-        itemRepository.deleteById(id);
-    }
-
-    /**
      * Validates the item data transfer object.
      *
      * @param itemDTO the item data transfer object
@@ -116,13 +104,12 @@ public class ItemService implements IItemService {
     }
 
     /**
-     * Validates if a category can be deleted by checking its existence and ensuring it has no associated items.
+     * Checks if there are items associated with a specific category.
      *
-     * @param id The unique identifier of the category to be deleted.
-     * @return {@code true} if the category can be deleted.
+     * @param categoryId The identifier of the category.
+     * @return {@code true} if there are items associated with the category, {@code false} otherwise.
      */
-    private boolean validateItemDeletion(String id) {
-        getItemById(id);
-        return true;
+    public boolean hasItemsInCategory(String categoryId) {
+        return itemRepository.existsByCategory_Id(categoryId);
     }
 }

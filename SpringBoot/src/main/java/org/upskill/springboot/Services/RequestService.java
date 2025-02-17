@@ -226,4 +226,54 @@ public class RequestService implements IRequestService {
         }
         return true;
     }
+
+    /**
+     * Checks if there are requests associated with a specific advertisement.
+     *
+     * @param advertisementId The identifier of the advertisement.
+     * @return {@code true} if there are requests associated with the advertisement, {@code false} otherwise.
+     */
+    public boolean hasRequestsInAdvertisement(String advertisementId) {
+        return requestRepository.existsByAdvertisement_Id(advertisementId);
+    }
+
+    /**
+     * Retrieves all requests associated with a specific advertisement.
+     *
+     * @param advertisementId The identifier of the advertisement.
+     * @return A list of {@link Request} objects associated with the advertisement.
+     *         Returns an empty list if no requests are found.
+     */
+    public List<Request> getRequestsByAdvertisement(String advertisementId) {
+        return requestRepository.getRequestsByAdvertisementId(advertisementId);
+    }
+
+    /**
+     * Checks if there are requests associated with a specific advertisement.
+     *
+     * @param advertisementId The identifier of the advertisement.
+     * @return {@code true} if there are requests associated with the advertisement, {@code false} otherwise.
+     */
+    public boolean hasDonatedRequestInAdvertisement(String advertisementId) {
+        return requestRepository.existsDonatedRequestForAdvertisement(advertisementId);
+    }
+
+    /**
+     * Rejects all requests associated with an advertisement by its ID.
+     *
+     * @param advertisementId the ID of the advertisement
+     */
+    public void rejectRequests(String advertisementId) {
+        List<Request> requests = getRequestsByAdvertisement(advertisementId);
+
+        //Set the request status to REJECTED
+        for (Request request : requests) {
+            if (request.getStatus() != Request.RequestStatus.CANCELED) {
+                request.setStatus(Request.RequestStatus.REJECTED);
+            }
+        }
+
+        // Save the updated requests
+        requestRepository.saveAll(requests);
+    }
 }

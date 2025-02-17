@@ -31,11 +31,4 @@ public interface IItemService {
      * @return the updated item data transfer object
      */
     ItemDTO updateItem(String id, ItemDTO itemDto);
-
-    /**
-     * Deletes an item by its ID.
-     *
-     * @param id the ID of the item to be deleted
-     */
-    void deleteItem(String id);
 }

@@ -16,7 +16,6 @@ import org.springframework.hateoas.RepresentationModel;
 @NoArgsConstructor
 @Getter
 @Setter
-
 public class ItemDTO {
 
     /**

@@ -17,6 +17,7 @@ import org.upskill.springboot.Repositories.AdvertisementRepository;
 import org.upskill.springboot.Services.Interfaces.IAdvertisementService;
 import org.upskill.springboot.WebClient.MunicipalityWebClient;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -186,10 +187,11 @@ public class AdvertisementService implements IAdvertisementService {
         // Converts the ItemDTO back to the Item entity
         Item item = ItemMapper.toEntity(savedItemDTO);  // Converts to Item entity
 
-        // Converts the AdvertisementDTO to the Advertisement entity and associates the item
+        // Converts the AdvertisementDTO to the Advertisement entity and associates the item, municipality and date
         Advertisement advertisement = AdvertisementMapper.toEntity(advertisementDTO);
         advertisement.setItem(item);
         advertisement.setMunicipality(advertisementDTO.getMunicipality());
+        advertisement.setInitialDate();
 
         // Saves the advertisement in the database
         advertisement = advertisementRepository.save(advertisement);
@@ -325,11 +327,18 @@ public class AdvertisementService implements IAdvertisementService {
         validateAdvertisementMunicipality(advertisementDTO);
 
         // Check if status is active
-        Advertisement.AdvertisementStatus statusEnum = Advertisement.AdvertisementStatus
-                .valueOf(advertisementDTO.getStatus());
+        if (advertisementDTO.getStatus() != null) {
+            Advertisement.AdvertisementStatus statusEnum = Advertisement.AdvertisementStatus
+                    .valueOf(advertisementDTO.getStatus());
 
-        if (statusEnum != Advertisement.AdvertisementStatus.ACTIVE) {
-            throw new AdvertisementValidationException("Advertisement must have active status by default");
+            if (statusEnum != Advertisement.AdvertisementStatus.ACTIVE) {
+                throw new AdvertisementValidationException("Advertisement must have active status by default");
+            }
+        }
+
+        // Check date
+        if (advertisementDTO.getInitialDate() != null && !advertisementDTO.getInitialDate().equals(LocalDate.now())) {
+            throw new AdvertisementValidationException("Advertisement date must be the current date");
         }
 
         // Check if the client associated with the advertisement is valid
@@ -426,7 +435,6 @@ public class AdvertisementService implements IAdvertisementService {
      */
     private boolean validateAdvertisementMunicipality(AdvertisementDTO advertisementDTO) {
         String municipalityName = advertisementDTO.getMunicipality();
-        System.out.println(municipalityName);
         try {
             MunicipalityDTO municipalityDTO = municipalityWebClient.getMunicipalityByDesignation(municipalityName);
             advertisementDTO.setMunicipality(municipalityDTO.getDesignation());

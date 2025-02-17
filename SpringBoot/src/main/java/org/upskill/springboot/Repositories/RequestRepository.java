@@ -3,8 +3,6 @@ package org.upskill.springboot.Repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
-import org.upskill.springboot.DTOs.RequestResponseDTO;
 import org.upskill.springboot.Models.Request;
 
 import java.util.List;

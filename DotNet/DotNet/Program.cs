@@ -1,4 +1,6 @@
 using DotNet.Data;
+using DotNet.Models;
+using DotNet.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +10,10 @@ using Microsoft.IdentityModel.Tokens;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddScoped<AccountService>();
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<AdminService>();
+
 builder.Services.AddDbContext<UserContext>(options => options.UseSqlServer
     (builder.Configuration.GetConnectionString("UserDB"))
     );
@@ -20,14 +26,16 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<UserContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("UserDB")));
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => {
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => {
     options.Password.RequiredLength = 8;
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
     options.Password.RequireUppercase = true;
     options.Password.RequireNonAlphanumeric = true;
 })
-    .AddEntityFrameworkStores<UserContext>().AddDefaultTokenProviders();
+    .AddEntityFrameworkStores<UserContext>()
+    .AddDefaultTokenProviders();
+
 
 builder.Services.AddAuthentication(options => {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -47,7 +55,7 @@ builder.Services.AddAuthentication(options => {
 
 builder.Services.AddAuthorization(Options => {
     Options.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin"));
-    Options.AddPolicy("UserPolicy", policy => policy.RequireRole("User"));
+    Options.AddPolicy("UserPolicy", policy => policy.RequireRole("ApplicationUser"));
 });
 
 var app = builder.Build();

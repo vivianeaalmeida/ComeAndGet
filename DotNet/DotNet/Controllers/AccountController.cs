@@ -1,68 +1,76 @@
 ﻿using DotNet.DTOs;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+using DotNet.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
-namespace DotNet.Controllers {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AccountController : ControllerBase {
+/// <summary>
+/// Handles account-related operations, such as registration, role management, and login.
+/// </summary>
+[Route("api/v1/[controller]")]
+[ApiController]
+public class AccountController : ControllerBase {
+    private readonly AccountService accountService;
 
-        private readonly UserManager<IdentityUser> userManager;
-        private readonly RoleManager<IdentityRole> roleManager;
-        private readonly IConfiguration configuration;
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AccountController"/> class.
+    /// </summary>
+    /// <param name="accountService">The account service instance.</param>
+    public AccountController(AccountService accountService) {
+        this.accountService = accountService;
+    }
 
-        public AccountController(UserManager<IdentityUser> userManager, 
-            RoleManager<IdentityRole> roleManager, IConfiguration configuration) {
-            this.userManager = userManager;
-            this.roleManager = roleManager;
-            this.configuration = configuration;
-        }
-
-
-        [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] Register model) {
-            var user = new IdentityUser { UserName = model.Username };
-            var result = await userManager.CreateAsync(user, model.Password);
-
-            if(result.Succeeded) {
-                return Ok(new { message = "User registered succesfully."});
-            }
+    /// <summary>
+    /// Registers a new user.
+    /// </summary>
+    /// <param name="model">The registration model.</param>
+    /// <returns>A JSON response indicating whether the registration was successful.</returns>
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] Register model) {
+        var result = await accountService.RegisterUserAsync(model);
+        if (!result.Succeeded) {
             return BadRequest(result.Errors);
         }
+        return Ok(new { message = "User registered successfully." });
+    }
 
-
-        [HttpPost("add-role")]
-        public async Task<IActionResult> AddRole([FromBody] string role) {
-            if (!await roleManager.RoleExistsAsync(role)) {
-                var result = await roleManager.CreateAsync(new IdentityRole(role));
-                if (result.Succeeded) {
-                    return Ok(new { message = "Role added successfully" });
-                }
-
-                return BadRequest(result.Errors);
-            }
-
-            return BadRequest("Role already exists");
+    /// <summary>
+    /// Adds a new role to the system.
+    /// </summary>
+    /// <param name="role">The name of the role to add.</param>
+    /// <returns>A JSON response indicating whether the role was added successfully.</returns>
+    [HttpPost("add-role")]
+    public async Task<IActionResult> AddRole([FromBody] string role) {
+        var result = await accountService.AddRoleAsync(role);
+        if (result.Succeeded) {
+            return Ok(new { message = "Role added successfully" });
         }
+        return BadRequest(result.Errors);
+    }
 
-        [HttpPost("assign-role")]
-        public async Task<IActionResult> AssignRole([FromBody] UserRole model) {
-            var user = await userManager.FindByNameAsync(model.Username);
-            if (user == null) {
-                return BadRequest("User not found");
-            }
-
-            var result = await userManager.AddToRoleAsync(user, model.Role);
-            if (result.Succeeded) {
-                return Ok(new { message = "Role assigned successfully" });
-            }
-
-            return BadRequest(result.Errors);
+    /// <summary>
+    /// Assigns a role to a user.
+    /// </summary>
+    /// <param name="model">The user-role assignment model.</param>
+    /// <returns>A JSON response indicating whether the role was assigned successfully.</returns>
+    [HttpPost("assign-role")]
+    public async Task<IActionResult> AssignRole([FromBody] UserRoleDTO model) {
+        var result = await accountService.AssignRoleAsync(model);
+        if (result.Succeeded) {
+            return Ok(new { message = "Role assigned successfully" });
         }
+        return BadRequest(result.Errors);
+    }
+
+    /// <summary>
+    /// Logs in a user.
+    /// </summary>
+    /// <param name="model">The login model.</param>
+    /// <returns>A JSON response containing the login result, or an unauthorized response if the login fails.</returns>
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] Login model) {
+        var loginResponse = await accountService.LoginAsync(model);
+        if (loginResponse == null) {
+            return Unauthorized();
+        }
+        return Ok(loginResponse);
     }
 }

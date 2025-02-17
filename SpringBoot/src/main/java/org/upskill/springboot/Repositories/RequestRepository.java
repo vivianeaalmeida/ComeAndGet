@@ -33,7 +33,6 @@ public interface RequestRepository extends JpaRepository<Request, String> {
      */
     Optional<Request> findByIdAndAdvertisementId(String id, String advertisementId);
 
-
     /**
      * Retrieves a list of requests associated with a specific user ID.
      *
@@ -42,5 +41,12 @@ public interface RequestRepository extends JpaRepository<Request, String> {
      */
     List<Request> findRequestByUser_Id(String userId);
 
+    /**
+     * Checks if a request exists for a given advertisement and user.
+     *
+     * @param advertisement_id the ID of the advertisement
+     * @param user_Id the ID of the user
+     * @return true if a request exists for the given advertisement and user, false otherwise
+     */
     boolean existsByAdvertisement_IdAndUser_Id(String advertisement_id, String user_Id);
 }

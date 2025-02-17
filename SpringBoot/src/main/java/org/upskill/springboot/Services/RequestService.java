@@ -1,6 +1,9 @@
 package org.upskill.springboot.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.upskill.springboot.DTOs.*;
 import org.upskill.springboot.Exceptions.AdvertisementValidationException;
@@ -42,13 +45,8 @@ public class RequestService implements IRequestService {
      * @return a list of RequestDTO objects representing all requests
      */
     @Override
-    public List<RequestResponseDTO> getRequests() {
-        List<Request> requests = requestRepository.findAll();
-        List<RequestResponseDTO> requestDTOs = new ArrayList<>();
-        for (Request request : requests) {
-            requestDTOs.add(RequestMapper.toDTO(request));
-        }
-        return requestDTOs;
+    public Page<RequestResponseDTO> getRequests(int page, int size) {
+        return requestRepository.findAll(PageRequest.of(page, size)).map(RequestMapper::toDTO);
     }
 
     /**

@@ -277,9 +277,33 @@ public class AdvertisementController extends BaseController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    /**
+     * Retrieve an advertisement request by its advertisement ID and request ID.
+     *
+     * @param adId The unique identifier of the advertisement.
+     * @param requestId The unique identifier of the request associated with the advertisement.
+     * @return A {@link ResponseEntity} containing the {@link RequestResponseDTO} with the advertisement request details,
+     *         and an HTTP status of 200 OK if the request is successful.
+     */
     @GetMapping("/advertisements/{adId}/requests/{requestId}")
     public ResponseEntity<RequestResponseDTO> getAdvertisementRequestById(@PathVariable String adId, @PathVariable String requestId) {
         RequestResponseDTO response = advertisementService.getAdvertisementRequestById(adId, requestId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    /**
+     * Endpoint to update the status of a request for a specific advertisement.
+     * This method handles a PATCH request and invokes the service to update the request's status for the specified advertisement.
+     *
+     * @param adId The unique identifier of the advertisement.
+     * @param requestId The unique identifier of the request.
+     * @param requestDTO The object containing the new status information for the request.
+     *
+     * @return A {@link ResponseEntity} containing a {@link RequestResponseDTO} object with the details of the operation's response, including HTTP status.
+     */
+    @PatchMapping("/advertisements/{adId}/requests/{requestId}/status")
+    public ResponseEntity<RequestResponseDTO> patchAdvertisementRequestStatus(@PathVariable String adId, @PathVariable String requestId, @RequestBody RequestStatusDTO requestDTO) {
+        RequestResponseDTO response = advertisementService.patchAdvertisementRequestStatus(adId, requestId, requestDTO);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

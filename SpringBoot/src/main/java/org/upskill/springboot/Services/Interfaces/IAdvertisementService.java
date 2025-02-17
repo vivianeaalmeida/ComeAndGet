@@ -1,10 +1,7 @@
 package org.upskill.springboot.Services.Interfaces;
 
 import org.springframework.data.domain.Page;
-import org.upskill.springboot.DTOs.AdvertisementDTO;
-import org.upskill.springboot.DTOs.AdvertisementUpdateDTO;
-import org.upskill.springboot.DTOs.RequestDTO;
-import org.upskill.springboot.DTOs.RequestResponseDTO;
+import org.upskill.springboot.DTOs.*;
 
 /**
  * Service interface for managing advertisements.
@@ -98,4 +95,18 @@ public interface IAdvertisementService {
      * @return A {@link RequestResponseDTO} object containing the details of the advertisement request.
      */
     RequestResponseDTO getAdvertisementRequestById(String idAdvertisement, String idRequest);
+
+    /**
+     * Updates the status of a request for an advertisement.
+     * This method calls the service to apply the changes to the status of a specific request related to an advertisement.
+     *
+     * @param idAdvertisement The unique identifier of the advertisement.
+     * @param idRequest The unique identifier of the request.
+     * @param requestStatusDTO The object containing the new status information for the request.
+     *
+     * @return A {@link RequestResponseDTO} object containing the details of the operation's response.
+     *
+     */
+
+    RequestResponseDTO patchAdvertisementRequestStatus(String idAdvertisement, String idRequest, RequestStatusDTO requestStatusDTO);
 }

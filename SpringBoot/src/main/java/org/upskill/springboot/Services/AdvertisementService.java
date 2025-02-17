@@ -1,6 +1,7 @@
 package org.upskill.springboot.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,6 @@ import org.upskill.springboot.Models.Request;
 import org.upskill.springboot.Repositories.AdvertisementRepository;
 import org.upskill.springboot.Repositories.RequestRepository;
 import org.upskill.springboot.Services.Interfaces.IAdvertisementService;
-import org.upskill.springboot.Services.Interfaces.IRequestService;
 
 import java.util.List;
 
@@ -31,10 +31,15 @@ public class AdvertisementService implements IAdvertisementService {
     private ItemService itemService;
     @Autowired
     private UserService userService;
-    @Autowired
-    private IRequestService requestService;
+
+    private final RequestService requestService;
     @Autowired
     private RequestRepository requestRepository;
+
+    @Autowired
+    public AdvertisementService(@Lazy RequestService requestService) {
+        this.requestService = requestService;
+    }
 
 
     /**
@@ -247,6 +252,21 @@ public class AdvertisementService implements IAdvertisementService {
             throw new RequestNotFoundException("Advertisement id invalid.");
         }
         return response;
+    }
+
+    /**
+     * Updates the status of a request for an advertisement.
+     * This method calls the service to apply the changes to the status of a specific request related to an advertisement.
+     *
+     * @param idAdvertisement The unique identifier of the advertisement.
+     * @param idRequest The unique identifier of the request.
+     * @param requestStatusDTO The object containing the new status information for the request.
+     *
+     * @return A {@link RequestResponseDTO} object containing the details of the operation's response.
+     *
+     */
+    public RequestResponseDTO patchAdvertisementRequestStatus(String idAdvertisement, String idRequest, RequestStatusDTO requestStatusDTO){
+        return requestService.patchRequest(idRequest, idAdvertisement, requestStatusDTO);
     }
 
     private boolean validateTitleAndDescription(String title, String description) {

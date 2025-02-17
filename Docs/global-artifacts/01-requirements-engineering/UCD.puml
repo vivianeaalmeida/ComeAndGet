@@ -74,6 +74,5 @@ rectangle " " as usecase1 {
             "Manager" --> US50
             "Manager" --> US55
         }
-
 }
 @enduml

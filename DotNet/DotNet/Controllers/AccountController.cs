@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 /// <summary>
 /// Handles account-related operations, such as registration, role management, and login.
 /// </summary>
-[Route("api/[controller]")]
+[Route("api/v1/[controller]")]
 [ApiController]
 public class AccountController : ControllerBase {
     private readonly AccountService accountService;

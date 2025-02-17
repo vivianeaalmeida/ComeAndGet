@@ -8,7 +8,7 @@ namespace DotNet.Controllers {
     /// Controller for handling admin-related operations.
     /// </summary>
     [Authorize(Roles = "Admin")]
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class AdminController : ControllerBase {
         private readonly AdminService _adminService;

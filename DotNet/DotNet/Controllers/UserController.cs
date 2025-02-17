@@ -8,7 +8,7 @@ namespace DotNet.Controllers {
     /// Handles user-related operations, such as retrieving user information.
     /// </summary>
     [Authorize(Roles = "User")]
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class UserController : ControllerBase {
         private readonly UserService _userService;

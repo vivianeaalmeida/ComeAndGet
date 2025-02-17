@@ -15,9 +15,9 @@ rectangle " " as usecase1 {
 
     rectangle "All Users Area " as usecase2 #Lightpink{
 
-            usecase "US09 -  As a user, I want to view the \n list of active advertisements so that I can\n explore the items that are\n available for donation" as US09
-            usecase "US11 -  As a user, I want to view more \n details about a specific advertisement\n so that I can get additional information" as US11
-            usecase "US12 -  As a user, I want to search\n for available advertisements by category,\n keyword, and location so that I can better\n find the items I’m interested in" as US12
+            usecase "US09 -  As a user, I want to view active advertisements list" as US09
+            usecase "US11 -  As a user, I want to view advertisement details" as US11
+            usecase "US12 -  As a user, I want to search advertisements" as US12
 
             "Client" --> US09
             "Client" --> US11
@@ -32,8 +32,8 @@ rectangle " " as usecase1 {
 
     rectangle "Unregistered User Area " as usecase3 #Lightgreen{
 
-            usecase "US01 - As an unregistered user,\n I want to register in the application to\n access restricted features" as US01
-            usecase "US02 - As an unauthenticated user,\n I want to log in to the application to\n access restricted functionalities" as US02
+            usecase "US01 - As an unregistered user,\n I want to register in the application" as US01
+            usecase "US02 - As an unauthenticated user,\n I want to log in to the application" as US02
 
             "Unregistered\nUser" --> US01
             "Unregistered\nUser" --> US02
@@ -41,17 +41,19 @@ rectangle " " as usecase1 {
 
      rectangle "Client Area " as usecase4 #Lightyellow{
 
-            usecase "US04 - As a client or manager,\n I want to view a list of all available\n categories so that I can classify\n advertisements correctly and search\n by item category" as US04
-            usecase "US07 - As a client, I want\n to create an advertisement so\n that I can donate an item" as US07
-            usecase "US13 - As a client, I want\n to update advertisement’s name,\n location, and end date" as US13
+            usecase "US04 - As a client or manager, I want to\n view a list of all available categories" as US04
+            usecase "US07 - As a client, I want\n to create an advertisement" as US07
+            usecase "US13 - As a client (advertisement owner)\n, I want to update advertisement’s name,\n location, and end date" as US13
+            usecase "US15 - As a client, I want to\n view my published advertisements" as US15
             usecase "US14 - As a client or manager,\n I want to delete an advertisement" as US14
-            usecase "US15 -  As a client, I want\n to create a donation request on an\n advertisement so that I can request\n the item being donated" as US15
-            usecase "US16 -   As a client, I want\n to view the details of a donation request so\n that I can track its status and\n relevant information" as US16
-            usecase "US17 -  As a client, I want\n to view the list of donation requests I have\n made so that I can track their status\n and manage the requests" as US17
-            usecase "US18 -   As a client (advertisement owner)\n, I want to view all active donation\n requests made to my advertisements\n so that I can respond to the requests" as US18
-            usecase "US19 -   As a client (requester or\n advertisement owner), I want to change\n a request so that I can canceled\n my request or decline/accepted/conclude\n a request made to my advertisement." as US19
+            usecase "US16 -  As a client, I want\n to create a donation request on an\n advertisement" as US16
+            usecase "US17 -   As a client, I want\n to view the details of a donation request" as US17
+            usecase "US18 -  As a client, I want\n to view the list of donation requests I have\n made" as US18
+            usecase "US19 -   As a client (advertisement owner),\n I want to view all active donation\n requests made to my advertisements" as US19
+            usecase "US20 -   As a client (requester or\n advertisement owner), I want\n to update a request" as US20
 
-            "Client" --> US19
+            "Client" --> US15
+            "Client" --> US20
             "Client" --> US18
             "Client" --> US17
             "Client" --> US16
@@ -67,13 +69,12 @@ rectangle " " as usecase1 {
 
     rectangle "Manager Area " as usecase5 #Lightblue{
 
-            usecase "US10 - Register a new store." as US10
-            usecase "US50 - Get a list of all agents." as US50
-            usecase "US55 - List all deals made" as US55
-            "Manager" --> US10
-            "Manager" --> US50
-            "Manager" --> US55
+            usecase "US03 - As a manager, I want to create a category" as US03
+            usecase "US05 - As a manager, I want to update a category" as US05
+            usecase "US06 - As a manager, I want to delete a category" as US06
+            "Manager" --> US03
+            "Manager" --> US05
+            "Manager" --> US06
         }
-
 }
 @enduml

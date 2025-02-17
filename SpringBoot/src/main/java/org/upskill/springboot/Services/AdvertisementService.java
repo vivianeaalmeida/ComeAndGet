@@ -191,7 +191,6 @@ public class AdvertisementService implements IAdvertisementService {
         Advertisement advertisement = AdvertisementMapper.toEntity(advertisementDTO);
         advertisement.setItem(item);
         advertisement.setMunicipality(advertisementDTO.getMunicipality());
-        advertisement.setInitialDate();
 
         // Saves the advertisement in the database
         advertisement = advertisementRepository.save(advertisement);

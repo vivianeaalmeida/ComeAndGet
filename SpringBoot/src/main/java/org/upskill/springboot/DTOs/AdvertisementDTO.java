@@ -3,6 +3,7 @@ package org.upskill.springboot.DTOs;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.hateoas.RepresentationModel;
+import org.upskill.springboot.Models.Advertisement;
 
 import java.time.LocalDate;
 
@@ -55,4 +56,13 @@ public class AdvertisementDTO extends RepresentationModel<AdvertisementDTO> {
      * The unique client ID associated with the advertisement.
      */
     private String clientId;
+
+    /**
+     * Default constructor that initializes the advertisement with the current date
+     * and sets the status to ACTIVE.
+     */
+    public AdvertisementDTO() {
+        this.status = Advertisement.AdvertisementStatus.ACTIVE.toString();
+        this.initialDate = LocalDate.now();
+    }
 }

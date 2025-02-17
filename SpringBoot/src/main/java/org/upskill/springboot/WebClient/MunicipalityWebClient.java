@@ -20,22 +20,48 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * Service to interact with the external API for municipalities and manage cache functionality.
+ * This class handles the retrieval, caching, and storage of municipality data.
+ */
 @Service
 public class MunicipalityWebClient {
 
+    /**
+     * WebClient.Builder used for building WebClient instances for making HTTP requests.
+     * This is typically injected and used to configure the client for making external API calls.
+     */
     private final WebClient.Builder webClientBuilder;
 
-    // variable to store municipalities in cache
+    /**
+     * A list that stores municipalities either fetched from the external API or loaded from the file.
+     * This acts as a cache for the municipality data to avoid repeated API calls.
+     */
     private List<String> municipalitiesCache;
 
-    private String municipalitiesFile = "municipalities.json";
+    /**
+     * The path to the municipalities data file where the fetched municipality data is stored.
+     * If the cache is expired or empty, the data will be reloaded either from this file or fetched again from the external API.
+     */
+    private final String MUNICIPALITIES_FILE = "municipalities.json";
 
+    /**
+     * Constructor that sets up the WebClient builder and initializes the municipalities cache.
+     *
+     * @param webClientBuilder The WebClient builder to use for making API calls.
+     */
     @Autowired
     public MunicipalityWebClient(WebClient.Builder webClientBuilder) {
         this.webClientBuilder = webClientBuilder.baseUrl("https://json.geoapi.pt");
         municipalitiesCache = new ArrayList<>();
     }
 
+    /**
+     * Retrieves the list of municipalities. If the cache is empty or expired, it reloads the data from file or fetches
+     * new data from the external API.
+     *
+     * @return A list of municipalities.
+     */
     public List<String> getMunicipalities() {
         // If cache empty, reload from file or fetch new data
         if (municipalitiesCache.isEmpty()) {
@@ -50,9 +76,14 @@ public class MunicipalityWebClient {
         return municipalitiesCache;
     }
 
+    /**
+     * Checks if the cache has expired. The cache is considered expired if the file last modified time is older than 30 days.
+     *
+     * @return true if the cache is expired, false otherwise.
+     */
     private boolean isCacheExpired() {
         // Check if municipalities file exists and its last modified time is older than 30 days
-        File municipalitiesFile = new File(this.municipalitiesFile);
+        File municipalitiesFile = new File(this.MUNICIPALITIES_FILE);
         if (municipalitiesFile.exists()) {
             try {
                 FileTime fileTime = Files.getLastModifiedTime(municipalitiesFile.toPath());
@@ -71,6 +102,11 @@ public class MunicipalityWebClient {
         return true; // If the file doesn't exist, consider the cache expired
     }
 
+    /**
+     * Fetches the list of municipalities from the external API.
+     *
+     * @return A list of municipalities.
+     */
     private List<String> fetchMunicipalities() {
         try {
             WebClient client = webClientBuilder
@@ -87,6 +123,11 @@ public class MunicipalityWebClient {
         }
     }
 
+    /**
+     * Saves the list of municipalities to a file for future use.
+     *
+     * @param municipalities A list of municipalities to save.
+     */
     private void saveMunicipalitiesToFile(List<String> municipalities) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -97,11 +138,16 @@ public class MunicipalityWebClient {
         }
     }
 
+    /**
+     * Loads the list of municipalities from the file.
+     *
+     * @return A list of municipalities from the file, or null if the file doesn't exist or can't be read.
+     */
     private List<String> loadMunicipalitiesFromFile() {
-        if (Files.exists(Path.of(municipalitiesFile))) {
+        if (Files.exists(Path.of(MUNICIPALITIES_FILE))) {
             ObjectMapper objectMapper = new ObjectMapper();
             try {
-                return objectMapper.readValue(new File(municipalitiesFile), List.class);
+                return objectMapper.readValue(new File(MUNICIPALITIES_FILE), List.class);
             } catch (IOException e) {
                 throw new RuntimeException("Error reading municipalities data from file", e);
             }
@@ -109,7 +155,15 @@ public class MunicipalityWebClient {
         return null;
     }
 
-    // Method to get municipality DTO by designation
+    /**
+     * Retrieves a municipality DTO by its designation.
+     * If the municipality is found in the cache, it is returned as a DTO.
+     * If not, a MunicipalityNotFound exception is thrown.
+     *
+     * @param designation The name of the municipality to search for.
+     * @return The MunicipalityDTO if found.
+     * @throws MunicipalityNotFound if the municipality is not found.
+     */
     public MunicipalityDTO getMunicipalityByDesignation(String designation) {
         getMunicipalities();
 

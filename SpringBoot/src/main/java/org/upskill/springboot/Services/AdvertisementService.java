@@ -43,8 +43,6 @@ public class AdvertisementService implements IAdvertisementService {
     private MunicipalityWebClient municipalityWebClient;
 
     @Autowired
-    public AdvertisementService(@Lazy RequestService requestService) {
-
     public AdvertisementService(@Lazy UserService userService, @Lazy RequestService requestService) {
         this.userService = userService;
         this.requestService = requestService;

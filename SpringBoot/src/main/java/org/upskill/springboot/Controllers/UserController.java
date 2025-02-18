@@ -7,13 +7,11 @@ import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.upskill.springboot.DTOs.AdvertisementDTO;
-import org.upskill.springboot.DTOs.RequestResponseDTO;
+import org.upskill.springboot.DTOs.ReservationAttemptResponseDTO;
 import org.upskill.springboot.DTOs.UserDTO;
 import org.upskill.springboot.Services.UserService;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,7 +37,6 @@ public class UserController extends BaseController {
         return new ResponseEntity<>(userDTO, HttpStatus.CREATED);
     }
 
-
     @GetMapping("/users/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable("id") String id) {
         UserDTO userDTO = this.userService.getUserById(id);
@@ -48,13 +45,13 @@ public class UserController extends BaseController {
         return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/users/{userId}/requests")
-    public ResponseEntity<CollectionModel<RequestResponseDTO>> getRequestsByUserId(@PathVariable String userId,
-                                                                               @RequestParam Optional<Integer> page,
-                                                                               @RequestParam Optional<Integer> size) {
+    @GetMapping("/users/{userId}/ReservationAttempt")
+    public ResponseEntity<CollectionModel<ReservationAttemptResponseDTO>> getRequestsByUserId(@PathVariable String userId,
+                                                                                              @RequestParam Optional<Integer> page,
+                                                                                              @RequestParam Optional<Integer> size) {
         int _page = page.orElse(0);
         int _size = size.orElse(10);
-        Page<RequestResponseDTO> response = this.userService.getRequestsByUserId(userId,_page, _size);
+        Page<ReservationAttemptResponseDTO> response = this.userService.getReservationAttemptByUserId(userId,_page, _size);
         Link selfLink = linkTo(methodOn(UserController.class)
                 .getAdvertisementsRequestsByUserId(userId, Optional.of(_page), Optional.of(_size))).withSelfRel();
 
@@ -73,15 +70,15 @@ public class UserController extends BaseController {
         return new ResponseEntity<>(CollectionModel.of(response.getContent(), links), HttpStatus.OK);
     }
 
-   @GetMapping("/users/{userId}/advertisements/requests")
-    public ResponseEntity<CollectionModel<RequestResponseDTO>>getAdvertisementsRequestsByUserId(
+   @GetMapping("/users/{userId}/advertisements/reservationAttempt")
+    public ResponseEntity<CollectionModel<ReservationAttemptResponseDTO>>getAdvertisementsRequestsByUserId(
             @PathVariable String userId,
             @RequestParam Optional<Integer> page,
             @RequestParam Optional<Integer> size
     ) {
         int _page = page.orElse(0);
         int _size = size.orElse(10);
-        Page<RequestResponseDTO> response = userService.getRequestsFromAdvertisementOfUser(userId, _page, _size);
+        Page<ReservationAttemptResponseDTO> response = userService.getReservationAttemptFromAdvertisementOfUser(userId, _page, _size);
 
 
        Link selfLink = linkTo(methodOn(UserController.class)

@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.upskill.springboot.Models.Advertisement;
 
 import java.util.List;
@@ -39,4 +40,15 @@ public interface AdvertisementRepository extends JpaRepository<Advertisement, St
      * @return a page of advertisements with the given status
      */
     Page<Advertisement> findByClientId(String clientId, Pageable pageable);
+
+    @Query("SELECT DISTINCT a FROM Advertisement a " +
+            "LEFT JOIN a.item i " +
+            "LEFT JOIN i.category c " +
+            "WHERE (:municipality IS NULL OR a.municipality = :municipality) " +
+            "AND (:keyword IS NULL OR LOWER(a.title) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "OR LOWER(a.description) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
+            "AND (:category IS NULL OR LOWER(c.designation) LIKE LOWER(CONCAT('%', :category, '%')))")
+    Page<Advertisement> searchAdvertisements(@Param("municipality") String municipality,
+                               @Param("keyword") String keyword,
+                               @Param("category") String category);
 }

@@ -1,7 +1,12 @@
 package org.upskill.springboot.Mappers;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.upskill.springboot.DTOs.AdvertisementDTO;
 import org.upskill.springboot.Models.Advertisement;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Mapper class for converting {@link Advertisement} entities to {@link AdvertisementDTO} objects and vice versa.
@@ -50,5 +55,10 @@ public class AdvertisementMapper {
         advertisement.setClientId(advertisementDTO.getClientId());
 
         return advertisement;
+    }
+
+    public static Page<AdvertisementDTO> toDTO(Page<Advertisement> advertisements) {
+        List<AdvertisementDTO> advertisementDTOS = advertisements.stream().map(AdvertisementMapper::toDTO).collect(Collectors.toList());
+        return new PageImpl<>(advertisementDTOS, advertisements.getPageable(), advertisements.getTotalElements());
     }
 }

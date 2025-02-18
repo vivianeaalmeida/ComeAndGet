@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,7 @@ import org.upskill.springboot.WebClient.MunicipalityWebClient;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -310,6 +312,19 @@ public class AdvertisementService implements IAdvertisementService {
     public ReservationAttemptResponseDTO patchAdvertisementRequestStatus(String idAdvertisement, String idReservationAttempt, ReservationAttemptStatusDTO reservationAttemptStatusDTO){
         return reservationAttemptService.patchReservationAttempt(idReservationAttempt, idAdvertisement, reservationAttemptStatusDTO);
     }
+
+    /*
+    @Override
+    public Page<AdvertisementDTO> searchAdvertisements(int page, int size, Optional<String> municipality, Optional<String> keyword, Optional<String> category){
+        Page<Advertisement> advertisements = advertisementRepository.searchAdvertisements(
+                municipality.orElse(null),
+                keyword.orElse(null),
+                category.orElse(null));
+        List<AdvertisementDTO> advertisementsDTO = advertisements.stream().map()
+
+
+
+    }/*
 
     /**
      * Validates the advertisement data transfer object.

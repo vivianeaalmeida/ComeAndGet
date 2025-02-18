@@ -3,6 +3,8 @@ package org.upskill.springboot.Services.Interfaces;
 import org.springframework.data.domain.Page;
 import org.upskill.springboot.DTOs.*;
 
+import java.util.Optional;
+
 /**
  * Service interface for managing advertisements.
  */
@@ -110,4 +112,6 @@ public interface IAdvertisementService {
      */
 
     ReservationAttemptResponseDTO patchAdvertisementRequestStatus(String idAdvertisement, String idRequest, ReservationAttemptStatusDTO reservationAttemptStatusDTO);
+
+    /*Page<AdvertisementDTO> searchAdvertisements(int page, int size, Optional<String> municipality, Optional<String> keyword, Optional<String> category);*/
 }

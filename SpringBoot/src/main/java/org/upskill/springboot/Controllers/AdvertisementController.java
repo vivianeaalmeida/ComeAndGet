@@ -295,16 +295,15 @@ public class AdvertisementController extends BaseController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-
     /**
-     * Endpoint to update the status of a request for a specific advertisement.
-     * This method handles a PATCH request and invokes the service to update the request's status for the specified advertisement.
+     * Endpoint to update the status of a reservation request for a specific advertisement.
+     * This method handles a PATCH request and invokes the service to update the reservation request status for the specified advertisement.
      *
      * @param adId The unique identifier of the advertisement.
-     * @param  The unique identifier of the request.
-     * @param requestDTO The object containing the new status information for the request.
+     * @param reservationId The unique identifier of the reservation request.
+     * @param requestDTO The object containing the new status information for the reservation request.
      *
-     * @return A {@link ResponseEntity} containing a {@link ReservationAttemptResponseDTO} object with the details of the operation's response, including HTTP status.
+     * @return A {@link ResponseEntity} containing a {@link ReservationAttemptResponseDTO} object with the details of the operation's response, including the HTTP status.
      */
     @PatchMapping("/advertisements/{adId}/reservationAttempts/{reservationId}/status")
     public ResponseEntity<ReservationAttemptResponseDTO> patchReservationAttemptStatus(@PathVariable String adId, @PathVariable String reservationId, @RequestBody ReservationAttemptStatusDTO requestDTO) {

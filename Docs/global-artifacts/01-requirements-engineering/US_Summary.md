@@ -135,7 +135,7 @@
 ---
 
 ## US12 - Search advertisements
-- **Endpoint**: `/advertisement/available?category=[arg1]&keyword=[arg2]&municipality=[arg3]`
+- **Endpoint**: `/advertisement/active?category=[arg1]&keyword=[arg2]&municipality=[arg3]`
 - **Description**: As a user, I want to search for active advertisements by category, keyword, and municipality so that I can better find the items I’m interested in.
 - **Permissions/Role**: All
 - **Acceptance Criteria**:

@@ -36,15 +36,15 @@ public class AdvertisementService implements IAdvertisementService {
   
     private final UserService userService;
 
-    private final RequestService requestService;
+    private final ReservationAttemptService reservationAttemptService;
 
     @Autowired
     private MunicipalityWebClient municipalityWebClient;
 
     @Autowired
-    public AdvertisementService(@Lazy UserService userService, @Lazy RequestService requestService) {
+    public AdvertisementService(@Lazy UserService userService, @Lazy ReservationAttemptService reservationAttemptService) {
         this.userService = userService;
-        this.requestService = requestService;
+        this.reservationAttemptService = reservationAttemptService;
     }
 
     /**
@@ -225,7 +225,7 @@ public class AdvertisementService implements IAdvertisementService {
 
         // If status is changed to closed, rejects all requests
         if (advertisement.getStatus() == Advertisement.AdvertisementStatus.CLOSED) {
-            requestService.rejectRequests(advertisement.getId());
+            reservationAttemptService.rejectRequests(advertisement.getId());
             advertisement.setStatus(Advertisement.AdvertisementStatus.CLOSED);
         }
 
@@ -261,7 +261,7 @@ public class AdvertisementService implements IAdvertisementService {
         // Save updated advertisement
         advertisement = advertisementRepository.save(advertisement);
 
-        requestService.rejectRequests(advertisement.getId());
+        reservationAttemptService.rejectRequests(advertisement.getId());
 
         AdvertisementDTO updatedAdvertisementDTO = AdvertisementMapper.toDTO(advertisement);
         updatedAdvertisementDTO.setMunicipality(advertisement.getMunicipality());
@@ -273,42 +273,42 @@ public class AdvertisementService implements IAdvertisementService {
      * Creates a new advertisement based on the provided data.
      *
      * @param id The unique identifier of the advertisement.
-     * @param advertisementRequestDTO An object containing the request details for creating the advertisement.
-     * @return A {@code RequestResponseDTO} object containing the response of the request.
+     * @param advertisementReservationAttemptDTO An object containing the reservation attempt details for creating the advertisement.
+     * @return A {@code RequestResponseDTO} object containing the response of the reservation attempt.
      */
-    public RequestResponseDTO createAdvertisementRequest(String id, RequestDTO advertisementRequestDTO){
-        advertisementRequestDTO.setAdvertisementId(id);
-        return requestService.createRequest(advertisementRequestDTO);
+    public ReservationAttemptResponseDTO createAdvertisementReservationAttempt(String id, ReservationAttemptDTO advertisementReservationAttemptDTO){
+        advertisementReservationAttemptDTO.setAdvertisementId(id);
+        return reservationAttemptService.createReservationAttempt(advertisementReservationAttemptDTO);
     }
 
     /**
-     * Retrieves the advertisement request details based on the provided advertisement ID and request ID.
+     * Retrieves the advertisement reservation attempt details based on the provided advertisement ID and request ID.
      *
      * @param idAdvertisement The unique identifier of the advertisement.
-     * @param idRequest The unique identifier of the request associated with the advertisement.
-     * @return A {@link RequestResponseDTO} object containing the details of the advertisement request.
+     * @param idRequest The unique identifier of the reservation attempt associated with the advertisement.
+     * @return A {@link ReservationAttemptResponseDTO} object containing the details of the advertisement reservation attempt.
      */
-    public RequestResponseDTO getAdvertisementRequestById(String idAdvertisement, String idRequest){
-        RequestResponseDTO response = requestService.getRequestById(idRequest);
+    public ReservationAttemptResponseDTO getAdvertisementRequestById(String idAdvertisement, String idRequest){
+        ReservationAttemptResponseDTO response = reservationAttemptService.getReservationAttemptById(idRequest);
         if(!response.getAdvertisementId().equals(idAdvertisement)){
-            throw new RequestNotFoundException("Advertisement id invalid.");
+            throw new ReservationAttemptNotFoundException("Advertisement id invalid.");
         }
         return response;
     }
 
     /**
-     * Updates the status of a request for an advertisement.
-     * This method calls the service to apply the changes to the status of a specific request related to an advertisement.
+     * Updates the status of a reservation attempt for an advertisement.
+     * This method calls the service to apply the changes to the status of a specific reservation attempt related to an advertisement.
      *
      * @param idAdvertisement The unique identifier of the advertisement.
-     * @param idRequest The unique identifier of the request.
-     * @param requestStatusDTO The object containing the new status information for the request.
+     * @param idReservationAttempt The unique identifier of the reservation attempt.
+     * @param reservationAttemptStatusDTO The object containing the new status information for the reservation attempt.
      *
-     * @return A {@link RequestResponseDTO} object containing the details of the operation's response.
+     * @return A {@link ReservationAttemptResponseDTO} object containing the details of the operation's response.
      *
      */
-    public RequestResponseDTO patchAdvertisementRequestStatus(String idAdvertisement, String idRequest, RequestStatusDTO requestStatusDTO){
-        return requestService.patchRequest(idRequest, idAdvertisement, requestStatusDTO);
+    public ReservationAttemptResponseDTO patchAdvertisementRequestStatus(String idAdvertisement, String idReservationAttempt, ReservationAttemptStatusDTO reservationAttemptStatusDTO){
+        return reservationAttemptService.patchReservationAttempt(idReservationAttempt, idAdvertisement, reservationAttemptStatusDTO);
     }
 
     /**
@@ -367,7 +367,7 @@ public class AdvertisementService implements IAdvertisementService {
         validateTitleAndDescription(advertisementUpdateDTO.getTitle(), advertisementUpdateDTO.getDescription());
 
         // Check if the advertisement has requests. If so, the advertisement cannot be updated
-        if (requestService.hasRequestsInAdvertisement(advertisement.getId())) {
+        if (reservationAttemptService.hasRequestsInAdvertisement(advertisement.getId())) {
             throw new AdvertisementValidationException("The advertisement with id " + id +
                     " has requests, therefore it cannot be updated.");
         }
@@ -426,7 +426,7 @@ public class AdvertisementService implements IAdvertisementService {
         }
 
         // Check if there are any requests with status 'DONATED' associated with this advertisement
-        if (requestService.hasDonatedRequestInAdvertisement(advertisement.getId())) {
+        if (reservationAttemptService.hasDonatedRequestInAdvertisement(advertisement.getId())) {
             throw new AdvertisementInvalidActionException("Cannot change the status of the advertisement with donated requests.");
         }
 
@@ -465,7 +465,7 @@ public class AdvertisementService implements IAdvertisementService {
                 advertisementRepository.save(advertisement);  // Save the advertisement with the updated status
 
                 // Reject requests associated with the advertisement
-                requestService.rejectRequests(advertisement.getId());
+                reservationAttemptService.rejectRequests(advertisement.getId());
             }
         }
     }

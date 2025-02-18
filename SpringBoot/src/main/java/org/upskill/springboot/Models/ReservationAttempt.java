@@ -13,12 +13,13 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Request {
+
+public class ReservationAttempt {
 
     /**
-     * Enumeration representing the possible statuses of a request.
+     * Enumeration representing the possible statuses of a reservation attempt.
      */
-    public enum RequestStatus {
+    public enum ReservationAttemptStatus {
         PENDING,
         CANCELED,
         REJECTED,
@@ -27,7 +28,7 @@ public class Request {
     }
 
     /**
-     * The unique identifier for the request.
+     * The unique identifier for the reservation attempt.
      * It is automatically generated using the UUID strategy.
      */
     @Id
@@ -35,16 +36,16 @@ public class Request {
     private String id;
 
     /**
-     * The advertisement associated with this request.
+     * The advertisement associated with this reservation attempt.
      * This is a required field and represents a many-to-one relationship with the Advertisement entity.
-     * The request is linked to an advertisement by its unique `advertisement_id`.
+     * The reservation attempt is linked to an advertisement by its unique `advertisement_id`.
      */
     @ManyToOne
     @JoinColumn(name = "advertisement_id", nullable = false)
     private Advertisement advertisement;
 
     /**
-     * The ID of the user who made the request.
+     * The ID of the user who made the reservation attempt.
      * This is a required field.
      */
     @NonNull
@@ -53,27 +54,27 @@ public class Request {
     private User user;
 
     /**
-     * The date the request was created.
+     * The date the reservation attempt was created.
      * This is a required field.
      */
     @NonNull
     private LocalDate date;
 
     /**
-     * The status of the request.
-     * This is a required field and represents the current state of the request.
+     * The status of the reservation attempt.
+     * This is a required field and represents the current state of the reservation attempt.
      * The status is stored in the database as a numeric value.
      */
     @NonNull
     @Enumerated(EnumType.ORDINAL)
-    private RequestStatus status;
+    private ReservationAttempt.ReservationAttemptStatus status;
 
     /**
-     * Default constructor for the Request class.
+     * Default constructor for the Reservation Attempt class.
      * Sets the date to the current date and the status to PENDING by default.
      */
-    public Request() {
+    public ReservationAttempt() {
         this.date = LocalDate.now();
-        this.status = RequestStatus.PENDING;
+        this.status = ReservationAttemptStatus.PENDING;
     }
 }

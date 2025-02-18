@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestDTO {
+public class ReservationAttemptDTO {
     private String userId;
     private String status;
     private String advertisementId;

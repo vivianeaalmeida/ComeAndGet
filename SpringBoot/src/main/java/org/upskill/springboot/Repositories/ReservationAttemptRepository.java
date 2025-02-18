@@ -4,19 +4,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.upskill.springboot.Models.Request;
+import org.upskill.springboot.Models.ReservationAttempt;
 
 import java.util.List;
 import java.util.Optional;
 
 /**
- * Repository interface for performing CRUD operations on {@link Request} entities.
+ * Repository interface for performing CRUD operations on {@link ReservationAttempt} entities.
  * Extends {@link JpaRepository} to leverage built-in methods for data access.
  */
 @Repository
-public interface RequestRepository extends JpaRepository<Request, String> {
+public interface ReservationAttemptRepository extends JpaRepository<ReservationAttempt, String> {
 
     /**
      * Finds all requests for a given advertisement.
@@ -24,8 +23,8 @@ public interface RequestRepository extends JpaRepository<Request, String> {
      * @param advertisementId the ID of the advertisement to query
      * @return a list of requests for the given advertisement
      */
-    @Query("SELECT r FROM Request r WHERE r.advertisement.id = :advertisementId")
-    List<Request> getRequestsByAdvertisementId(String advertisementId);
+    @Query("SELECT r FROM ReservationAttempt r WHERE r.advertisement.id = :advertisementId")
+    List<ReservationAttempt> getRequestsByAdvertisementId(String advertisementId);
 
     /**
      * Checks if there are any requests associated with a specific advertisement.
@@ -42,15 +41,15 @@ public interface RequestRepository extends JpaRepository<Request, String> {
      * @param advertisementId the unique identifier of the advertisement
      * @return an {@link Optional} containing the found request, or empty if no request matches the criteria
      */
-    Optional<Request> findByIdAndAdvertisementId(String id, String advertisementId);
+    Optional<ReservationAttempt> findByIdAndAdvertisementId(String id, String advertisementId);
 
     /**
      * Retrieves a list of requests associated with a specific user ID.
      *
      * @param userId the unique identifier of the user
-     * @return a list of {@link Request} entities linked to the given user ID
+     * @return a list of {@link ReservationAttempt} entities linked to the given user ID
      */
-    Page<Request> findRequestByUser_Id(String userId, Pageable pageable);
+    Page<ReservationAttempt> findRequestByUser_Id(String userId, Pageable pageable);
 
     /**
      * Checks if a request exists for a given advertisement and user.
@@ -68,11 +67,11 @@ public interface RequestRepository extends JpaRepository<Request, String> {
      * @param advertisementId The ID of the advertisement
      * @return {@code true} if there are any "DONATED" requests for the advertisement, {@code false} otherwise.
      */
-    @Query("SELECT COUNT(r) > 0 FROM Request r WHERE r.advertisement.id = :advertisementId AND r.status = 4")
+    @Query("SELECT COUNT(r) > 0 FROM ReservationAttempt r WHERE r.advertisement.id = :advertisementId AND r.status = 4")
     boolean existsDonatedRequestForAdvertisement(String advertisementId);
 
 
 
-    @Query("SELECT r FROM Request r INNER JOIN Advertisement ad ON r.advertisement.id = ad.id WHERE ad.clientId = :userId")
-    Page<Request> findRequestsFromAdvertisementOfUser(String userId,Pageable pageable);
+    @Query("SELECT r FROM ReservationAttempt r INNER JOIN Advertisement ad ON r.advertisement.id = ad.id WHERE ad.clientId = :userId")
+    Page<ReservationAttempt> findRequestsFromAdvertisementOfUser(String userId, Pageable pageable);
 }

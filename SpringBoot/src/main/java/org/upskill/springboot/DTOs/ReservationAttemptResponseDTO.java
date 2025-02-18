@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestResponseDTO {
+public class ReservationAttemptResponseDTO {
     private String id;
     private String userId;
     private String status;

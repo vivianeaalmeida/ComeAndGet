@@ -26,7 +26,7 @@ INSERT INTO ADVERTISEMENT (ID, TITLE, DESCRIPTION, DATE, MUNICIPALITY, STATUS, I
 (3, 'Máquina de lavar a loiça para doar', 'Máquina de lavar a loiça em funcionamento.', '2025-02-10', 'Porto', 1, 3, 1),
 (4, 'Máquina de café', 'Máquina de café da Nespresso em bom estado.', '2025-01-01', 'Porto', 1, 4, 1);
 
--- Insert requests
-INSERT INTO REQUEST (ID, ADVERTISEMENT_ID, USER_ID, DATE, STATUS) VALUES
+-- Insert reservationAttempts
+INSERT INTO RESERVATION_ATTEMPT (ID, ADVERTISEMENT_ID, USER_ID, DATE, STATUS) VALUES
 (1, 1, 2, '2025-02-14', 0),
 (2, 3, 2, '2025-02-14', 4);

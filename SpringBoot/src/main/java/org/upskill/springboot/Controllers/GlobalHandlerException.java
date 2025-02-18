@@ -152,8 +152,8 @@ public class GlobalHandlerException {
      * @param e the RequestNotFoundException
      * @return a ResponseEntity containing an ErrorResponse and HTTP status NOT_FOUND
      */
-    @ExceptionHandler(RequestNotFoundException.class)
-    public ResponseEntity<ErrorResponse> RequestNotFoundExceptions(RequestNotFoundException e) {
+    @ExceptionHandler(ReservationAttemptNotFoundException.class)
+    public ResponseEntity<ErrorResponse> RequestNotFoundExceptions(ReservationAttemptNotFoundException e) {
         ErrorResponse errorResponse = new ErrorResponse(
                 e.getMessage(),
                 HttpStatus.NOT_FOUND.value(),

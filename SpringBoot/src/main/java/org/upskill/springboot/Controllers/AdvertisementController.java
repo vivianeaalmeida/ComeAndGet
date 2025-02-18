@@ -272,12 +272,12 @@ public class AdvertisementController extends BaseController {
      * Create a new advertisement request.
      *
      * @param id The unique identifier of the advertisement.
-     * @param requestDTO The request data for creating the advertisement request.
+     * @param reservationAttemptDTO The request data for creating the advertisement request.
      * @return A {@code ResponseEntity<RequestResponseDTO>} containing the response data.
      */
-    @PostMapping("/advertisements/{id}/requests")
-    public ResponseEntity<RequestResponseDTO> createAdvertisementRequest(@PathVariable String id, @RequestBody RequestDTO requestDTO) {
-        RequestResponseDTO response = advertisementService.createAdvertisementRequest(id, requestDTO);
+    @PostMapping("/advertisements/{id}/reservationAttempts")
+    public ResponseEntity<ReservationAttemptResponseDTO> createAdvertisementRequest(@PathVariable String id, @RequestBody ReservationAttemptDTO reservationAttemptDTO) {
+        ReservationAttemptResponseDTO response = advertisementService.createAdvertisementReservationAttempt(id, reservationAttemptDTO);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -285,29 +285,30 @@ public class AdvertisementController extends BaseController {
      * Retrieve an advertisement request by its advertisement ID and request ID.
      *
      * @param adId The unique identifier of the advertisement.
-     * @param requestId The unique identifier of the request associated with the advertisement.
-     * @return A {@link ResponseEntity} containing the {@link RequestResponseDTO} with the advertisement request details,
+     * @param reservationId The unique identifier of the request associated with the advertisement.
+     * @return A {@link ResponseEntity} containing the {@link ReservationAttemptResponseDTO} with the advertisement request details,
      *         and an HTTP status of 200 OK if the request is successful.
      */
-    @GetMapping("/advertisements/{adId}/requests/{requestId}")
-    public ResponseEntity<RequestResponseDTO> getAdvertisementRequestById(@PathVariable String adId, @PathVariable String requestId) {
-        RequestResponseDTO response = advertisementService.getAdvertisementRequestById(adId, requestId);
+    @GetMapping("/advertisements/{adId}/reservationAttempts/{reservationId}")
+    public ResponseEntity<ReservationAttemptResponseDTO> getAdvertisementReservationAttemptById(@PathVariable String adId, @PathVariable String reservationId) {
+        ReservationAttemptResponseDTO response = advertisementService.getAdvertisementRequestById(adId, reservationId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
 
     /**
      * Endpoint to update the status of a request for a specific advertisement.
      * This method handles a PATCH request and invokes the service to update the request's status for the specified advertisement.
      *
      * @param adId The unique identifier of the advertisement.
-     * @param requestId The unique identifier of the request.
+     * @param  The unique identifier of the request.
      * @param requestDTO The object containing the new status information for the request.
      *
-     * @return A {@link ResponseEntity} containing a {@link RequestResponseDTO} object with the details of the operation's response, including HTTP status.
+     * @return A {@link ResponseEntity} containing a {@link ReservationAttemptResponseDTO} object with the details of the operation's response, including HTTP status.
      */
-    @PatchMapping("/advertisements/{adId}/requests/{requestId}/status")
-    public ResponseEntity<RequestResponseDTO> patchAdvertisementRequestStatus(@PathVariable String adId, @PathVariable String requestId, @RequestBody RequestStatusDTO requestDTO) {
-        RequestResponseDTO response = advertisementService.patchAdvertisementRequestStatus(adId, requestId, requestDTO);
+    @PatchMapping("/advertisements/{adId}/reservationAttempts/{reservationId}/status")
+    public ResponseEntity<ReservationAttemptResponseDTO> patchReservationAttemptStatus(@PathVariable String adId, @PathVariable String reservationId, @RequestBody ReservationAttemptStatusDTO requestDTO) {
+        ReservationAttemptResponseDTO response = advertisementService.patchAdvertisementRequestStatus(adId, reservationId , requestDTO);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

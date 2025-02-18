@@ -1,23 +1,21 @@
 package org.upskill.springboot.Services.Interfaces;
 
 import org.springframework.data.domain.Page;
-import org.upskill.springboot.DTOs.RequestDTO;
-import org.upskill.springboot.DTOs.RequestResponseDTO;
-import org.upskill.springboot.DTOs.RequestStatusDTO;
-
-import java.util.List;
+import org.upskill.springboot.DTOs.ReservationAttemptDTO;
+import org.upskill.springboot.DTOs.ReservationAttemptResponseDTO;
+import org.upskill.springboot.DTOs.ReservationAttemptStatusDTO;
 
 /**
  * Service interface for managing requests.
  */
-public interface IRequestService {
+public interface IReservationAttemptService {
 
     /**
      * Retrieves all requests.
      *
      * @return a list of all request response data transfer objects
      */
-    Page<RequestResponseDTO> getRequests(int page, int size);
+    Page<ReservationAttemptResponseDTO> getReservationAttempts(int page, int size);
 
     /**
      * Retrieves a specific request by its ID.
@@ -25,40 +23,40 @@ public interface IRequestService {
      * @param id the ID of the request
      * @return the request response data transfer object corresponding to the given ID
      */
-    RequestResponseDTO getRequestById(String id);
+    ReservationAttemptResponseDTO getReservationAttemptById(String id);
 
     /**
      * Creates a new request.
      *
-     * @param requestDTO the request data transfer object containing the details of the new request
+     * @param reservationAttemptDTO the request data transfer object containing the details of the new request
      * @return the created request response data transfer object
      */
-    RequestResponseDTO createRequest(RequestDTO requestDTO);
+    ReservationAttemptResponseDTO createReservationAttempt(ReservationAttemptDTO reservationAttemptDTO);
 
     /**
      * Updates an existing request.
      *
      * @param id           the ID of the request to be updated
-     * @param requestDTO   the request data transfer object containing the updated details
+     * @param reservationAttemptDTO   the request data transfer object containing the updated details
      * @return the updated request response data transfer object
      */
-    RequestResponseDTO updateRequest(String id, RequestDTO requestDTO);
+    ReservationAttemptResponseDTO updateReservationAttempt(String id, ReservationAttemptDTO reservationAttemptDTO);
 
     /**
      * Partially updates a request.
      *
      * @param id           the ID of the request to be partially updated
      * @param idAdvertisement  the ID of the advertisement
-     * @param requestStatusDTO   the object with the new status
+     * @param reservationAttemptStatusDTO   the object with the new status
      * @return the partially updated request response data transfer object
      */
-    RequestResponseDTO patchRequest(String id, String idAdvertisement, RequestStatusDTO requestStatusDTO);
+    ReservationAttemptResponseDTO patchReservationAttempt(String id, String idAdvertisement, ReservationAttemptStatusDTO reservationAttemptStatusDTO);
 
     /**
      * Deletes a request by its ID.
      *
      * @param id the ID of the request to be deleted
      */
-    void deleteRequest(String id);
+    void deleteReservationAttempt(String id);
 
 }

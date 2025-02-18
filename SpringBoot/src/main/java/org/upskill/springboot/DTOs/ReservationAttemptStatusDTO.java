@@ -9,6 +9,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestStatusDTO {
+public class ReservationAttemptStatusDTO {
     private String status;
 }

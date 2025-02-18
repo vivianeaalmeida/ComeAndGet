@@ -83,19 +83,19 @@ public interface IAdvertisementService {
      * Creates a new advertisement based on the provided data.
      *
      * @param id The unique identifier of the advertisement.
-     * @param advertisementRequestDTO An object containing the request details for creating the advertisement.
+     * @param advertisementReservationAttemptDTO An object containing the request details for creating the advertisement.
      * @return A {@code RequestResponseDTO} object containing the response of the request.
      */
-    RequestResponseDTO createAdvertisementRequest(String id, RequestDTO advertisementRequestDTO);
+    ReservationAttemptResponseDTO createAdvertisementReservationAttempt(String id, ReservationAttemptDTO advertisementReservationAttemptDTO);
 
     /**
      * Retrieves the advertisement request details based on the provided advertisement ID and request ID.
      *
      * @param idAdvertisement The unique identifier of the advertisement.
      * @param idRequest The unique identifier of the request associated with the advertisement.
-     * @return A {@link RequestResponseDTO} object containing the details of the advertisement request.
+     * @return A {@link ReservationAttemptResponseDTO} object containing the details of the advertisement request.
      */
-    RequestResponseDTO getAdvertisementRequestById(String idAdvertisement, String idRequest);
+    ReservationAttemptResponseDTO getAdvertisementRequestById(String idAdvertisement, String idRequest);
 
     /**
      * Updates the status of a request for an advertisement.
@@ -103,11 +103,11 @@ public interface IAdvertisementService {
      *
      * @param idAdvertisement The unique identifier of the advertisement.
      * @param idRequest The unique identifier of the request.
-     * @param requestStatusDTO The object containing the new status information for the request.
+     * @param reservationAttemptStatusDTO The object containing the new status information for the request.
      *
-     * @return A {@link RequestResponseDTO} object containing the details of the operation's response.
+     * @return A {@link ReservationAttemptResponseDTO} object containing the details of the operation's response.
      *
      */
 
-    RequestResponseDTO patchAdvertisementRequestStatus(String idAdvertisement, String idRequest, RequestStatusDTO requestStatusDTO);
+    ReservationAttemptResponseDTO patchAdvertisementRequestStatus(String idAdvertisement, String idRequest, ReservationAttemptStatusDTO reservationAttemptStatusDTO);
 }

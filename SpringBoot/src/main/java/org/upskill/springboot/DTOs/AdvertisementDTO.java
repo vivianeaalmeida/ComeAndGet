@@ -35,7 +35,7 @@ public class AdvertisementDTO extends RepresentationModel<AdvertisementDTO> {
     /**
      * The initial date when the advertisement was created.
      */
-    private LocalDate initialDate;
+    private LocalDate date;
 
     /**
      * The municipality of the advertisement
@@ -63,6 +63,6 @@ public class AdvertisementDTO extends RepresentationModel<AdvertisementDTO> {
      */
     public AdvertisementDTO() {
         this.status = Advertisement.AdvertisementStatus.ACTIVE.toString();
-        this.initialDate = LocalDate.now();
+        this.date = LocalDate.now();
     }
 }

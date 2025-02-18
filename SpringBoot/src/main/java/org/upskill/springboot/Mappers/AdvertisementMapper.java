@@ -19,7 +19,7 @@ public class AdvertisementMapper {
         advertisementDTO.setId(advertisement.getId());
         advertisementDTO.setTitle(advertisement.getTitle());
         advertisementDTO.setDescription(advertisement.getDescription());
-        advertisementDTO.setInitialDate(advertisement.getInitialDate());
+        advertisementDTO.setDate(advertisement.getDate());
         advertisementDTO.setStatus(advertisement.getStatus().toString());
         advertisementDTO.setItem(ItemMapper.toDTO(advertisement.getItem()));
         advertisementDTO.setClientId(advertisement.getClientId());
@@ -39,7 +39,7 @@ public class AdvertisementMapper {
         advertisement.setId(advertisementDTO.getId());
         advertisement.setTitle(advertisementDTO.getTitle());
         advertisement.setDescription(advertisementDTO.getDescription());
-        advertisement.setInitialDate(advertisementDTO.getInitialDate());
+        advertisement.setDate(advertisementDTO.getDate());
 
         // Converts String to Enum
         if (advertisementDTO.getStatus() != null) {

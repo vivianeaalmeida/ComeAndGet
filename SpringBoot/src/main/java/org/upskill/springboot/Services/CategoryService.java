@@ -13,7 +13,6 @@ import org.upskill.springboot.Exceptions.DuplicateCategoryException;
 import org.upskill.springboot.Mappers.CategoryMapper;
 import org.upskill.springboot.Models.Category;
 import org.upskill.springboot.Repositories.CategoryRepository;
-import org.upskill.springboot.Repositories.ItemRepository;
 import org.upskill.springboot.Services.Interfaces.ICategoryService;
 
 /**

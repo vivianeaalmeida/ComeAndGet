@@ -337,7 +337,7 @@ public class AdvertisementService implements IAdvertisementService {
         }
 
         // Check date
-        if (advertisementDTO.getInitialDate() != null && !advertisementDTO.getInitialDate().equals(LocalDate.now())) {
+        if (advertisementDTO.getDate() != null && !advertisementDTO.getDate().equals(LocalDate.now())) {
             throw new AdvertisementValidationException("Advertisement date must be the current date");
         }
 
@@ -461,8 +461,7 @@ public class AdvertisementService implements IAdvertisementService {
 
         for (Advertisement advertisement : advertisements) {
             // Close advertisement if expired
-            if (advertisement.getStatus() == Advertisement.AdvertisementStatus.ACTIVE
-                    && advertisement.closeIfExpired()) {
+            if (advertisement.closeIfExpired()) {
                 advertisementRepository.save(advertisement);  // Save the advertisement with the updated status
 
                 // Reject requests associated with the advertisement

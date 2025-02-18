@@ -52,7 +52,7 @@ public class Advertisement {
      * The initial date when the advertisement was created.
      * This is a required field.
      */
-    private LocalDate initialDate;
+    private LocalDate date;
 
     /**
      * The municipality designation of the advertisement
@@ -89,7 +89,7 @@ public class Advertisement {
      * and sets the status to ACTIVE.
      */
     public Advertisement() {
-        this.initialDate = LocalDate.now();
+        this.date = LocalDate.now();
         this.status = AdvertisementStatus.ACTIVE;
     }
 
@@ -100,7 +100,7 @@ public class Advertisement {
      *         false if the advertisement is still within the 30-day period and remains open
      */
     public boolean closeIfExpired() {
-        if (LocalDate.now().isAfter(initialDate.plusDays(30))) {
+        if (LocalDate.now().isAfter(date.plusDays(30))) {
             this.status = AdvertisementStatus.CLOSED;
             return true;
         }

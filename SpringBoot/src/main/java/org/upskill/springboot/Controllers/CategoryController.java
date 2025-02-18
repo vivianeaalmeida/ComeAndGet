@@ -6,6 +6,7 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.upskill.springboot.DTOs.CategoryDTO;
 import org.upskill.springboot.Services.CategoryService;
@@ -112,6 +113,7 @@ public class CategoryController extends BaseController {
      * @return A ResponseEntity with HTTP status 204 (No Content) if the deletion is successful.
      */
     @DeleteMapping("/categories/{id}")
+    @PreAuthorize("hasRole('Admin')")
     public ResponseEntity<Void> deleteCategory(@PathVariable("id") String id) {
         categoryService.deleteCategory(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

@@ -49,6 +49,7 @@ public interface AdvertisementRepository extends JpaRepository<Advertisement, St
             "OR LOWER(a.description) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
             "AND (:category IS NULL OR LOWER(c.designation) LIKE LOWER(CONCAT('%', :category, '%')))")
     Page<Advertisement> searchAdvertisements(@Param("municipality") String municipality,
-                               @Param("keyword") String keyword,
-                               @Param("category") String category);
+                                             @Param("keyword") String keyword,
+                                             @Param("category") String category,
+                                             Pageable pageable);
 }

@@ -58,7 +58,7 @@ public class AccountService {
         if (!await roleManager.RoleExistsAsync(role)) {
             return await roleManager.CreateAsync(new IdentityRole(role));
         }
-        return IdentityResult.Failed(new IdentityError { Description = "Role already exists." });
+        return IdentityResult.Failed(new IdentityError { Description = "Roles already exists." });
     }
 
 
@@ -112,7 +112,7 @@ public class AccountService {
 
             return new LoginResponse {
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
-                Role = userRoles.FirstOrDefault() ?? "User"
+                Roles = userRoles.FirstOrDefault() ?? "User"
             };
         }
 

@@ -58,17 +58,6 @@ builder.Services.AddAuthorization(Options => {
     Options.AddPolicy("UserPolicy", policy => policy.RequireRole("ApplicationUser"));
 });
 
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-var builder = WebApplication.CreateBuilder(args);
-
 builder.Services.AddCors(options => {
     options.AddPolicy("MyCorsPolicy",
         policy => {
@@ -80,6 +69,16 @@ builder.Services.AddCors(options => {
 });
 
 var app = builder.Build();
+
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+
 
 app.UseCors("MyCorsPolicy");
 

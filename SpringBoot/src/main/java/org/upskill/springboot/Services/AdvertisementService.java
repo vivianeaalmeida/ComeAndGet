@@ -313,18 +313,35 @@ public class AdvertisementService implements IAdvertisementService {
         return reservationAttemptService.patchReservationAttempt(idReservationAttempt, idAdvertisement, reservationAttemptStatusDTO);
     }
 
-    /*
+    /**
+     * Searches for advertisements based on the provided filters and returns a paginated list of advertisements.
+     * The search includes optional filtering by municipality, keyword, and category.
+     * This method leverages the repository to fetch the data and maps it to DTOs before returning the result.
+     *
+     * @param page The page number to retrieve.
+     * @param size The number of advertisements to include in each page.
+     * @param municipality Optional filter for the municipality where the advertisement is located.
+     * @param keyword Optional keyword to search in the advertisement title or description.
+     * @param category Optional filter to search by advertisement category.
+     *
+     * @return A {@link Page<AdvertisementDTO>} object containing the paginated results of the advertisement search,
+     *         with advertisements matching the filters or all advertisements if no filters are provided.
+     */
     @Override
-    public Page<AdvertisementDTO> searchAdvertisements(int page, int size, Optional<String> municipality, Optional<String> keyword, Optional<String> category){
-        Page<Advertisement> advertisements = advertisementRepository.searchAdvertisements(
-                municipality.orElse(null),
-                keyword.orElse(null),
-                category.orElse(null));
-        List<AdvertisementDTO> advertisementsDTO = advertisements.stream().map()
+    public Page<AdvertisementDTO> searchAdvertisements(int page, int size, String municipality, String keyword, String category){
+        Page<Advertisement> advertisements = advertisementRepository
+                .searchAdvertisements(municipality, keyword, category, PageRequest.of(page, size));
 
+        List<AdvertisementDTO> advertisementsDTO = advertisements.stream()
+                .map(advertisement -> {
+                    AdvertisementDTO dto = AdvertisementMapper.toDTO(advertisement);
+                    dto.setMunicipality(advertisement.getMunicipality());
+                    return dto;
+                })
+                .collect(Collectors.toList());
 
-
-    }/*
+        return new PageImpl<>(advertisementsDTO, PageRequest.of(page, size), advertisements.getTotalElements());
+    }
 
     /**
      * Validates the advertisement data transfer object.

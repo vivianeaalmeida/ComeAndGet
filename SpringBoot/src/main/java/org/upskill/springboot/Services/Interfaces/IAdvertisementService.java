@@ -76,7 +76,7 @@ public interface IAdvertisementService {
      * @param id The unique identifier of the advertisement to be updated.
      * @return The updated {@link AdvertisementDTO} with the new status.
      */
-    AdvertisementDTO patchAdvertisementStatusToInactive(String id);
+    AdvertisementDTO deactivateAdvertisement(String id);
 
 
     /**

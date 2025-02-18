@@ -240,7 +240,13 @@ public class AdvertisementController extends BaseController {
      * and HTTP status 200 (Ok) if the update is successful.
      */
     @PutMapping("/advertisements/{id}")
-    public ResponseEntity<AdvertisementDTO> updateAdvertisement(@PathVariable("id") String id, @RequestBody AdvertisementUpdateDTO request) {
+    public ResponseEntity<AdvertisementDTO> updateAdvertisement(@PathVariable("id") String id,
+                                                                @RequestBody AdvertisementUpdateDTO request)
+    {
+        if (!id.equals(request.getId())) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         AdvertisementDTO advertisementDTO = advertisementService.updateAdvertisement(id, request);
 
         // self
@@ -251,14 +257,14 @@ public class AdvertisementController extends BaseController {
     }
 
     /**
-     * Updates the status of an advertisement to INACTIVE.
+     * Deactivates an advertisement by updating the status of an advertisement to INACTIVE.
      *
-     * @param id The ID of the advertisement to be updated.
-     * @return The updated advertisement DTO with status set to INACTIVE.
+     * @param id The ID of the advertisement to be deactivated.
+     * @return The deactivated advertisement DTO
      */
-    @PatchMapping("/advertisements/{id}/status/inactive")
-    public ResponseEntity<AdvertisementDTO> patchAdvertisementStatusToInactive(@PathVariable String id) {
-        AdvertisementDTO advertisementDTO = advertisementService.patchAdvertisementStatusToInactive(id);
+    @PatchMapping("/advertisements/{id}/deactivate")
+    public ResponseEntity<AdvertisementDTO> deactivateAdvertisement(@PathVariable String id) {
+        AdvertisementDTO advertisementDTO = advertisementService.deactivateAdvertisement(id);
         return new ResponseEntity<>(advertisementDTO, HttpStatus.OK);
     }
 

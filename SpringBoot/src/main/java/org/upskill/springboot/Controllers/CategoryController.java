@@ -82,19 +82,6 @@ public class CategoryController extends BaseController {
     }
 
     /**
-     * Deletes a category by its ID.
-     * If the category exists and meets the deletion criteria, it is removed from the system.
-     *
-     * @param id The ID of the category to be deleted.
-     * @return A ResponseEntity with HTTP status 204 (No Content) if the deletion is successful.
-     */
-    @DeleteMapping("/categories/{id}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable("id") String id) {
-        categoryService.deleteCategory(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    /**
      * Updates a category by its ID.
      * If the category exists and meets the update criteria, it is updated in the system.
      *
@@ -105,6 +92,10 @@ public class CategoryController extends BaseController {
      */
     @PutMapping("/categories/{id}")
     public ResponseEntity<CategoryDTO> updateCategory(@PathVariable("id") String id, @RequestBody CategoryDTO request) {
+        if (!id.equals(request.getId())) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         CategoryDTO categoryDTO = categoryService.updateCategory(id, request);
 
         // self
@@ -112,5 +103,18 @@ public class CategoryController extends BaseController {
                 .updateCategory(id, request)).withSelfRel());
 
         return new ResponseEntity<>(categoryDTO, HttpStatus.OK);
+    }
+
+    /**
+     * Deletes a category by its ID.
+     * If the category exists and meets the deletion criteria, it is removed from the system.
+     *
+     * @param id The ID of the category to be deleted.
+     * @return A ResponseEntity with HTTP status 204 (No Content) if the deletion is successful.
+     */
+    @DeleteMapping("/categories/{id}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable("id") String id) {
+        categoryService.deleteCategory(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

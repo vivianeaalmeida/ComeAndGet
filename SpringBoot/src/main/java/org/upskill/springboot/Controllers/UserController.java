@@ -100,32 +100,5 @@ public class UserController extends BaseController {
        }
 
        return new ResponseEntity<>(CollectionModel.of(response.getContent(), links), HttpStatus.OK);
-
-
-
     }
-
-    /*
-        Link selfLink = linkTo(methodOn(RequestController.class)
-                .getRequests(Optional.of(_page), Optional.of(_size))).withSelfRel();
-
-        List<Link> links = new ArrayList<>();
-        links.add(selfLink);
-
-        if (requestsDTO.hasNext()) {
-            links.add(linkTo(methodOn(CategoryController.class)
-                    .getCategories(Optional.of(_page + 1), Optional.of(_size))).withRel("next"));
-        }
-        if (requestsDTO.hasPrevious()) {
-            links.add(linkTo(methodOn(CategoryController.class)
-                    .getCategories(Optional.of(_page - 1), Optional.of(_size))).withRel("previous"));
-        }
-
-        return new ResponseEntity<>(CollectionModel.of(requestsDTO.getContent(), links), HttpStatus.OK);
-    }
-
-
-
-     */
-
 }

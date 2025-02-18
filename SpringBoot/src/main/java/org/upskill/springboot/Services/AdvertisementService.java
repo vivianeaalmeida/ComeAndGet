@@ -247,8 +247,8 @@ public class AdvertisementService implements IAdvertisementService {
      */
     @Override
     @Transactional
-    public AdvertisementDTO patchAdvertisementStatusToInactive(String id) {
-        validatePatchStatusToInactive(id);
+    public AdvertisementDTO deactivateAdvertisement(String id) {
+        validateDeactivateAdvertisement(id);
 
         AdvertisementDTO advertisementDTO = getAdvertisementById(id);
 
@@ -416,7 +416,7 @@ public class AdvertisementService implements IAdvertisementService {
      * @throws AdvertisementNotFoundException      if the advertisement does not exist
      * @throws AdvertisementInvalidActionException if the advertisement is already inactive or has one request with the status donated
      */
-    private boolean validatePatchStatusToInactive(String id) {
+    private boolean validateDeactivateAdvertisement(String id) {
         // Fetch the advertisement from the repository by its ID
         Advertisement advertisement = this.advertisementRepository.findById(id)
                 .orElseThrow(() -> new AdvertisementNotFoundException("Advertisement with id " + id + " not found"));

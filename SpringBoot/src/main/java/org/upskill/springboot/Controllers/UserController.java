@@ -42,36 +42,36 @@ public class UserController extends BaseController {
         UserDTO userDTO = this.userService.getUserById(id);
 
         userDTO.add(linkTo(methodOn(UserController.class).getUserById(id)).withSelfRel());
-        return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
+        return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/users/{userId}/ReservationAttempt")
-    public ResponseEntity<CollectionModel<ReservationAttemptResponseDTO>> getRequestsByUserId(@PathVariable String userId,
-                                                                                              @RequestParam Optional<Integer> page,
-                                                                                              @RequestParam Optional<Integer> size) {
+    @GetMapping("/users/{userId}/reservationAttempts")
+    public ResponseEntity<CollectionModel<ReservationAttemptResponseDTO>> getReservationAttemptsByUserId(@PathVariable String userId,
+                                                                                                         @RequestParam Optional<Integer> page,
+                                                                                                         @RequestParam Optional<Integer> size) {
         int _page = page.orElse(0);
         int _size = size.orElse(10);
         Page<ReservationAttemptResponseDTO> response = this.userService.getReservationAttemptByUserId(userId,_page, _size);
         Link selfLink = linkTo(methodOn(UserController.class)
-                .getAdvertisementsRequestsByUserId(userId, Optional.of(_page), Optional.of(_size))).withSelfRel();
+                .getAdvertisementReservationAttemptsByUserId(userId, Optional.of(_page), Optional.of(_size))).withSelfRel();
 
         List<Link> links = new ArrayList<>();
         links.add(selfLink);
 
         if (response.hasNext()) {
             links.add(linkTo(methodOn(UserController.class)
-                    .getAdvertisementsRequestsByUserId(userId, Optional.of(_page+1), Optional.of(_size))).withRel("next"));
+                    .getAdvertisementReservationAttemptsByUserId(userId, Optional.of(_page+1), Optional.of(_size))).withRel("next"));
         }
         if (response.hasPrevious()) {
             links.add(linkTo(methodOn(UserController.class)
-                    .getAdvertisementsRequestsByUserId(userId, Optional.of(_page+1), Optional.of(_size))).withRel("previous"));
+                    .getAdvertisementReservationAttemptsByUserId(userId, Optional.of(_page+1), Optional.of(_size))).withRel("previous"));
         }
 
         return new ResponseEntity<>(CollectionModel.of(response.getContent(), links), HttpStatus.OK);
     }
 
    @GetMapping("/users/{userId}/advertisements/reservationAttempt")
-    public ResponseEntity<CollectionModel<ReservationAttemptResponseDTO>>getAdvertisementsRequestsByUserId(
+    public ResponseEntity<CollectionModel<ReservationAttemptResponseDTO>> getAdvertisementReservationAttemptsByUserId(
             @PathVariable String userId,
             @RequestParam Optional<Integer> page,
             @RequestParam Optional<Integer> size
@@ -82,18 +82,18 @@ public class UserController extends BaseController {
 
 
        Link selfLink = linkTo(methodOn(UserController.class)
-               .getAdvertisementsRequestsByUserId(userId, Optional.of(_page), Optional.of(_size))).withSelfRel();
+               .getAdvertisementReservationAttemptsByUserId(userId, Optional.of(_page), Optional.of(_size))).withSelfRel();
 
        List<Link> links = new ArrayList<>();
        links.add(selfLink);
 
        if (response.hasNext()) {
            links.add(linkTo(methodOn(UserController.class)
-                   .getAdvertisementsRequestsByUserId(userId, Optional.of(_page+1), Optional.of(_size))).withRel("next"));
+                   .getAdvertisementReservationAttemptsByUserId(userId, Optional.of(_page+1), Optional.of(_size))).withRel("next"));
        }
        if (response.hasPrevious()) {
            links.add(linkTo(methodOn(UserController.class)
-                   .getAdvertisementsRequestsByUserId(userId, Optional.of(_page+1), Optional.of(_size))).withRel("previous"));
+                   .getAdvertisementReservationAttemptsByUserId(userId, Optional.of(_page+1), Optional.of(_size))).withRel("previous"));
        }
 
        return new ResponseEntity<>(CollectionModel.of(response.getContent(), links), HttpStatus.OK);

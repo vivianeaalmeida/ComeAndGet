@@ -71,7 +71,7 @@ public class ReservationAttemptController extends BaseController {
     @GetMapping("/reservationAttempts/{id}")
     public ResponseEntity<ReservationAttemptResponseDTO> getReservationAttemptById(@PathVariable String id) {
         ReservationAttemptResponseDTO responseDTO = reservationAttemptService.getReservationAttemptById(id);
-        return ResponseEntity.ok(responseDTO);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
     /**
@@ -83,6 +83,6 @@ public class ReservationAttemptController extends BaseController {
     @PostMapping("/reservationAttempts")
     public ResponseEntity<ReservationAttemptResponseDTO> postReservationAttempt(@RequestBody ReservationAttemptDTO reservationAttemptDTO) {
         ReservationAttemptResponseDTO responseDTO = reservationAttemptService.createReservationAttempt(reservationAttemptDTO);
-        return ResponseEntity.ok(responseDTO);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 }

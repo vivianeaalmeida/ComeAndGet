@@ -67,6 +67,22 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(options => {
+    options.AddPolicy("MyCorsPolicy",
+        policy => {
+            policy.WithOrigins("http://localhost:4200", "http://localhost:8080")
+                  .AllowAnyMethod()
+                  .AllowAnyHeader()
+                  .AllowCredentials();
+        });
+});
+
+var app = builder.Build();
+
+app.UseCors("MyCorsPolicy");
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

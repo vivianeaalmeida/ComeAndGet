@@ -15,16 +15,10 @@ activate User
     User -> System : requests to update an advertisement
         activate System
 
-            System --> User : shows categories list and asks to select one
+            System --> User : requests updated advertisement data \n(title and description)
         deactivate System
 
-        User -> System : selects a category
-        activate System
-
-            System --> User : requests updated advertisement data \n(designation, finalDate, address, item values)
-        deactivate System
-
-        User -> System : types requested data and click on Submit button
+        User -> System : types requested data and confirms operation
         activate System
 
             System --> User : displays operation success

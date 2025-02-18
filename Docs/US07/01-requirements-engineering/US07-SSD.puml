@@ -21,6 +21,12 @@ activate User
         User -> System : selects a category
         activate System
 
+            System --> User : shows municipalities list and asks to select one
+        deactivate System
+
+        User -> System : selects a municipality
+        activate System
+
             System --> User : requests advertisement data (designation, \nfinalDate, address, item values)
         deactivate System
 

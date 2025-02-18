@@ -24,7 +24,7 @@ public interface ReservationAttemptRepository extends JpaRepository<ReservationA
      * @return a list of requests for the given advertisement
      */
     @Query("SELECT r FROM ReservationAttempt r WHERE r.advertisement.id = :advertisementId")
-    List<ReservationAttempt> getRequestsByAdvertisementId(String advertisementId);
+    List<ReservationAttempt> getReservationAttemptsByAdvertisementId(String advertisementId);
 
     /**
      * Checks if there are any requests associated with a specific advertisement.
@@ -68,10 +68,10 @@ public interface ReservationAttemptRepository extends JpaRepository<ReservationA
      * @return {@code true} if there are any "DONATED" requests for the advertisement, {@code false} otherwise.
      */
     @Query("SELECT COUNT(r) > 0 FROM ReservationAttempt r WHERE r.advertisement.id = :advertisementId AND r.status = 4")
-    boolean existsDonatedRequestForAdvertisement(String advertisementId);
+    boolean existsDonatedReservationsForAdvertisement(String advertisementId);
 
 
 
     @Query("SELECT r FROM ReservationAttempt r INNER JOIN Advertisement ad ON r.advertisement.id = ad.id WHERE ad.clientId = :userId")
-    Page<ReservationAttempt> findRequestsFromAdvertisementOfUser(String userId, Pageable pageable);
+    Page<ReservationAttempt> findReservationAttemptsFromAdvertisementOfUser(String userId, Pageable pageable);
 }

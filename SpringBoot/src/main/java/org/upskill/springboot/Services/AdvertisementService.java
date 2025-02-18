@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +20,6 @@ import org.upskill.springboot.WebClient.MunicipalityWebClient;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -227,7 +225,7 @@ public class AdvertisementService implements IAdvertisementService {
 
         // If status is changed to closed, rejects all requests
         if (advertisement.getStatus() == Advertisement.AdvertisementStatus.CLOSED) {
-            reservationAttemptService.rejectRequests(advertisement.getId());
+            reservationAttemptService.rejectReservationAttempts(advertisement.getId());
             advertisement.setStatus(Advertisement.AdvertisementStatus.CLOSED);
         }
 
@@ -263,7 +261,7 @@ public class AdvertisementService implements IAdvertisementService {
         // Save updated advertisement
         advertisement = advertisementRepository.save(advertisement);
 
-        reservationAttemptService.rejectRequests(advertisement.getId());
+        reservationAttemptService.rejectReservationAttempts(advertisement.getId());
 
         AdvertisementDTO updatedAdvertisementDTO = AdvertisementMapper.toDTO(advertisement);
         updatedAdvertisementDTO.setMunicipality(advertisement.getMunicipality());
@@ -310,7 +308,7 @@ public class AdvertisementService implements IAdvertisementService {
      *
      */
     public ReservationAttemptResponseDTO patchAdvertisementRequestStatus(String idAdvertisement, String idReservationAttempt, ReservationAttemptStatusDTO reservationAttemptStatusDTO){
-        return reservationAttemptService.patchReservationAttempt(idReservationAttempt, idAdvertisement, reservationAttemptStatusDTO);
+        return reservationAttemptService.updateReservationAttemptStatus(idReservationAttempt, idAdvertisement, reservationAttemptStatusDTO);
     }
 
     /**
@@ -483,7 +481,7 @@ public class AdvertisementService implements IAdvertisementService {
     }
 
     /**
-     * Close expired advertisements and reject pending or accepted requests associated with them.
+     * Close expired advertisements and reject pending or accepted reservation attempts associated with them.
      * This method is scheduled to run every day at midnight.
      */
     @Scheduled(cron = "0 0 0 * * ?")  // Cron expression for every day at midnight
@@ -496,8 +494,8 @@ public class AdvertisementService implements IAdvertisementService {
             if (advertisement.closeIfExpired()) {
                 advertisementRepository.save(advertisement);  // Save the advertisement with the updated status
 
-                // Reject requests associated with the advertisement
-                reservationAttemptService.rejectRequests(advertisement.getId());
+                // Reject reservation attemps associated with the advertisement
+                reservationAttemptService.rejectReservationAttempts(advertisement.getId());
             }
         }
     }

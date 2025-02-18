@@ -1,5 +1,6 @@
 package org.upskill.springboot.DTOs;
 
+import io.micrometer.common.lang.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,7 @@ public class ItemDTO {
     /**
      * The name of the item.
      */
+    @Nullable
     private String image;
 
     /**

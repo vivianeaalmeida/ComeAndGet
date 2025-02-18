@@ -1,8 +1,10 @@
 package org.upskill.springboot.Services.Interfaces;
 
 import org.springframework.data.domain.Page;
+import org.springframework.web.multipart.MultipartFile;
 import org.upskill.springboot.DTOs.*;
 
+import java.io.IOException;
 import java.util.Optional;
 
 /**
@@ -60,7 +62,7 @@ public interface IAdvertisementService {
      * @param advertisementDTO the advertisement data transfer object containing the details of the advertisement
      * @return the created advertisement data transfer object
      */
-    AdvertisementDTO createAdvertisement(AdvertisementDTO advertisementDTO);
+    AdvertisementDTO createAdvertisement(AdvertisementDTO advertisementDTO, MultipartFile imageFile) throws IOException;
 
 
     /**

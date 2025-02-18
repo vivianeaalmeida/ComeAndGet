@@ -2,6 +2,7 @@ package org.upskill.springboot.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.upskill.springboot.DTOs.ItemDTO;
 import org.upskill.springboot.Exceptions.CategoryNotFoundException;
 import org.upskill.springboot.Exceptions.ItemNotFoundException;
@@ -13,11 +14,21 @@ import org.upskill.springboot.Models.Item;
 import org.upskill.springboot.Repositories.ItemRepository;
 import org.upskill.springboot.Services.Interfaces.IItemService;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
+
 /**
  * Service class for managing items.
  */
 @Service
 public class ItemService implements IItemService {
+
+    private static final String IMAGE_UPLOAD_DIR = "uploads/images/";
+
     /**
      * The item repository.
      */
@@ -112,4 +123,39 @@ public class ItemService implements IItemService {
     public boolean hasItemsInCategory(String categoryId) {
         return itemRepository.existsByCategory_Id(categoryId);
     }
+
+
+    public String uploadItemImage(MultipartFile file) throws IOException{
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("O arquivo de imagem não pode estar vazio.");
+        }
+
+        // Garante que o diretório existe
+        File uploadDir = new File(IMAGE_UPLOAD_DIR);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs(); // Cria os diretórios necessários
+        }
+
+        // Gera um nome único para a imagem
+        String fileExtension = getFileExtension(file.getOriginalFilename());
+        String uniqueFileName = UUID.randomUUID().toString() + "." + fileExtension;
+
+        // Define o caminho completo onde a imagem será salva
+        Path filePath = Paths.get(IMAGE_UPLOAD_DIR, uniqueFileName);
+        Files.write(filePath, file.getBytes());
+
+        // Retorna o caminho relativo da imagem para armazenar no banco
+        return IMAGE_UPLOAD_DIR + uniqueFileName;
+    }
+
+    // Método auxiliar para obter a extensão do arquivo
+    private String getFileExtension(String fileName) {
+        if (fileName == null || fileName.lastIndexOf(".") == -1) {
+            throw new IllegalArgumentException("Nome de arquivo inválido.");
+        }
+        return fileName.substring(fileName.lastIndexOf(".") + 1);
+    }
+
+
+
 }

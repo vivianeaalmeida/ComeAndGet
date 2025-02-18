@@ -7,9 +7,12 @@ import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 import org.upskill.springboot.DTOs.*;
 import org.upskill.springboot.Services.AdvertisementService;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -220,16 +223,25 @@ public class AdvertisementController extends BaseController {
      * @return the created advertisement data transfer object with HTTP status CREATED
      */
     @PostMapping("/advertisements")
-    public ResponseEntity<AdvertisementDTO> createAdvertisement(@RequestBody AdvertisementDTO request) {
-        AdvertisementDTO advertisementDTO = advertisementService.createAdvertisement(request);
+    public ResponseEntity<AdvertisementDTO> createAdvertisement(
+            @RequestPart("advertisementDTO") AdvertisementDTO request,
+            @RequestPart(value = "imageFile", required = false) MultipartFile imageFile) {
 
-        // self
-        advertisementDTO.add(linkTo(methodOn(AdvertisementController.class)
-                .createAdvertisement(request)).withSelfRel());
+        // Chama o Service para criar o anúncio e salvar a imagem
+        AdvertisementDTO advertisementDTO = null;
+        try {
+            advertisementDTO = advertisementService.createAdvertisement(request, imageFile);
 
-        return new ResponseEntity<>(advertisementDTO, HttpStatus.CREATED);
+            // Adiciona o link HATEOAS para o próprio recurso
+            advertisementDTO.add(linkTo(methodOn(AdvertisementController.class)
+                    .createAdvertisement(request, imageFile)).withSelfRel());
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(advertisementDTO);
+        } catch (IOException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error processing image", e);
+        }
+
     }
-
 
     /**
      * Updates an existing advertisement by its ID.

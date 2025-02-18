@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import org.upskill.springboot.DTOs.*;
 import org.upskill.springboot.Exceptions.*;
 import org.upskill.springboot.Mappers.AdvertisementMapper;
@@ -18,6 +19,7 @@ import org.upskill.springboot.Repositories.AdvertisementRepository;
 import org.upskill.springboot.Services.Interfaces.IAdvertisementService;
 import org.upskill.springboot.WebClient.MunicipalityWebClient;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -174,13 +176,19 @@ public class AdvertisementService implements IAdvertisementService {
      */
     @Override
     @Transactional
-    public AdvertisementDTO createAdvertisement(AdvertisementDTO advertisementDTO) {
+    public AdvertisementDTO createAdvertisement(AdvertisementDTO advertisementDTO, MultipartFile imageFile ) throws IOException {
         // Validates the advertisement data
         validateAdvertisementCreation(advertisementDTO);
 
         // Validates the ItemDTO
         ItemDTO itemDTO = advertisementDTO.getItem();
         itemService.validateItem(itemDTO);
+
+        // Faz o upload da imagem e salva o caminho no banco
+        if (imageFile != null && !imageFile.isEmpty()) {
+            String imagePath = itemService.uploadItemImage(imageFile);
+            itemDTO.setImage(imagePath);
+        }
 
         // Creates the item and returns the ItemDTO after is saved in the DB
         ItemDTO savedItemDTO = itemService.createItem(itemDTO);

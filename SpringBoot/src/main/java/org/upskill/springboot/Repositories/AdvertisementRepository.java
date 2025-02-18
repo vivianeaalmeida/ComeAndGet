@@ -44,11 +44,14 @@ public interface AdvertisementRepository extends JpaRepository<Advertisement, St
     @Query("SELECT DISTINCT a FROM Advertisement a " +
             "LEFT JOIN a.item i " +
             "LEFT JOIN i.category c " +
-            "WHERE (:municipality IS NULL OR a.municipality = :municipality) " +
+            "WHERE a.status = 0" +
+            "AND (:municipality IS NULL OR a.municipality = :municipality) " +
             "AND (:keyword IS NULL OR LOWER(a.title) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
             "OR LOWER(a.description) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
             "AND (:category IS NULL OR LOWER(c.designation) LIKE LOWER(CONCAT('%', :category, '%')))")
     Page<Advertisement> searchAdvertisements(@Param("municipality") String municipality,
-                               @Param("keyword") String keyword,
-                               @Param("category") String category);
+                                             @Param("keyword") String keyword,
+                                             @Param("category") String category,
+                                             Pageable pageable);
+
 }

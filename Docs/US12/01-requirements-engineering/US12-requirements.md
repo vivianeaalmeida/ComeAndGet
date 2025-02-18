@@ -10,7 +10,7 @@ As a user, I want to search for active advertisements by category, keyword, and 
 
 **From the specifications document:**
 
-> The system must allow users to search advertisements using keywords, category, and location.
+> The system must allow users to search advertisements using keywords, category, and municipality.
 > Only active advertisements should be displayed in the search results.
 
 **From the client clarifications:**

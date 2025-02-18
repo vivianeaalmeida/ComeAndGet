@@ -5,26 +5,23 @@ skinparam linetype polyline
 skinparam classAttributeIconSize 0
 
 class User {
-    - name: String
-    - emailAddress: String
-    - phoneNumber: String
-    - password: String
+    - email: String
+    - phone: String
     - role: String
     + User(...)
 }
 
 class Item {
-    - designation: String
     - condition: String
     - image
+    - category: Category
     + Item(...)
 }
 
 class ItemDto {
-    - designation: String
-    - categoryName: String
     - condition: String
     - image
+    - category: CategoryDTO
     + ItemDto(...)
 }
 
@@ -35,17 +32,21 @@ class Category {
 }
 
 class AdvertisementDto {
-    - designation: String
-    - address: String
+    - title: String
+    - description: String
+    - date: Date
+    - municipality: String
+    - status: String
     - itemDto: ItemDto
     + AdvertisementDto(...)
 }
 
 class Advertisement {
-    - designation: String
-    - initialDate: Date
-    - finalDate: Date
-    - address: String
+    - title: String
+    - description: String
+    - date: Date
+    - municipality: String
+    - status: AdvertisementStatus
     + Advertisement(...)
 }
 

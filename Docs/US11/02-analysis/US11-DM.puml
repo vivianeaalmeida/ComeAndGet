@@ -9,7 +9,6 @@ hide methods
 'left to right direction
 
 class Item {
-    designation
     condition
     image
 }
@@ -19,11 +18,11 @@ class Category {
 }
 
 class Advertisement {
-    - id: String
-    - designation
-    - initialDate
-    - finalDate
-    - address
+    - title
+    - description
+    - date
+    - municipality
+    - status
 }
 
 note bottom of Advertisement

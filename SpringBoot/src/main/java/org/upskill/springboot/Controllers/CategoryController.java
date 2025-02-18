@@ -37,8 +37,7 @@ public class CategoryController extends BaseController {
     @GetMapping("/categories")
     public ResponseEntity<CollectionModel<CategoryDTO>> getCategories(
             @RequestParam Optional<Integer> page,
-            @RequestParam Optional<Integer> size
-    ) {
+            @RequestParam Optional<Integer> size) {
         // Define pagination default values
         int _page = page.orElse(0);
         int _size = size.orElse(10);

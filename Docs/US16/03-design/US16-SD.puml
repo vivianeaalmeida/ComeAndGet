@@ -6,42 +6,42 @@ skinparam shadowing false
 autonumber
 
 actor "Client" as USER
-participant "RequestUI" as UI
-participant "RequestController" as CTRL
-participant "RequestService" as SERV
-participant "mapper\n:RequestMapper" as MAPPER
-participant "RequestsRepository" as AD_REPO
-participant "request\n:Request" as request
-participant "requestDTO\n:RequestDTO" as requestDTO
+participant "ReservationAttemptUI" as UI
+participant "ReservationAttemptController" as CTRL
+participant "ReservationAttemptService" as SERV
+participant "mapper\n:ReservationAttemptMapper" as MAPPER
+participant "ReservationAttemptsRepository" as AD_REPO
+participant "reservationAttempt\n:ReservationAttempt" as ReservationAttempt
+participant "reservationAttemptDTO\n:ReservationAttemptDTO" as ReservationAttemptDTO
 
 
 
 activate USER
 
-    USER -> UI : requests to create new request
+    USER -> UI : ReservationAttempts to create new ReservationAttempt
     activate UI
-        UI -> CTRL : createRequest()
+        UI -> CTRL : createReservationAttempt()
         activate CTRL
-            CTRL -> SERV : createRequest()
+            CTRL -> SERV : createReservationAttempt()
             activate SERV
-                    SERV -->> request**: create()
+                    SERV -->> ReservationAttempt**: create()
                 deactivate MAPPER
 
-                SERV -> AD_REPO : save(request)
+                SERV -> AD_REPO : save(ReservationAttempt)
                 activate AD_REPO
-                    AD_REPO --> SERV : request
+                    AD_REPO --> SERV : ReservationAttempt
                 deactivate AD_REPO
 
-                SERV -> MAPPER : toDTO(request)
+                SERV -> MAPPER : toDTO(ReservationAttempt)
                 activate MAPPER
-                    MAPPER -->> requestDTO**: create()
-                    MAPPER --> SERV : requestDTO
+                    MAPPER -->> ReservationAttemptDTO**: create()
+                    MAPPER --> SERV : ReservationAttemptDTO
                 deactivate MAPPER
-                SERV --> CTRL : requestDTO
+                SERV --> CTRL : ReservationAttemptDTO
         deactivate SERV
-        CTRL --> UI : requestDTO
+        CTRL --> UI : ReservationAttemptDTO
         deactivate CTRL
-    UI --> USER : requestDTO
+    UI --> USER : ReservationAttemptDTO
     deactivate UI
 deactivate USER
 @enduml

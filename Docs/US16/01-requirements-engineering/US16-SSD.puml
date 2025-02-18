@@ -3,7 +3,7 @@ skinparam monochrome true
 skinparam packageStyle rectangle
 skinparam shadowing false
 
-title System Sequence Diagram (SSD) - Create Request
+title System Sequence Diagram (SSD) - Create ReservationAttempt
 
 autonumber
 
@@ -12,7 +12,7 @@ participant ":System" as System
 
 activate User
 
-    User -> System : requests to create a new request
+    User -> System : requests to create a new reservation attempt
     activate System
 
         System --> User : displays operation success

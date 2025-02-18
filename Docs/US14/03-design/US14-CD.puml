@@ -5,10 +5,8 @@ skinparam linetype polyline
 skinparam classAttributeIconSize 0
 
 class User {
-    - name: String
-    - emailAddress: String
-    - phoneNumber: String
-    - password: String
+    - email: String
+    - phone: String
     - role: String
 }
 
@@ -18,7 +16,10 @@ class DeleteAdvertisementUI {
 
 class Advertisement {
     - id : String
-    - designation : String
+    - title: String
+    - description: String
+    - date: LocalDate
+    - municipality: String
     - status : AdvertisementStatus
     + Advertisement(designation, status)
 }

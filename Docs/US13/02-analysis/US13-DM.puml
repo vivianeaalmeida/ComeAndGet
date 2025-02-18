@@ -9,8 +9,8 @@ hide methods
 
 class User {
     - name
-    - emailAddress
-    - phoneNumber
+    - email
+    - phone
     - password
     - role
 }
@@ -22,7 +22,6 @@ class Category {
 
 class Item {
     - id
-    - designation
     - condition
     - image
 }
@@ -47,5 +46,5 @@ endnote
 User "1" -- "0..*" Advertisement : owns
 Advertisement "1" -- "1" Item : has >
 Item "0..*" -- "1" Category: categorized >
-Item "1" -- "1" AdvertisementStatus: has >
+Advertisement "1" -- "1" AdvertisementStatus: has >
 @enduml

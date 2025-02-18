@@ -5,65 +5,65 @@ skinparam linetype polyline
 skinparam classAttributeIconSize 0
 
 
-class RequestUI {
+class ReservationAttemptUI {
 }
 
-class RequestController {
+class ReservationAttemptController {
     + createRequest()
 }
 
-class RequestService {
+class ReservationAttemptService {
    + createRequest()
 }
 
-interface RequestRepository {
-    + save(Request request)
+interface ReservationAttemptRepository {
+    + save(ReservationAttempt reservationAttempt)
 }
 
 
-class Request {
+class ReservationAttempt {
     - id : String
-    - email: String
-    - phone: String
     - date: Date
-    - status: RequestStatus
+    - status: ReservationAttemptStatus
     - client: Client
     - advertisement : Advertisement
-    + Request(...)
+    + ReservationAttempt(...)
 }
 
-enum RequestStatus {
+enum ReservationAttemptStatus {
     designation: String
 }
 
-class RequestMapper {
-    + toEntity(RequestDTO requestDTO))
-    + toDTO(Request request))
+class ReservationAttemptMapper {
+    + toEntity(ReservationAttemptDTO reservationAttemptDTO))
+    + toDTO(ReservationAttempt reservationAttempt))
 }
 
-class RequestDTO {
+class ReservationAttemptDTO {
     - id : String
     - email: String
     - phone: String
     - date: Date
-    - status: RequestStatus
+    - status: ReservationAttemptStatus
     - client: Client
     - advertisement : Advertisement
-    + RequestDTO(...)
+    + ReservationAttemptDTO(...)
 }
 
 class User {
-role: client
+    - email: String
+    - phone: String
+    - role: String
 }
 
 ' --- Relacionamentos ---
-User .> RequestUI : asks to create\nnew request
-RequestUI ..> RequestController
-RequestController ..> RequestService
-RequestService ..> RequestRepository
-RequestService ..> RequestMapper
-RequestMapper ..> Request
-RequestMapper ..> RequestDTO
-RequestRepository "1" --> "*" Request : request
-Request "*" --> "1" RequestStatus : has
+User .> ReservationAttemptUI : asks to create\nnew request
+ReservationAttemptUI ..> ReservationAttemptController
+ReservationAttemptController ..> ReservationAttemptService
+ReservationAttemptService ..> ReservationAttemptRepository
+ReservationAttemptService ..> ReservationAttemptMapper
+ReservationAttemptMapper ..> ReservationAttempt
+ReservationAttemptMapper ..> ReservationAttemptDTO
+ReservationAttemptRepository "1" --> "*" ReservationAttempt : request
+ReservationAttempt "*" --> "1" ReservationAttemptStatus : has
 @enduml

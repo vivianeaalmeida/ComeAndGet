@@ -25,10 +25,10 @@ class AdvertisementMapper {
 
 class Advertisement {
     - id: String
-    - designation: String
-    - initialDate: Date
-    - finalDate: Date
-    - address: String
+    - title: String
+    - description: String
+    - date: Date
+    - municipality: String
     - status: AdvertisementStatus
     + Advertisement(...)
 }
@@ -40,9 +40,10 @@ enum AdvertisementStatus {
 
 class AdvertisementDTO {
     - id: String
-    - designation: String
-    - initialDate: Date
-    - finalDate: Date
+    - title: String
+    - description: String
+    - date: Date
+    - status: String
     - itemDTO: ItemDTO
     - address: String
     + AdvertisementDTO(..)
@@ -50,10 +51,9 @@ class AdvertisementDTO {
 
 class ItemDTO {
     - id: String
-    - designation: String
     - condition
     - image: String
-    - categoryName: String
+    - category: CategoryDTO
     + ItemDTO(...)
 }
 

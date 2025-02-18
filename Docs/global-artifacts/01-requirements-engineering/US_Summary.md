@@ -15,11 +15,11 @@
 - US13 - Update advertisement *
 - US14 - Delete/inactive advertisement
 - US15 - View my published advertisements
-- US16 - Create request on advertisement
-- US17 - View request
-- US18 - View my list of requests
-- US19 - View requests on my advertisements
-- US20 - Updates request status *
+- US16 - Create ReservationAttempt on advertisement
+- US17 - View ReservationAttempt
+- US18 - View my list of ReservationAttempts
+- US19 - View ReservationAttempts on my advertisements
+- US20 - Updates ReservationAttempt status *
 
 ## US01 - Register new user
 - **Endpoint**: `POST /signup`
@@ -152,16 +152,19 @@
     - Only advertisements with active status can be updated.
     - Only title, designation and status can be updated
     - Advertisement status can only be updated to closed.
-    - Advertisement status can be updated to closed, but if there are requests with status pending or accepted their status have to change to rejected.
+    - Advertisement status can be updated to closed, but if there are ReservationAttempts with status pending or accepted their status have to change to rejected.
 
 ---
 
 ## US14 - Deactivate an advertisement
-- **Endpoint**: `PATCH /advertisements/{id}/status/inactive`
+- **Endpoint**: `PATCH /advertisements/{id}/deactivate`
 - **Description**: As a manager I want to deactivate an advertisement so that inappropriate advertisements can be removed from visibility.
 - **Permissions/Role**: Manager
 - **Acceptance Criteria**:
-    - Advertisement that have a request with status donated cannot be deactivated.
+    - Advertisement that have a ReservationAttempt with status donated cannot be deactivated. 
+    - The system must ask for confirmation before deleting an advertisement. 
+    - The system should display a success message upon successful deletion.
+
 
 ---
 
@@ -175,61 +178,61 @@
 
 ---
 
-## US16 - Create request on advertisement
-- **Endpoint**: `POST /advertisements/{id}/requests`
-- **Description**: As a client, I want to create a request on an advertisement so that I can request the item being donated.
+## US16 - Create ReservationAttempt on advertisement
+- **Endpoint**: `POST /advertisements/{id}/ReservationAttempts`
+- **Description**: As a client, I want to create a ReservationAttempt on an advertisement so that I can ReservationAttempt the item being donated.
 - **Permissions/Role**: Client
 - **Acceptance Criteria**:
-    - The request must be made to an advertisement with active status.
-    - The system should notify the advertisement owner when a request is made.
-    - A client cannot create multiple requests for the same advertisement.
-    - The owner of the advertisement cannot be able to made request to their own advertisements.
+    - The ReservationAttempt must be made to an advertisement with active status.
+    - The system should notify the advertisement owner when a ReservationAttempt is made.
+    - A client cannot create multiple ReservationAttempts for the same advertisement.
+    - The owner of the advertisement cannot be able to made ReservationAttempt to their own advertisements.
 
 ---
 
-## US17 - View request
-- **Endpoint**: `GET /advertisements/{adId}/requests/{requestId}`
-- **Description**: As a client, I want to view the details of a request so that I can track its status and relevant information.
-- **Permissions/Role**: Client (requester or advertisement owner)
+## US17 - View ReservationAttempt
+- **Endpoint**: `GET /advertisements/{adId}/ReservationAttempts/{ReservationAttemptId}`
+- **Description**: As a client, I want to view the details of a ReservationAttempt so that I can track its status and relevant information.
+- **Permissions/Role**: Client (ReservationAttempter or advertisement owner)
 - **Acceptance Criteria**:
-    - The requester can view the details of their own requests.
-    - The advertisement owner can view requests made to their advertisements.
+    - The ReservationAttempter can view the details of their own ReservationAttempts.
+    - The advertisement owner can view ReservationAttempts made to their advertisements.
 
 ---
 
-## US18 - View my list of requests
-- **Endpoint**: `GET /users/{userId}/requests`
-- **Description**: As a client, I want to view the list of requests I have made on advertisements so that I can track their status and manage them
+## US18 - View my list of ReservationAttempts
+- **Endpoint**: `GET /users/{userId}/ReservationAttempts`
+- **Description**: As a client, I want to view the list of ReservationAttempts I have made on advertisements so that I can track their status and manage them
 - **Permissions/Role**: Client
 - **Acceptance Criteria**:
-    - The client should be able to view a list of requests they have made on advertisements ordered by descending date.
-    - Each request should display its status.
-    - Clicking on a request should show its details and the associated advertisement.
+    - The client should be able to view a list of ReservationAttempts they have made on advertisements ordered by descending date.
+    - Each ReservationAttempt should display its status.
+    - Clicking on a ReservationAttempt should show its details and the associated advertisement.
 
 ---
 
-## US19 - View requests on my advertisements
-- **Endpoint**: `GET /users/{userId}/advertisements/requests`
-- **Description**: As a client (advertisement owner), I want to see the list of requests made on my advertisements so that I can track interest and respond accordingly.
+## US19 - View ReservationAttempts on my advertisements
+- **Endpoint**: `GET /users/{userId}/advertisements/ReservationAttempts`
+- **Description**: As a client (advertisement owner), I want to see the list of ReservationAttempts made on my advertisements so that I can track interest and respond accordingly.
 - **Permissions/Role**: Client (advertisement owner)
 - **Acceptance Criteria**:
-    - The client should be able to view all requests received for each of their advertisements.
-    - Clicking on a request should allow the client to respond (accept/reject).
+    - The client should be able to view all ReservationAttempts received for each of their advertisements.
+    - Clicking on a ReservationAttempt should allow the client to respond (accept/reject).
 
 ---
 
-## US20 - Update request status
-- **Endpoint**: `PATCH /advertisements/{id}/requests/{id}/status`
-- **Description**: As a client, I want to change a request so that I can canceled my request or decline/accepted/conclude a request made to my advertisement.
-- **Permissions/Role**: Client (requester or advertisement creator)
+## US20 - Update ReservationAttempt status
+- **Endpoint**: `PATCH /advertisements/{id}/ReservationAttempts/{id}/status`
+- **Description**: As a client, I want to change a ReservationAttempt so that I can canceled my ReservationAttempt or decline/accepted/conclude a ReservationAttempt made to my advertisement.
+- **Permissions/Role**: Client (ReservationAttempter or advertisement creator)
 - **Acceptance Criteria**:
-    - The only editable field is the request status.
-    - Only the requester or the advertisement owner can update the status of the request.
+    - The only editable field is the ReservationAttempt status.
+    - Only the ReservationAttempter or the advertisement owner can update the status of the ReservationAttempt.
     - The system should notify the involved parties when the status changes.
     - When the status is changed to finished the advertisement status is changed to finished.
-    - It must only exist a request with status donated per advertisement.
-    - Request with donated, canceled and rejected status cannot be changed by anyone.
-    - The requester can change is request to canceled.
-    - The advertisement owner can change the pending requests to rejected. It can also change a pending request to accepted, but it must only exist one accepted request per advertisement.
-    - Changing a request to donated closes the corresponding advertisement (advertisement status must be updated to closed)
+    - It must only exist a ReservationAttempt with status donated per advertisement.
+    - ReservationAttempt with donated, canceled and rejected status cannot be changed by anyone.
+    - The ReservationAttempter can change is ReservationAttempt to canceled.
+    - The advertisement owner can change the pending ReservationAttempts to rejected. It can also change a pending ReservationAttempt to accepted, but it must only exist one accepted ReservationAttempt per advertisement.
+    - Changing a ReservationAttempt to donated closes the corresponding advertisement (advertisement status must be updated to closed)
 ---

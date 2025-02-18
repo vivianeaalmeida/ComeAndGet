@@ -9,8 +9,8 @@ hide methods
 
 class User {
     name
-    emailAddress
-    phoneNumber
+    email
+    phone
     password
     role
 }
@@ -21,18 +21,16 @@ class Category {
 }
 
 class Item {
-    - id
-    - designation
     - condition
     - image
 }
 
 class Advertisement {
-    - id
-    - designation
-    - initialDate
-    - finalDate
-    - address
+    - title
+    - description
+    - date
+    - municipality
+    - status
 }
 
 enum AdvertisementStatus {

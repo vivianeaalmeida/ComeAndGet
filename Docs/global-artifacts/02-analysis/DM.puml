@@ -21,7 +21,6 @@ class Role {
 }
 
 class Item {
-    designation
     condition
     image
 }
@@ -31,14 +30,15 @@ class Category {
 }
 
 class Advertisement{
-    designation
+    title
+    description
     date
     municipality
     status
     '(active, closed)
 }
 
-class Request {
+class ReservationAttempt {
     status
     '(pending, canceled, rejected, accepted, donated)
     date
@@ -53,7 +53,7 @@ class Tip {
 class Like {
 }
 
-note bottom of Request
+note bottom of ReservationAttempt
 Status: Pending, Canceled, Rejected,
 Accepted, Donated
 endnote
@@ -65,8 +65,8 @@ endnote
 Item "0..*" -left- "1" Category : belongs to a \t >
 Advertisement "1" -- "1" Item : contains an \t >
 User "1" -- "0..*" Advertisement : create >
-User "1" -- "0..*" Request : references <
-Request "0..*" -- "1" Advertisement : receives <
+User "1" -- "0..*" ReservationAttempt : references <
+ReservationAttempt "0..*" -- "1" Advertisement : receives <
 User "1" -- "0..*" Like : makes >
 Like "0..*" -left- "1" Tip : references >
 User "0..*" - "1" Role : has \t >

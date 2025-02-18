@@ -5,20 +5,20 @@ skinparam linetype polyline
 skinparam classAttributeIconSize 0
 
 class User {
-    - name: String
-    - emailAddress: String
-    - phoneNumber: String
-    - password: String
+    - email: String
+    - phone: String
     - role: String
 }
 
 class SearchAdvertisementUI {
-    + searchAdvertisement(category, location, keyWords)
+    + searchAdvertisement(category, municipality, keyWords)
 }
 
 class Advertisement {
     - id : String
+    - title: String
     - designation : String
+    - date: LocalDate
     - status : AdvertisementStatus
     + Advertisement(designation, status)
 }
@@ -30,15 +30,15 @@ class Advertisement {
 '}
 
 class AdvertisementController {
-    + searchAdvertisement(category, location, keyWords)
+    + searchAdvertisement(category, municipality, keyWords)
 }
 
 class AdvertisementService {
-    + searchAdvertisement(category, location, keyWords)
+    + searchAdvertisement(category, municipality, keyWords)
 }
 
 class AdvertisementRepository {
-    + searchAdvertisement(category, location, keyWords)
+    + searchAdvertisement(category, municipality, keyWords)
 }
 
 'class AdvertisementMapper {

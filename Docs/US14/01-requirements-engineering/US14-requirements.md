@@ -1,18 +1,21 @@
-# US14 - Delete advertisements
+# US14 - Deactivate advertisement
 
 ## 1. Requirements Engineering
 
 ### 1.1. User Story Description
 
-As a client and a manager, I want to delete an advertisement, so that it is no longer available in the system.
+As a manager I want to deactivate an advertisement so that inappropriate advertisements can be removed from visibility.
 
 ### 1.2. Customer Specifications and Clarifications
 
 **From the specifications document:**
 
-> The system must allow clients to delete their own advertisements.
-> The system must allow managers to delete any advertisement if necessary.
-> Deleted advertisements should no longer appear in searches or listings.
+- **Endpoint**: `PATCH /advertisements/{id}/deactivate`
+- **Description**: As a manager I want to deactivate an advertisement so that inappropriate advertisements can be removed from visibility.
+- **Permissions/Role**: Manager
+- **Acceptance Criteria**:
+  - Advertisement that have a ReservationAttempt with status donated cannot be deactivated.
+> Deactivate advertisements should no longer appear in searches or listings.
 
 **From the client clarifications:**
 
@@ -22,14 +25,13 @@ As a client and a manager, I want to delete an advertisement, so that it is no l
 
 ### 1.3. Acceptance Criteria
 
-* **AC1:** Only advertisements with active status can be deleted.
+* **AC1:** Advertisement that have a ReservationAttempt with status donated cannot be deactivated.
 * **AC2:** The system must ask for confirmation before deleting an advertisement.
 * **AC3:** The system should display a success message upon successful deletion.
 
 ### 1.4. Found out Dependencies
 
-* US08 - View advertisements list (to ensure deleted ads no longer appear).
-* US09 - View active advertisements list (as only active ads can be deleted).
+* N/A
 
 ### 1.5 Input and Output Data
 

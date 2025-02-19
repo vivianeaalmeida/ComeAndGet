@@ -2,9 +2,6 @@ package org.upskill.springboot.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,12 +14,12 @@ import org.upskill.springboot.Models.Advertisement;
 import org.upskill.springboot.Models.Item;
 import org.upskill.springboot.Repositories.AdvertisementRepository;
 import org.upskill.springboot.Services.Interfaces.IAdvertisementService;
+import org.upskill.springboot.WebClient.AuthUserWebClient;
 import org.upskill.springboot.WebClient.MunicipalityWebClient;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Service class for managing advertisements.
@@ -44,17 +41,20 @@ public class AdvertisementService implements IAdvertisementService {
     private MunicipalityWebClient municipalityWebClient;
 
     @Autowired
+    private AuthUserWebClient webClient;
+
+    @Autowired
     public AdvertisementService(@Lazy UserService userService, @Lazy ReservationAttemptService reservationAttemptService) {
         this.userService = userService;
         this.reservationAttemptService = reservationAttemptService;
     }
 
     /**
-     * Retrieves an advertisement by its ID.
+     * Retrieves an advertisement by its ID and throws an exception if the advertisement
+     * with the provided does not exist
      *
      * @param id the ID of the advertisement
      * @return the advertisement data transfer object
-     * @throws AdvertisementNotFoundException if the advertisement is not found
      */
     @Override
     public AdvertisementDTO getAdvertisementById(String id) {

@@ -1,6 +1,5 @@
 package org.upskill.springboot.Services.Interfaces;
 
-import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 import org.upskill.springboot.DTOs.*;
 

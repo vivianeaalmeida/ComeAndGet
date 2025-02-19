@@ -4,6 +4,7 @@ import { HeaderComponent } from './Components/header/header.component';
 import { ButtonComponent } from './Components/button/button.component';
 import { AdvertisementCardComponent } from './Components/advertisement-card/advertisement-card.component';
 import { FooterComponent } from './Components/footer/footer.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -14,6 +15,7 @@ import { FooterComponent } from './Components/footer/footer.component';
     ButtonComponent,
     AdvertisementCardComponent,
     FooterComponent,
+    CommonModule,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',

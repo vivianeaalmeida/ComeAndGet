@@ -1,9 +1,11 @@
 package org.upskill.springboot.Services.Interfaces;
 
 import org.springframework.data.domain.Page;
+import org.springframework.web.multipart.MultipartFile;
 import org.upskill.springboot.DTOs.*;
 
-import java.util.Optional;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Service interface for managing advertisements.
@@ -18,41 +20,33 @@ public interface IAdvertisementService {
     AdvertisementDTO getAdvertisementById(String id);
 
     /**
-     * Retrieves a paginated list of all advertisements.
+     * Retrieves a list of advertisements.
      *
-     * @param page the page number (zero-based index)
-     * @param size the number of items per page
-     * @return a page of all advertisements
+     * @return a list of all advertisements
      */
-    Page<AdvertisementDTO> getAllAdvertisements(int page, int size);
+    List<AdvertisementDTO> getAdvertisements();
 
     /**
-     * Retrieves a paginated list of active advertisements.
+     * Retrieves a list of active advertisements.
      *
-     * @param page the page number (zero-based index)
-     * @param size the number of items per page
-     * @return a page of active advertisements
+     * @return a list of active advertisements
      */
-    Page<AdvertisementDTO> getActiveAdvertisements(int page, int size);
+    List<AdvertisementDTO> getActiveAdvertisements();
 
     /**
-     * Retrieves a paginated list of closed advertisements.
+     * Retrieves a list of closed advertisements.
      *
-     * @param page the page number (zero-based index)
-     * @param size the number of items per page
-     * @return a page of closed advertisements
+     * @return a list of closed advertisements
      */
-    Page<AdvertisementDTO> getClosedAdvertisements(int page, int size);
+    List<AdvertisementDTO> getClosedAdvertisements();
 
     /**
-     * Retrieves a paginated list of advertisements by client ID.
+     * Retrieves a list of advertisements by client ID.
      *
-     * @param page the page number (zero-based index)
-     * @param size the number of items per page
      * @param id the ID of the user
-     * @return a page of advertisements associated with the given user ID
+     * @return a list of advertisements associated with the given user ID
      */
-    Page<AdvertisementDTO> getAdvertisementsByClientId(int page, int size, String id);
+    List<AdvertisementDTO> getAdvertisementsByClientId(String id);
 
     /**
      * Creates a new advertisement.
@@ -60,7 +54,7 @@ public interface IAdvertisementService {
      * @param advertisementDTO the advertisement data transfer object containing the details of the advertisement
      * @return the created advertisement data transfer object
      */
-    AdvertisementDTO createAdvertisement(AdvertisementDTO advertisementDTO);
+    AdvertisementDTO createAdvertisement(AdvertisementDTO advertisementDTO, MultipartFile imageFile) throws IOException;
 
 
     /**
@@ -113,5 +107,15 @@ public interface IAdvertisementService {
 
     ReservationAttemptResponseDTO patchAdvertisementRequestStatus(String idAdvertisement, String idRequest, ReservationAttemptStatusDTO reservationAttemptStatusDTO);
 
-    /*Page<AdvertisementDTO> searchAdvertisements(int page, int size, Optional<String> municipality, Optional<String> keyword, Optional<String> category);*/
+    /**
+     * Searches for advertisements based on the provided filters and returns a list of advertisements.
+     * The search includes filtering by municipality, keyword, and category.
+     *
+     * @param municipality filter for the municipality where the advertisement is located.
+     * @param keyword keyword to search in the advertisement title or description.
+     * @param category filter to search by advertisement category.
+     *
+     * @return a list of advertisements containing the filters or all advertisements if no filters are provided.
+     */
+    List<AdvertisementDTO> searchAdvertisements(String municipality, String keyword, String category);
 }

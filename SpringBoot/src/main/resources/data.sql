@@ -10,7 +10,8 @@ INSERT INTO CATEGORY (ID, DESIGNATION) VALUES
 (1, 'Tecnologia'),
 (2, 'Roupas'),
 (3, 'Electrodomésticos'),
-(4, 'Móveis');
+(4, 'Móveis'),
+(5, 'Outros');
 
 -- Insert items
 INSERT INTO ITEM (ID, IMAGE, CONDITION, CATEGORY_ID) VALUES

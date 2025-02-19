@@ -50,15 +50,6 @@ public class ReservationAttemptController extends BaseController {
         List<Link> links = new ArrayList<>();
         links.add(selfLink);
 
-        if (reservationAttemptsDTO.hasNext()) {
-            links.add(linkTo(methodOn(CategoryController.class)
-                    .getCategories(Optional.of(_page + 1), Optional.of(_size))).withRel("next"));
-        }
-        if (reservationAttemptsDTO.hasPrevious()) {
-            links.add(linkTo(methodOn(CategoryController.class)
-                    .getCategories(Optional.of(_page - 1), Optional.of(_size))).withRel("previous"));
-        }
-
         return new ResponseEntity<>(CollectionModel.of(reservationAttemptsDTO.getContent(), links), HttpStatus.OK);
     }
 
@@ -71,7 +62,7 @@ public class ReservationAttemptController extends BaseController {
     @GetMapping("/reservationAttempts/{id}")
     public ResponseEntity<ReservationAttemptResponseDTO> getReservationAttemptById(@PathVariable String id) {
         ReservationAttemptResponseDTO responseDTO = reservationAttemptService.getReservationAttemptById(id);
-        return ResponseEntity.ok(responseDTO);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
     /**
@@ -83,31 +74,6 @@ public class ReservationAttemptController extends BaseController {
     @PostMapping("/reservationAttempts")
     public ResponseEntity<ReservationAttemptResponseDTO> postReservationAttempt(@RequestBody ReservationAttemptDTO reservationAttemptDTO) {
         ReservationAttemptResponseDTO responseDTO = reservationAttemptService.createReservationAttempt(reservationAttemptDTO);
-        return ResponseEntity.ok(responseDTO);
-    }
-
-    /**
-     * Updates an existing reservation attempt by its ID.
-     *
-     * @param id the ID of the reservation attempt to update
-     * @param reservationAttemptDTO the ReservationAttemptDTO object containing the updated reservation data
-     * @return a ResponseEntity containing the updated ReservationAttemptResponseDTO and HTTP status OK if update is successful
-     */
-    @PutMapping("/reservationAttempts/{id}")
-    public ResponseEntity<ReservationAttemptResponseDTO> putReservationAttempt(@PathVariable String id, @RequestBody ReservationAttemptDTO reservationAttemptDTO) {
-        ReservationAttemptResponseDTO responseDTO = reservationAttemptService.updateReservationAttempt(id, reservationAttemptDTO);
-        return ResponseEntity.ok(responseDTO);
-    }
-
-    /**
-     * Deletes a reservation attempt by its ID.
-     *
-     * @param id the ID of the reservation attempt to delete
-     * @return a ResponseEntity containing a confirmation message and HTTP status OK if deletion is successful
-     */
-    @DeleteMapping("/reservationAttempts/{id}")
-    public ResponseEntity<String> deleteReservationAttempt(@PathVariable String id) {
-        reservationAttemptService.deleteReservationAttempt(id);
-        return ResponseEntity.ok("Deleted.");
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 }

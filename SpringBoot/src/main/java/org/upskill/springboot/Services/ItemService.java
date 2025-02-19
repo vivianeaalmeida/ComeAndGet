@@ -2,8 +2,10 @@ package org.upskill.springboot.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.upskill.springboot.DTOs.ItemDTO;
 import org.upskill.springboot.Exceptions.CategoryNotFoundException;
+import org.upskill.springboot.Exceptions.InvalidFileExtensionException;
 import org.upskill.springboot.Exceptions.ItemNotFoundException;
 import org.upskill.springboot.Exceptions.ItemValidationException;
 import org.upskill.springboot.Mappers.CategoryMapper;
@@ -13,11 +15,21 @@ import org.upskill.springboot.Models.Item;
 import org.upskill.springboot.Repositories.ItemRepository;
 import org.upskill.springboot.Services.Interfaces.IItemService;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
+
 /**
  * Service class for managing items.
  */
 @Service
 public class ItemService implements IItemService {
+
+    private static final String IMAGE_UPLOAD_DIR = "uploads/images/";
+
     /**
      * The item repository.
      */
@@ -77,11 +89,6 @@ public class ItemService implements IItemService {
             throw new IllegalArgumentException("The item must be provided.");
         }
 
-        // Image validation
-        if (itemDTO.getImage() == null || itemDTO.getImage().isEmpty()) {
-            throw new ItemValidationException("The image URL must be provided.");
-        }
-
         // Condition validation
         if (itemDTO.getCondition() == null) {
             throw new ItemValidationException("The condition must be provided.");
@@ -111,5 +118,53 @@ public class ItemService implements IItemService {
      */
     public boolean hasItemsInCategory(String categoryId) {
         return itemRepository.existsByCategory_Id(categoryId);
+    }
+
+
+    /**
+     * Uploads an image file to the server, ensuring that the file is not empty and the directory exists.
+     * The method generates a unique file name for the image and saves it to a predefined directory.
+     *
+     * @param file the image file to be uploaded (must not be null or empty)
+     * @return the relative file path of the uploaded image (to store in the database)
+     * @throws IOException if there is an error while saving the file to the server
+     */
+    public String uploadItemImage(MultipartFile file) throws IOException{
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("The image file cannot be empty.");
+        }
+
+        // Ensures that the directory exists
+        File uploadDir = new File(IMAGE_UPLOAD_DIR);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs(); // Creates the necessary directories
+        }
+
+        // Generates a unique name for the image
+        String fileExtension = getFileExtension(file.getOriginalFilename());
+        String uniqueFileName = UUID.randomUUID().toString() + "." + fileExtension;
+
+        // Defines the full path where the image will be saved
+        Path filePath = Paths.get(IMAGE_UPLOAD_DIR, uniqueFileName);
+        Files.write(filePath, file.getBytes());
+
+        // Returns the relative path of the image to store in the database
+        return IMAGE_UPLOAD_DIR + uniqueFileName;
+    }
+
+
+    /**
+     * Auxiliar method to extract the file extension from a given file name.
+     * This method checks if the file name is valid (not null and contains an extension).
+     * If the file name is invalid, an exception is thrown.
+     *
+     * @param fileName the name of the file from which the extension will be extracted
+     * @return the file extension (everything after the last dot in the file name)
+     */
+    private String getFileExtension(String fileName) {
+        if (fileName == null || fileName.lastIndexOf(".") == -1) {
+            throw new InvalidFileExtensionException("Invalid file name.");
+        }
+        return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
 }

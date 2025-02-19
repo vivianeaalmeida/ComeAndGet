@@ -1,15 +1,20 @@
 package org.upskill.springboot.Controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 import org.upskill.springboot.DTOs.*;
 import org.upskill.springboot.Services.AdvertisementService;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +26,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
  * REST controller for managing advertisements.
  */
 @RestController
+@CrossOrigin("*")
 public class AdvertisementController extends BaseController {
 
     @Autowired
@@ -30,188 +36,63 @@ public class AdvertisementController extends BaseController {
      * Retrieves an advertisement by its ID.
      *
      * @param id the ID of the advertisement
-     * @return the advertisement data transfer object with HTTP status OK, or HTTP status NOT FOUND if not found
+     * @return A ResponseEntity containing a list of AdvertisementDTO
+     *
      */
     @GetMapping("/advertisements/{id}")
     public ResponseEntity<AdvertisementDTO> getAdvertisementById(@PathVariable String id) {
         AdvertisementDTO advertisementDTO = advertisementService.getAdvertisementById(id);
-
-        // link to self
-        advertisementDTO.add(linkTo(methodOn(AdvertisementController.class).getAdvertisementById(id)).withSelfRel());
-
-        // link to advertisments list
-        advertisementDTO.add(linkTo(methodOn(AdvertisementController.class)
-                .getAdvertisements(Optional.of(0), Optional.of(10))).withRel("advertisements"));
-        advertisementDTO.add(linkTo(methodOn(AdvertisementController.class)
-                .getActiveAdvertisements(Optional.of(0), Optional.of(10))).withRel("active-advertisements"));
-        advertisementDTO.add(linkTo(methodOn(AdvertisementController.class)
-                .getClosedAdvertisements(Optional.of(0), Optional.of(10))).withRel("closed-advertisements"));
-
         return new ResponseEntity<>(advertisementDTO, HttpStatus.OK);
     }
 
     /**
-     * Retrieves all advertisements with pagination.
+     * Retrieves all advertisements except inactive ones
      *
-     * @param page the page number
-     * @param size the size of the page
-     * @return a page of advertisement data transfer objects with HTTP status OK
+     * @return A ResponseEntity containing a list of AdvertisementDTO
      */
     @GetMapping("/advertisements")
-    public ResponseEntity<CollectionModel<AdvertisementDTO>> getAdvertisements(
-            @RequestParam Optional<Integer> page,
-            @RequestParam Optional<Integer> size
-    ) {
-        // Define pagination default values
-        int _page = page.orElse(0);
-        int _size = size.orElse(10);
-
-        Page<AdvertisementDTO> advertisementsDTO = advertisementService.getAllAdvertisements(_page, _size);
-
-        advertisementsDTO.forEach(advertisement ->
-                advertisement.add(linkTo(methodOn(AdvertisementController.class)
-                        .getAdvertisementById(advertisement.getId())).withSelfRel()));
-
-        Link selfLink = linkTo(methodOn(AdvertisementController.class)
-                .getAdvertisements(Optional.of(_page), Optional.of(_size))).withSelfRel();
-
-        List<Link> links = new ArrayList<>();
-        links.add(selfLink);
-
-        if (advertisementsDTO.hasNext()) {
-            links.add(linkTo(methodOn(AdvertisementController.class)
-                    .getAdvertisements(Optional.of(_page + 1), Optional.of(_size))).withRel("next"));
-        }
-        if (advertisementsDTO.hasPrevious()) {
-            links.add(linkTo(methodOn(AdvertisementController.class)
-                    .getAdvertisements(Optional.of(_page - 1), Optional.of(_size))).withRel("previous"));
-        }
-
-        return new ResponseEntity<>(CollectionModel.of(advertisementsDTO.getContent(), links), HttpStatus.OK);
+    public ResponseEntity<List<AdvertisementDTO>> getAdvertisements() {
+        List<AdvertisementDTO> advertisementsDTO = advertisementService.getAdvertisements();
+        return new ResponseEntity<>(advertisementsDTO, HttpStatus.OK);
     }
 
-
     /**
-     * Retrieves a paginated list of active advertisements.
+     * Retrieves a list of active advertisements.
      *
-     * @param page Optional parameter for the page number (default is 0).
-     * @param size Optional parameter for the page size (default is 10).
-     * @return A ResponseEntity containing a CollectionModel of AdvertisementDTO with HATEOAS links,
-     * including self, next, and previous page links and HTTP status 200 (Ok) if retrieval is successful.
+     * @return A ResponseEntity containing a list of AdvertisementDTO with active status
      */
     @GetMapping("/advertisements/active")
-    public ResponseEntity<CollectionModel<AdvertisementDTO>> getActiveAdvertisements(
-            @RequestParam Optional<Integer> page,
-            @RequestParam Optional<Integer> size
-    ) {
-        // Define pagination default values
-        int _page = page.orElse(0);
-        int _size = size.orElse(10);
-
-        Page<AdvertisementDTO> advertisementsDTO = advertisementService.getActiveAdvertisements(_page, _size);
-
-        advertisementsDTO.forEach(advertisement ->
-                advertisement.add(linkTo(methodOn(AdvertisementController.class)
-                        .getAdvertisementById(advertisement.getId())).withSelfRel()));
-
-        Link selfLink = linkTo(methodOn(AdvertisementController.class)
-                .getAdvertisements(Optional.of(_page), Optional.of(_size))).withSelfRel();
-
-        List<Link> links = new ArrayList<>();
-        links.add(selfLink);
-
-        if (advertisementsDTO.hasNext()) {
-            links.add(linkTo(methodOn(AdvertisementController.class)
-                    .getAdvertisements(Optional.of(_page + 1), Optional.of(_size))).withRel("next"));
-        }
-        if (advertisementsDTO.hasPrevious()) {
-            links.add(linkTo(methodOn(AdvertisementController.class)
-                    .getAdvertisements(Optional.of(_page - 1), Optional.of(_size))).withRel("previous"));
-        }
-
-        return new ResponseEntity<>(CollectionModel.of(advertisementsDTO.getContent(), links), HttpStatus.OK);
+    public ResponseEntity<List<AdvertisementDTO>> getActiveAdvertisements() {
+        List<AdvertisementDTO> advertisementsDTO = advertisementService.getActiveAdvertisements();
+        return new ResponseEntity<>(advertisementsDTO, HttpStatus.OK);
     }
 
-
     /**
-     * Retrieves a paginated list of closed advertisements.
+     * Retrieves a list of closed advertisements.
      *
-     * @param page Optional parameter for the page number (default is 0).
-     * @param size Optional parameter for the page size (default is 10).
-     * @return A ResponseEntity containing a CollectionModel of AdvertisementDTO with HATEOAS links,
-     * including self, next, and previous page links and HTTP status 200 (Ok) if retrieval is successful.
+     * @return A ResponseEntity containing a list of AdvertisementDTO with closed status
      */
     @GetMapping("/advertisements/closed")
-    public ResponseEntity<CollectionModel<AdvertisementDTO>> getClosedAdvertisements(
-            @RequestParam Optional<Integer> page,
-            @RequestParam Optional<Integer> size
-    ) {
-        // Define pagination default values
-        int _page = page.orElse(0);
-        int _size = size.orElse(10);
-
-        Page<AdvertisementDTO> advertisementsDTO = advertisementService.getClosedAdvertisements(_page, _size);
-
-        advertisementsDTO.forEach(advertisement ->
-                advertisement.add(linkTo(methodOn(AdvertisementController.class)
-                        .getAdvertisementById(advertisement.getId())).withSelfRel()));
-
-        Link selfLink = linkTo(methodOn(AdvertisementController.class)
-                .getAdvertisements(Optional.of(_page), Optional.of(_size))).withSelfRel();
-
-        List<Link> links = new ArrayList<>();
-        links.add(selfLink);
-
-        if (advertisementsDTO.hasNext()) {
-            links.add(linkTo(methodOn(AdvertisementController.class)
-                    .getAdvertisements(Optional.of(_page + 1), Optional.of(_size))).withRel("next"));
-        }
-        if (advertisementsDTO.hasPrevious()) {
-            links.add(linkTo(methodOn(AdvertisementController.class)
-                    .getAdvertisements(Optional.of(_page - 1), Optional.of(_size))).withRel("previous"));
-        }
-
-        return new ResponseEntity<>(CollectionModel.of(advertisementsDTO.getContent(), links), HttpStatus.OK);
+    public ResponseEntity<List<AdvertisementDTO>> getClosedAdvertisements() {
+        List<AdvertisementDTO> advertisementsDTO = advertisementService.getClosedAdvertisements();
+        return new ResponseEntity<>(advertisementsDTO, HttpStatus.OK);
     }
 
     /**
-     * Retrieves a paginated list of advertisements by client ID.
+     * Retrieves a list of all advertisements (except inactive ones) by client ID.
      *
      * @param clientId the ID of the client
-     * @param page Optional parameter for the page number (default is 0)
-     * @param size Optional parameter for the page size (default is 10)
-     * @return a ResponseEntity containing a CollectionModel of AdvertisementDTO with HATEOAS links,
-     *         including self, next, and previous page links and HTTP status OK if retrieval is successful
+     * @return A ResponseEntity containing a list of a AdvertisementDTO of the client
      */
     @GetMapping("users/{clientId}/advertisements")
-    public ResponseEntity<CollectionModel<AdvertisementDTO>> getAdvertisementsByClientId(
-            @PathVariable String clientId,
-            @RequestParam Optional<Integer> page,
-            @RequestParam Optional<Integer> size
-    ) {
-        int _page = page.orElse(0);
-        int _size = size.orElse(10);
+    public ResponseEntity<List<AdvertisementDTO>> getAdvertisementsByClientId(
+            @PathVariable String clientId) {
 
-        Page<AdvertisementDTO> advertisementsDTO = advertisementService.getAdvertisementsByClientId(_page, _size, clientId);
+        List<AdvertisementDTO> advertisementsDTO = advertisementService
+                .getAdvertisementsByClientId(clientId);
 
-        Link selfLink = linkTo(methodOn(AdvertisementController.class)
-                .getAdvertisementsByClientId(clientId, Optional.of(_page), Optional.of(_size))).withSelfRel();
-
-        List<Link> links = new ArrayList<>();
-        links.add(selfLink);
-
-        if (advertisementsDTO.hasNext()) {
-            links.add(linkTo(methodOn(AdvertisementController.class)
-                    .getAdvertisementsByClientId(clientId, Optional.of(_page + 1), Optional.of(_size))).withRel("next"));
-        }
-        if (advertisementsDTO.hasPrevious()) {
-            links.add(linkTo(methodOn(AdvertisementController.class)
-                    .getAdvertisementsByClientId(clientId, Optional.of(_page - 1), Optional.of(_size))).withRel("previous"));
-        }
-
-        return new ResponseEntity<>(CollectionModel.of(advertisementsDTO.getContent(), links), HttpStatus.OK);
+        return new ResponseEntity<>(advertisementsDTO, HttpStatus.OK);
     }
-
 
     /**
      * Creates a new advertisement.
@@ -219,17 +100,20 @@ public class AdvertisementController extends BaseController {
      * @param request the advertisement data transfer object
      * @return the created advertisement data transfer object with HTTP status CREATED
      */
-    @PostMapping("/advertisements")
-    public ResponseEntity<AdvertisementDTO> createAdvertisement(@RequestBody AdvertisementDTO request) {
-        AdvertisementDTO advertisementDTO = advertisementService.createAdvertisement(request);
+    @PostMapping(value = "/advertisements", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<AdvertisementDTO> createAdvertisement(
+            @RequestPart(value = "advertisementDTO", required = true) @Valid AdvertisementDTO request,
+            @RequestPart(value = "imageFile", required = true) MultipartFile imageFile) {
 
-        // self
-        advertisementDTO.add(linkTo(methodOn(AdvertisementController.class)
-                .createAdvertisement(request)).withSelfRel());
-
-        return new ResponseEntity<>(advertisementDTO, HttpStatus.CREATED);
+        // Calls service to create advertisement and saves the image
+        AdvertisementDTO advertisementDTO;
+        try {
+            advertisementDTO = advertisementService.createAdvertisement(request, imageFile);
+            return ResponseEntity.status(HttpStatus.CREATED).body(advertisementDTO);
+        } catch (IOException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error processing image", e);
+        }
     }
-
 
     /**
      * Updates an existing advertisement by its ID.
@@ -249,10 +133,6 @@ public class AdvertisementController extends BaseController {
 
         AdvertisementDTO advertisementDTO = advertisementService.updateAdvertisement(id, request);
 
-        // self
-        advertisementDTO.add(linkTo(methodOn(AdvertisementController.class)
-                .updateAdvertisement(id, request)).withSelfRel());
-
         return new ResponseEntity<>(advertisementDTO, HttpStatus.OK);
     }
 
@@ -260,7 +140,7 @@ public class AdvertisementController extends BaseController {
      * Deactivates an advertisement by updating the status of an advertisement to INACTIVE.
      *
      * @param id The ID of the advertisement to be deactivated.
-     * @return The deactivated advertisement DTO
+     * @return  A ResponseEntity containing the deactivated AdvertisementDTO
      */
     @PatchMapping("/advertisements/{id}/deactivate")
     public ResponseEntity<AdvertisementDTO> deactivateAdvertisement(@PathVariable String id) {
@@ -273,7 +153,7 @@ public class AdvertisementController extends BaseController {
      *
      * @param id The unique identifier of the advertisement.
      * @param reservationAttemptDTO The request data for creating the advertisement request.
-     * @return A {@code ResponseEntity<RequestResponseDTO>} containing the response data.
+     * @return A ResponseEntity containing the response data.
      */
     @PostMapping("/advertisements/{id}/reservationAttempts")
     public ResponseEntity<ReservationAttemptResponseDTO> createAdvertisementRequest(@PathVariable String id, @RequestBody ReservationAttemptDTO reservationAttemptDTO) {
@@ -286,7 +166,7 @@ public class AdvertisementController extends BaseController {
      *
      * @param adId The unique identifier of the advertisement.
      * @param reservationId The unique identifier of the request associated with the advertisement.
-     * @return A {@link ResponseEntity} containing the {@link ReservationAttemptResponseDTO} with the advertisement request details,
+     * @return A {ResponseEntity containing the  ReservationAttemptResponseDTO with the advertisement request details,
      *         and an HTTP status of 200 OK if the request is successful.
      */
     @GetMapping("/advertisements/{adId}/reservationAttempts/{reservationId}")
@@ -303,11 +183,40 @@ public class AdvertisementController extends BaseController {
      * @param reservationId The unique identifier of the reservation request.
      * @param requestDTO The object containing the new status information for the reservation request.
      *
-     * @return A {@link ResponseEntity} containing a {@link ReservationAttemptResponseDTO} object with the details of the operation's response, including the HTTP status.
+     * @return A ResponseEntity containing a ReservationAttemptResponseDTO object with the details of the operation's response, including the HTTP status.
      */
     @PatchMapping("/advertisements/{adId}/reservationAttempts/{reservationId}/status")
     public ResponseEntity<ReservationAttemptResponseDTO> patchReservationAttemptStatus(@PathVariable String adId, @PathVariable String reservationId, @RequestBody ReservationAttemptStatusDTO requestDTO) {
         ReservationAttemptResponseDTO response = advertisementService.patchAdvertisementRequestStatus(adId, reservationId , requestDTO);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
+    /**
+     * Retrieves a list active advertisements based on search filters
+     * This method allows the user to search for active advertisements by applying filters such as keyword, municipality, and category
+     *
+     * @param keyword A keyword to search advertisements whose title or description contain the specified text (optional).
+     * @param municipality The municipality to filter the advertisements (optional).
+     * @param category The category to filter the advertisements (optional).
+     *
+     * @return A ResponseEntity containing a list of AdvertisementDTO that match the provided criteria
+     *         The HTTP status returned will be 200 OK if the operation is successful.
+     *
+     */
+    @GetMapping("/advertisements/active/search")
+    public ResponseEntity<List<AdvertisementDTO>> searchAdvertisements(
+            @RequestParam Optional<String> keyword,
+            @RequestParam Optional<String> municipality,
+            @RequestParam Optional<String> category
+    ) {
+
+        List<AdvertisementDTO> advertisementsDTO = advertisementService.searchAdvertisements(
+                municipality.orElse(null),
+                keyword.orElse(null),
+                category.orElse(null)
+        );
+
+        return new ResponseEntity<>(advertisementsDTO, HttpStatus.OK);
     }
 }

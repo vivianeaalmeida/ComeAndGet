@@ -5,10 +5,10 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import org.upskill.springboot.DTOs.*;
 import org.upskill.springboot.Exceptions.*;
 import org.upskill.springboot.Mappers.AdvertisementMapper;
@@ -19,9 +19,9 @@ import org.upskill.springboot.Repositories.AdvertisementRepository;
 import org.upskill.springboot.Services.Interfaces.IAdvertisementService;
 import org.upskill.springboot.WebClient.MunicipalityWebClient;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -73,99 +73,81 @@ public class AdvertisementService implements IAdvertisementService {
     }
 
     /**
-     * Retrieves all advertisements (except inactives) with pagination.
+     * Retrieves all advertisements (except inactives)
      *
-     * @param page the page number
-     * @param size the size of the page
-     * @return a page of advertisement data transfer objects
+     * @return a list of advertisement data transfer objects
      */
     @Override
-    public Page<AdvertisementDTO> getAllAdvertisements(int page, int size) {
-        Page<Advertisement> advertisements = advertisementRepository.findAll(PageRequest.of(page, size));
-
-        // Get dto list of all advertisements without inactives
-        List<AdvertisementDTO> advertisementsDTO = advertisements.stream()
-                .filter(advertisement -> advertisement.getStatus() != Advertisement.AdvertisementStatus.INACTIVE)
+    public List<AdvertisementDTO> getAdvertisements() {
+        List<AdvertisementDTO> advertisementsDTO = advertisementRepository
+                .findByStatusNot(Advertisement.AdvertisementStatus.INACTIVE)
+                .stream()
                 .map(advertisement -> {
                     AdvertisementDTO advertisementDTO = AdvertisementMapper.toDTO(advertisement);
                     advertisementDTO.setMunicipality(advertisement.getMunicipality());
                     return advertisementDTO;
                 })
-                .collect(Collectors.toList());
+                .toList();
 
-        // Calculate the total number of advertisements without the inactives
-        long totalVisibleAdvertisements = advertisements.stream()
-                .filter(advertisement -> advertisement.getStatus() != Advertisement.AdvertisementStatus.INACTIVE)
-                .count();
-
-        return new PageImpl<>(advertisementsDTO, PageRequest.of(page, size), totalVisibleAdvertisements);
+        return advertisementsDTO;
     }
 
     /**
-     * Retrieves all active advertisements with pagination.
+     * Retrieves all active advertisements
      *
-     * @param page the page number
-     * @param size the size of the page
-     * @return a page of active advertisement data transfer objects
+     * @return a list of active advertisement data transfer objects
      */
     @Override
-    public Page<AdvertisementDTO> getActiveAdvertisements(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-
-        return advertisementRepository.findByStatus(Advertisement.AdvertisementStatus.ACTIVE, pageRequest)
+    public List<AdvertisementDTO> getActiveAdvertisements() {
+        List<AdvertisementDTO> advertisementsDTO = advertisementRepository
+                .findByStatus(Advertisement.AdvertisementStatus.ACTIVE)
+                .stream()
                 .map(advertisement -> {
                     AdvertisementDTO advertisementDTO = AdvertisementMapper.toDTO(advertisement);
                     advertisementDTO.setMunicipality(advertisement.getMunicipality());
                     return advertisementDTO;
-                });
+                })
+                .toList();
+
+        return advertisementsDTO;
     }
 
     /**
-     * Retrieves all closed advertisements with pagination.
+     * Retrieves all closed advertisements.
      *
-     * @param page the page number
-     * @param size the size of the page
-     * @return a page of closed advertisement data transfer objects
+     * @return a list of closed advertisement data transfer objects
      */
     @Override
-    public Page<AdvertisementDTO> getClosedAdvertisements(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-
-        return advertisementRepository.findByStatus(Advertisement.AdvertisementStatus.CLOSED, pageRequest)
+    public List<AdvertisementDTO> getClosedAdvertisements() {
+        List<AdvertisementDTO> advertisementsDTO = advertisementRepository
+                .findByStatus(Advertisement.AdvertisementStatus.CLOSED)
+                .stream()
                 .map(advertisement -> {
                     AdvertisementDTO advertisementDTO = AdvertisementMapper.toDTO(advertisement);
                     advertisementDTO.setMunicipality(advertisement.getMunicipality());
                     return advertisementDTO;
-                });
+                })
+                .toList();
+
+        return advertisementsDTO;
     }
 
     /**
-     * Retrieves all advertisements by client ID with pagination.
+     * Retrieves all advertisements (except inactives) by client ID
      *
-     * @param page the page number (zero-based index)
-     * @param size the number of items per page
      * @param clientId the ID of the client
-     * @return a page of advertisements associated with the given client ID
+     * @return a list of advertisements associated with the given client ID
      */
     @Override
-    public Page<AdvertisementDTO> getAdvertisementsByClientId(int page, int size, String clientId) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-
+    public List<AdvertisementDTO> getAdvertisementsByClientId(String clientId) {
         // Retrieve advertisements associated with the clientId
-        Page<Advertisement> advertisements = advertisementRepository.findByClientId(clientId, pageRequest);
+        List<AdvertisementDTO> advertisementsDTO = advertisementRepository
+                .findByClientIdAndStatusNot(clientId, Advertisement.AdvertisementStatus.INACTIVE)
+                .stream()
+                .map(AdvertisementMapper::toDTO)
+                .toList();
 
-        // Filter out inactive advertisements and map the rest to DTOs
-        List<AdvertisementDTO> advertisementsDTO = advertisements.getContent().stream()
-                .filter(advertisement -> advertisement.getStatus() != Advertisement.AdvertisementStatus.INACTIVE) // Exclude inactive advertisements
-                .map(AdvertisementMapper::toDTO) // Map the active advertisements to DTOs
-                .collect(Collectors.toList());
-
-        // Calculate the total number of advertisements without the inactives
-        long totalVisibleAdvertisements = advertisements.stream()
-                .filter(advertisement -> advertisement.getStatus() != Advertisement.AdvertisementStatus.INACTIVE)
-                .count();
-
-        return new PageImpl<>(advertisementsDTO, pageRequest, totalVisibleAdvertisements);
+        return advertisementsDTO;
     }
 
     /**
@@ -176,13 +158,19 @@ public class AdvertisementService implements IAdvertisementService {
      */
     @Override
     @Transactional
-    public AdvertisementDTO createAdvertisement(AdvertisementDTO advertisementDTO) {
+    public AdvertisementDTO createAdvertisement(AdvertisementDTO advertisementDTO, MultipartFile imageFile ) throws IOException {
         // Validates the advertisement data
         validateAdvertisementCreation(advertisementDTO);
 
         // Validates the ItemDTO
         ItemDTO itemDTO = advertisementDTO.getItem();
         itemService.validateItem(itemDTO);
+
+        // Uploads the image and save the path in the DB
+        if (imageFile != null && !imageFile.isEmpty()) {
+            String imagePath = itemService.uploadItemImage(imageFile);
+            itemDTO.setImage(imagePath);
+        }
 
         // Creates the item and returns the ItemDTO after is saved in the DB
         ItemDTO savedItemDTO = itemService.createItem(itemDTO);
@@ -227,7 +215,7 @@ public class AdvertisementService implements IAdvertisementService {
 
         // If status is changed to closed, rejects all requests
         if (advertisement.getStatus() == Advertisement.AdvertisementStatus.CLOSED) {
-            reservationAttemptService.rejectRequests(advertisement.getId());
+            reservationAttemptService.rejectReservationAttempts(advertisement.getId());
             advertisement.setStatus(Advertisement.AdvertisementStatus.CLOSED);
         }
 
@@ -263,7 +251,7 @@ public class AdvertisementService implements IAdvertisementService {
         // Save updated advertisement
         advertisement = advertisementRepository.save(advertisement);
 
-        reservationAttemptService.rejectRequests(advertisement.getId());
+        reservationAttemptService.rejectReservationAttempts(advertisement.getId());
 
         AdvertisementDTO updatedAdvertisementDTO = AdvertisementMapper.toDTO(advertisement);
         updatedAdvertisementDTO.setMunicipality(advertisement.getMunicipality());
@@ -310,21 +298,33 @@ public class AdvertisementService implements IAdvertisementService {
      *
      */
     public ReservationAttemptResponseDTO patchAdvertisementRequestStatus(String idAdvertisement, String idReservationAttempt, ReservationAttemptStatusDTO reservationAttemptStatusDTO){
-        return reservationAttemptService.patchReservationAttempt(idReservationAttempt, idAdvertisement, reservationAttemptStatusDTO);
+        return reservationAttemptService.updateReservationAttemptStatus(idReservationAttempt, idAdvertisement, reservationAttemptStatusDTO);
     }
 
-    /*
+    /**
+     * Searches for advertisements based on the provided filters and returns a list of advertisements.
+     * The search includes filtering by municipality, keyword, and category.
+     *
+     * @param municipality filter for the municipality where the advertisement is located.
+     * @param keyword keyword to search in the advertisement title or description.
+     * @param category filter to search by advertisement category.
+     *
+     * @return a list of advertisements containing the filters or all advertisements if no filters are provided.
+     */
     @Override
-    public Page<AdvertisementDTO> searchAdvertisements(int page, int size, Optional<String> municipality, Optional<String> keyword, Optional<String> category){
-        Page<Advertisement> advertisements = advertisementRepository.searchAdvertisements(
-                municipality.orElse(null),
-                keyword.orElse(null),
-                category.orElse(null));
-        List<AdvertisementDTO> advertisementsDTO = advertisements.stream().map()
+    public List<AdvertisementDTO> searchAdvertisements(String municipality, String keyword, String category){
+        List<AdvertisementDTO> advertisementsDTO = advertisementRepository
+                .searchAdvertisements(municipality, keyword, category)
+                .stream()
+                .map(advertisement -> {
+                    AdvertisementDTO dto = AdvertisementMapper.toDTO(advertisement);
+                    dto.setMunicipality(advertisement.getMunicipality());
+                    return dto;
+                })
+                .toList();
 
-
-
-    }/*
+        return advertisementsDTO;
+    }
 
     /**
      * Validates the advertisement data transfer object.
@@ -466,7 +466,7 @@ public class AdvertisementService implements IAdvertisementService {
     }
 
     /**
-     * Close expired advertisements and reject pending or accepted requests associated with them.
+     * Close expired advertisements and reject pending or accepted reservation attempts associated with them.
      * This method is scheduled to run every day at midnight.
      */
     @Scheduled(cron = "0 0 0 * * ?")  // Cron expression for every day at midnight
@@ -479,8 +479,8 @@ public class AdvertisementService implements IAdvertisementService {
             if (advertisement.closeIfExpired()) {
                 advertisementRepository.save(advertisement);  // Save the advertisement with the updated status
 
-                // Reject requests associated with the advertisement
-                reservationAttemptService.rejectRequests(advertisement.getId());
+                // Reject reservation attemps associated with the advertisement
+                reservationAttemptService.rejectReservationAttempts(advertisement.getId());
             }
         }
     }

@@ -2,6 +2,7 @@ import { Component, HostListener } from '@angular/core';
 import { ButtonComponent } from '../button/button.component';
 import { NgIf } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-header',

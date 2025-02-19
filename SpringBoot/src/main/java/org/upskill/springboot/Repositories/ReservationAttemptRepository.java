@@ -24,7 +24,7 @@ public interface ReservationAttemptRepository extends JpaRepository<ReservationA
      * @return a list of requests for the given advertisement
      */
     @Query("SELECT r FROM ReservationAttempt r WHERE r.advertisement.id = :advertisementId")
-    List<ReservationAttempt> getRequestsByAdvertisementId(String advertisementId);
+    List<ReservationAttempt> getReservationAttemptsByAdvertisementId(String advertisementId);
 
     /**
      * Checks if there are any requests associated with a specific advertisement.
@@ -60,7 +60,6 @@ public interface ReservationAttemptRepository extends JpaRepository<ReservationA
      */
     boolean existsByAdvertisement_IdAndUser_Id(String advertisement_id, String user_Id);
 
-
     /**
      * Checks if there are any requests in the "DONATED" state for a specific advertisement.
      *
@@ -68,10 +67,24 @@ public interface ReservationAttemptRepository extends JpaRepository<ReservationA
      * @return {@code true} if there are any "DONATED" requests for the advertisement, {@code false} otherwise.
      */
     @Query("SELECT COUNT(r) > 0 FROM ReservationAttempt r WHERE r.advertisement.id = :advertisementId AND r.status = 4")
-    boolean existsDonatedRequestForAdvertisement(String advertisementId);
+    boolean existsDonatedReservationsForAdvertisement(String advertisementId);
 
-
-
+    /**
+     * Retrieves all reservation attempts associated with a given user based on their advertisement's client ID.
+     *
+     * @param userId the ID of the user
+     * @param pageable the pagination information (page number, page size, etc.)
+     * @return a {@link Page} of {@link ReservationAttempt} entities associated with the user's advertisement.
+     */
     @Query("SELECT r FROM ReservationAttempt r INNER JOIN Advertisement ad ON r.advertisement.id = ad.id WHERE ad.clientId = :userId")
-    Page<ReservationAttempt> findRequestsFromAdvertisementOfUser(String userId, Pageable pageable);
+    Page<ReservationAttempt> findReservationAttemptsFromAdvertisementOfUser(String userId, Pageable pageable);
+
+    /**
+     * Finds all reservation attempts for a specific advertisement and with statuses included in a list.
+     *
+     * @param advertisementId the ID of the advertisement to query
+     * @param statuses a list of statuses to filter the reservation attempts
+     * @return a list of {@link ReservationAttempt} entities matching the given advertisement ID and statuses
+     */
+    List<ReservationAttempt> findByAdvertisementIdAndStatusIn(String advertisementId, List<ReservationAttempt.ReservationAttemptStatus> statuses);
 }

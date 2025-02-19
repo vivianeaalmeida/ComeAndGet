@@ -7,9 +7,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.upskill.springboot.DTOs.ErrorResponse;
 import org.upskill.springboot.Exceptions.*;
 
+import java.io.IOException;
+
 /**
  * Global exception handler for the application.
- *
  * This class handles various exceptions thrown by the application and returns appropriate HTTP responses.
  */
 @ControllerAdvice
@@ -227,6 +228,22 @@ public class GlobalHandlerException {
     }
 
     /**
+     * Handles InvalidFileExtensionException
+     *
+     * @param e the InvalidFileExtensionException
+     * @return a ResponseEntity containing an ErrorResponse and HTTP status BAD_REQUEST
+     */
+    @ExceptionHandler(InvalidFileExtensionException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidFileExtensionException(InvalidFileExtensionException e) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                e.getMessage(),
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
      * Handles IllegalArgumentException.
      *
      * @param e the IllegalArgumentException
@@ -250,6 +267,16 @@ public class GlobalHandlerException {
      */
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<ErrorResponse> handleIllegalStateException(IllegalStateException e) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                e.getMessage(),
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<ErrorResponse> handleIOException(IOException e) {
         ErrorResponse errorResponse = new ErrorResponse(
                 e.getMessage(),
                 HttpStatus.BAD_REQUEST.value(),

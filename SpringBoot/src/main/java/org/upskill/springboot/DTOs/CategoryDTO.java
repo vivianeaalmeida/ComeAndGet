@@ -16,7 +16,7 @@ import org.springframework.hateoas.RepresentationModel;
 @NoArgsConstructor
 @Getter
 @Setter
-public class CategoryDTO extends RepresentationModel<CategoryDTO> {
+public class CategoryDTO {
     /**
      * The unique identifier for the category.
      */

@@ -51,7 +51,6 @@ activate USER
         UI --> USER : shows categories list and asks to select one
     deactivate UI
         USER -> UI : selects a category
-            note right of UI : validates selected category
     activate UI
 
         UI -> MUN_CTRL : getMunicipalities()
@@ -67,7 +66,6 @@ activate USER
     deactivate UI
 
     USER -> UI : selects a municipality
-        note right of UI : validates selected municipality
     activate UI
 
         UI --> USER : requests created advertisement data \n(title, description, item values)

@@ -4,6 +4,8 @@ import org.springframework.data.domain.Page;
 import org.upskill.springboot.DTOs.CategoryDTO;
 import org.upskill.springboot.Models.Category;
 
+import java.util.List;
+
 /**
  * Service interface for managing categories.
  */
@@ -17,13 +19,11 @@ public interface ICategoryService {
     Category getCategoryById(String id);
 
     /**
-     * Retrieves a paginated list of categories.
+     * Retrieves a list of all categories.
      *
-     * @param page the page number (zero-based index)
-     * @param size the number of items per page
      * @return a page of categories
      */
-    Page<CategoryDTO> getCategories(int page, int size);
+    List<CategoryDTO> getCategories();
 
     /**
      * Creates a new category.

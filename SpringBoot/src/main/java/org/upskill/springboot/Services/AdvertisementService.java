@@ -73,89 +73,81 @@ public class AdvertisementService implements IAdvertisementService {
     }
 
     /**
-     * Retrieves all advertisements (except inactives) with pagination.
+     * Retrieves all advertisements (except inactives)
      *
-     * @param page the page number
-     * @param size the size of the page
-     * @return a page of advertisement data transfer objects
+     * @return a list of advertisement data transfer objects
      */
     @Override
-    public Page<AdvertisementDTO> getAdvertisements(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-
-        return advertisementRepository.findByStatusNot(Advertisement.AdvertisementStatus.INACTIVE, pageRequest)
+    public List<AdvertisementDTO> getAdvertisements() {
+        List<AdvertisementDTO> advertisementsDTO = advertisementRepository
+                .findByStatusNot(Advertisement.AdvertisementStatus.INACTIVE)
+                .stream()
                 .map(advertisement -> {
                     AdvertisementDTO advertisementDTO = AdvertisementMapper.toDTO(advertisement);
                     advertisementDTO.setMunicipality(advertisement.getMunicipality());
                     return advertisementDTO;
-                });
+                })
+                .toList();
+
+        return advertisementsDTO;
     }
 
     /**
-     * Retrieves all active advertisements with pagination.
+     * Retrieves all active advertisements
      *
-     * @param page the page number
-     * @param size the size of the page
-     * @return a page of active advertisement data transfer objects
+     * @return a list of active advertisement data transfer objects
      */
     @Override
-    public Page<AdvertisementDTO> getActiveAdvertisements(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-
-        return advertisementRepository.findByStatus(Advertisement.AdvertisementStatus.ACTIVE, pageRequest)
+    public List<AdvertisementDTO> getActiveAdvertisements() {
+        List<AdvertisementDTO> advertisementsDTO = advertisementRepository
+                .findByStatus(Advertisement.AdvertisementStatus.ACTIVE)
+                .stream()
                 .map(advertisement -> {
                     AdvertisementDTO advertisementDTO = AdvertisementMapper.toDTO(advertisement);
                     advertisementDTO.setMunicipality(advertisement.getMunicipality());
                     return advertisementDTO;
-                });
+                })
+                .toList();
+
+        return advertisementsDTO;
     }
 
     /**
-     * Retrieves all closed advertisements with pagination.
+     * Retrieves all closed advertisements.
      *
-     * @param page the page number
-     * @param size the size of the page
-     * @return a page of closed advertisement data transfer objects
+     * @return a list of closed advertisement data transfer objects
      */
     @Override
-    public Page<AdvertisementDTO> getClosedAdvertisements(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-
-        return advertisementRepository.findByStatus(Advertisement.AdvertisementStatus.CLOSED, pageRequest)
+    public List<AdvertisementDTO> getClosedAdvertisements() {
+        List<AdvertisementDTO> advertisementsDTO = advertisementRepository
+                .findByStatus(Advertisement.AdvertisementStatus.CLOSED)
+                .stream()
                 .map(advertisement -> {
                     AdvertisementDTO advertisementDTO = AdvertisementMapper.toDTO(advertisement);
                     advertisementDTO.setMunicipality(advertisement.getMunicipality());
                     return advertisementDTO;
-                });
+                })
+                .toList();
+
+        return advertisementsDTO;
     }
 
     /**
-     * Retrieves all advertisements by client ID with pagination.
+     * Retrieves all advertisements (except inactives) by client ID
      *
-     * @param page the page number (zero-based index)
-     * @param size the number of items per page
      * @param clientId the ID of the client
-     * @return a page of advertisements associated with the given client ID
+     * @return a list of advertisements associated with the given client ID
      */
     @Override
-    public Page<AdvertisementDTO> getAdvertisementsByClientId(int page, int size, String clientId) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-
+    public List<AdvertisementDTO> getAdvertisementsByClientId(String clientId) {
         // Retrieve advertisements associated with the clientId
-        Page<Advertisement> advertisements = advertisementRepository.findByClientId(clientId, pageRequest);
+        List<AdvertisementDTO> advertisementsDTO = advertisementRepository
+                .findByClientIdAndStatusNot(clientId, Advertisement.AdvertisementStatus.INACTIVE)
+                .stream()
+                .map(AdvertisementMapper::toDTO)
+                .toList();
 
-        // Filter out inactive advertisements and map the rest to DTOs
-        List<AdvertisementDTO> advertisementsDTO = advertisements.getContent().stream()
-                .filter(advertisement -> advertisement.getStatus() != Advertisement.AdvertisementStatus.INACTIVE) // Exclude inactive advertisements
-                .map(AdvertisementMapper::toDTO) // Map the active advertisements to DTOs
-                .collect(Collectors.toList());
-
-        // Calculate the total number of advertisements without the inactives
-        long totalVisibleAdvertisements = advertisements.stream()
-                .filter(advertisement -> advertisement.getStatus() != Advertisement.AdvertisementStatus.INACTIVE)
-                .count();
-
-        return new PageImpl<>(advertisementsDTO, pageRequest, totalVisibleAdvertisements);
+        return advertisementsDTO;
     }
 
     /**
@@ -174,7 +166,7 @@ public class AdvertisementService implements IAdvertisementService {
         ItemDTO itemDTO = advertisementDTO.getItem();
         itemService.validateItem(itemDTO);
 
-        // Faz o upload da imagem e salva o caminho no banco
+        // Uploads the image and save the path in the DB
         if (imageFile != null && !imageFile.isEmpty()) {
             String imagePath = itemService.uploadItemImage(imageFile);
             itemDTO.setImage(imagePath);
@@ -310,33 +302,28 @@ public class AdvertisementService implements IAdvertisementService {
     }
 
     /**
-     * Searches for advertisements based on the provided filters and returns a paginated list of advertisements.
-     * The search includes optional filtering by municipality, keyword, and category.
-     * This method leverages the repository to fetch the data and maps it to DTOs before returning the result.
+     * Searches for advertisements based on the provided filters and returns a list of advertisements.
+     * The search includes filtering by municipality, keyword, and category.
      *
-     * @param page The page number to retrieve.
-     * @param size The number of advertisements to include in each page.
-     * @param municipality Optional filter for the municipality where the advertisement is located.
-     * @param keyword Optional keyword to search in the advertisement title or description.
-     * @param category Optional filter to search by advertisement category.
+     * @param municipality filter for the municipality where the advertisement is located.
+     * @param keyword keyword to search in the advertisement title or description.
+     * @param category filter to search by advertisement category.
      *
-     * @return A {@link Page<AdvertisementDTO>} object containing the paginated results of the advertisement search,
-     *         with advertisements matching the filters or all advertisements if no filters are provided.
+     * @return a list of advertisements containing the filters or all advertisements if no filters are provided.
      */
     @Override
-    public Page<AdvertisementDTO> searchAdvertisements(int page, int size, String municipality, String keyword, String category){
-        Page<Advertisement> advertisements = advertisementRepository
-                .searchAdvertisements(municipality, keyword, category, PageRequest.of(page, size));
-
-        List<AdvertisementDTO> advertisementsDTO = advertisements.stream()
+    public List<AdvertisementDTO> searchAdvertisements(String municipality, String keyword, String category){
+        List<AdvertisementDTO> advertisementsDTO = advertisementRepository
+                .searchAdvertisements(municipality, keyword, category)
+                .stream()
                 .map(advertisement -> {
                     AdvertisementDTO dto = AdvertisementMapper.toDTO(advertisement);
                     dto.setMunicipality(advertisement.getMunicipality());
                     return dto;
                 })
-                .collect(Collectors.toList());
+                .toList();
 
-        return new PageImpl<>(advertisementsDTO, PageRequest.of(page, size), advertisements.getTotalElements());
+        return advertisementsDTO;
     }
 
     /**

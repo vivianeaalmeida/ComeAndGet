@@ -56,9 +56,4 @@ public class AdvertisementMapper {
 
         return advertisement;
     }
-
-    public static Page<AdvertisementDTO> toDTO(Page<Advertisement> advertisements) {
-        List<AdvertisementDTO> advertisementDTOS = advertisements.stream().map(AdvertisementMapper::toDTO).collect(Collectors.toList());
-        return new PageImpl<>(advertisementDTOS, advertisements.getPageable(), advertisements.getTotalElements());
-    }
 }

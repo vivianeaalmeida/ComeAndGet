@@ -97,20 +97,21 @@ public class AdvertisementController extends BaseController {
      * @param request the advertisement data transfer object
      * @return the created advertisement data transfer object with HTTP status CREATED
      */
-    @PostMapping(value = "/advertisements", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping("/advertisements")
     public ResponseEntity<AdvertisementDTO> createAdvertisement(
-            @RequestPart(value = "advertisementDTO", required = true) @Valid AdvertisementDTO request,
-            @RequestPart(value = "imageFile", required = true) MultipartFile imageFile) {
+            @RequestBody AdvertisementDTO request,
+            @RequestHeader("Authorization") String authorization) {
 
-        // Calls service to create advertisement and saves the image
-        AdvertisementDTO advertisementDTO;
-        try {
-            advertisementDTO = advertisementService.createAdvertisement(request, imageFile);
-            return ResponseEntity.status(HttpStatus.CREATED).body(advertisementDTO);
-        } catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error processing image", e);
-        }
+        // Chama o service e passa o token JWT
+        AdvertisementDTO advertisementDTO = advertisementService.createAdvertisement(request, authorization);
+
+        // Adiciona link HATEOAS
+        advertisementDTO.add(linkTo(methodOn(AdvertisementController.class)
+                .createAdvertisement(request, authorization)).withSelfRel());
+
+        return new ResponseEntity<>(advertisementDTO, HttpStatus.CREATED);
     }
+
 
     /**
      * Updates an existing advertisement by its ID.

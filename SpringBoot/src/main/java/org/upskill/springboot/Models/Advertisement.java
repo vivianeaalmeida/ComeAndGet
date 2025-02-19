@@ -1,5 +1,6 @@
 package org.upskill.springboot.Models;
 
+import io.micrometer.common.lang.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -81,7 +82,7 @@ public class Advertisement {
      * The unique client ID associated with the advertisement.
      * This is a required field.
      */
-    @NonNull
+    @Nullable
     private String clientId;
 
     /**

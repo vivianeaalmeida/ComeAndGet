@@ -1,5 +1,7 @@
 package org.upskill.springboot.DTOs;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.micrometer.common.lang.Nullable;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.hateoas.RepresentationModel;
@@ -15,7 +17,7 @@ import java.time.LocalDate;
  */
 @Getter
 @Setter
-public class AdvertisementDTO {
+public class AdvertisementDTO extends RepresentationModel<AdvertisementDTO> {
 
     /**
      * The unique identifier for the advertisement.
@@ -55,6 +57,7 @@ public class AdvertisementDTO {
     /**
      * The unique client ID associated with the advertisement.
      */
+    @Nullable
     private String clientId;
 
     /**
@@ -66,3 +69,4 @@ public class AdvertisementDTO {
         this.date = LocalDate.now();
     }
 }
+

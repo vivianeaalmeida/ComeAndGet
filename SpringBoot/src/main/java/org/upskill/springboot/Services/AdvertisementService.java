@@ -156,41 +156,38 @@ public class AdvertisementService implements IAdvertisementService {
      * @param advertisementDTO the advertisement data transfer object
      * @return the created advertisement data transfer object
      */
-    @Override
     @Transactional
-    public AdvertisementDTO createAdvertisement(AdvertisementDTO advertisementDTO, MultipartFile imageFile ) throws IOException {
-        // Validates the advertisement data
+    public AdvertisementDTO createAdvertisement(AdvertisementDTO advertisementDTO, String authorization) {
+        // Obtém o ID do usuário autenticado usando o token JWT
+        String clientId = webClient.getUserId(authorization);
+        System.out.println("Client ID: " + clientId); // Verifique se o clientId está sendo retornado corretamente
+
+        // Valida os dados do anúncio
         validateAdvertisementCreation(advertisementDTO);
 
-        // Validates the ItemDTO
+        // Valida o ItemDTO
         ItemDTO itemDTO = advertisementDTO.getItem();
         itemService.validateItem(itemDTO);
 
-        // Uploads the image and save the path in the DB
-        if (imageFile != null && !imageFile.isEmpty()) {
-            String imagePath = itemService.uploadItemImage(imageFile);
-            itemDTO.setImage(imagePath);
-        }
-
-        // Creates the item and returns the ItemDTO after is saved in the DB
+        // Cria o item no banco de dados
         ItemDTO savedItemDTO = itemService.createItem(itemDTO);
+        Item item = ItemMapper.toEntity(savedItemDTO);
 
-        // Converts the ItemDTO back to the Item entity
-        Item item = ItemMapper.toEntity(savedItemDTO);  // Converts to Item entity
-
-        // Converts the AdvertisementDTO to the Advertisement entity and associates the item, municipality and date
+        // Converte DTO para entidade e associa o item e clientId
         Advertisement advertisement = AdvertisementMapper.toEntity(advertisementDTO);
         advertisement.setItem(item);
         advertisement.setMunicipality(advertisementDTO.getMunicipality());
-
-        // Saves the advertisement in the database
+        advertisement.setClientId(clientId); // Agora o ID do usuário autenticado é setado corretamente
+        // Salva no banco de dados
         advertisement = advertisementRepository.save(advertisement);
 
+        // Converte para DTO e retorna
         AdvertisementDTO savedAdvertisementDTO = AdvertisementMapper.toDTO(advertisement);
         savedAdvertisementDTO.setMunicipality(advertisement.getMunicipality());
 
         return savedAdvertisementDTO;
     }
+
 
     /**
      * Updates an existing advertisement.
@@ -357,10 +354,10 @@ public class AdvertisementService implements IAdvertisementService {
         }
 
         // Check if the client associated with the advertisement is valid
-        UserDTO user = userService.getUserById(advertisementDTO.getClientId());
-        if (user == null) {
-            throw new ClientNotFoundException("Client client not found");
-        }
+//        String userId = webClient.getUserId(advertisementDTO.getClientId());
+//        if (userId == null) {
+//            throw new ClientNotFoundException("Client not found");
+//        }
 
         return true;
     }

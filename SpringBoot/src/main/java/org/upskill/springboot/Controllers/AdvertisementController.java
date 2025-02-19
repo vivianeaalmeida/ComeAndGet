@@ -72,7 +72,7 @@ public class AdvertisementController extends BaseController {
         int _page = page.orElse(0);
         int _size = size.orElse(10);
 
-        Page<AdvertisementDTO> advertisementsDTO = advertisementService.getAllAdvertisements(_page, _size);
+        Page<AdvertisementDTO> advertisementsDTO = advertisementService.getAdvertisements(_page, _size);
 
         advertisementsDTO.forEach(advertisement ->
                 advertisement.add(linkTo(methodOn(AdvertisementController.class)

@@ -5,7 +5,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.upskill.springboot.DTOs.*;
 
 import java.io.IOException;
-import java.util.Optional;
 
 /**
  * Service interface for managing advertisements.
@@ -26,7 +25,7 @@ public interface IAdvertisementService {
      * @param size the number of items per page
      * @return a page of all advertisements
      */
-    Page<AdvertisementDTO> getAllAdvertisements(int page, int size);
+    Page<AdvertisementDTO> getAdvertisements(int page, int size);
 
     /**
      * Retrieves a paginated list of active advertisements.

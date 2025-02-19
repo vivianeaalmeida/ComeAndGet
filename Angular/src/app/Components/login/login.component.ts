@@ -11,6 +11,7 @@ import { Router, RouterLink } from '@angular/router';
 // import { PageLoaderService } from '../../Services/page-loader.service';
 import Swal from 'sweetalert2';
 import { map } from 'rxjs';
+import { AuthService } from '../../Services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -27,7 +28,7 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    // private loginServ: AuthService,
+    private loginServ: AuthService,
     private myRouter: Router // private loaderServ: PageLoaderService
   ) {}
 
@@ -37,14 +38,9 @@ export class LoginComponent implements OnInit {
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
 
-    // this.loginServ.user.pipe(map((user) => user)).subscribe((user) => {
-    //   this.isLogged = user;
-    // });
-
-    // this.loaderServ.isLoading().subscribe({
-    //   next: (x) => (this.isVisible = x),
-    //   error: (err) => console.error(err),
-    // });
+    this.loginServ.user.pipe(map((user) => user)).subscribe((user) => {
+      this.isLogged = user;
+    });
   }
 
   loginUser(): void {
@@ -54,24 +50,23 @@ export class LoginComponent implements OnInit {
 
     const { email, password } = this.loginForm.value;
 
-    // this.loginServ.login(email, password).subscribe({
-    //   next: () => {
-    //     this.isAuthorized = true;
-    //     if (this.isLogged.role == 'client') {
-    //       this.myRouter.navigate(['books/my/recommendations']);
-    //     } else {
-    //       this.myRouter.navigate(['dashboard']);
-    //     }
-    //   },
-    //   error: (error: any) => {
-    //     this.isAuthorized = false;
-    //     this.loaderServ.hideLoader();
-    //     Swal.fire({
-    //       icon: 'error',
-    //       title: 'Login failed! Please check your email and password.',
-    //     });
-    //   },
-    // });
+    this.loginServ.login(email, password).subscribe({
+      next: (reponse) => {
+        this.isAuthorized = true;
+        if (this.isLogged.roles == 'User') {
+          this.myRouter.navigate(['/']);
+        } else {
+          this.myRouter.navigate(['home']);
+        }
+      },
+      error: (error: any) => {
+        this.isAuthorized = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'Login failed! Please check your email and password.',
+        });
+      },
+    });
   }
 
   registerUser(): void {

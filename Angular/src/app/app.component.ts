@@ -5,6 +5,7 @@ import { ButtonComponent } from './Components/button/button.component';
 import { AdvertisementCardComponent } from './Components/advertisement-card/advertisement-card.component';
 import { FooterComponent } from './Components/footer/footer.component';
 import { CommonModule } from '@angular/common';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 @Component({
   selector: 'app-root',
@@ -16,6 +17,7 @@ import { CommonModule } from '@angular/common';
     AdvertisementCardComponent,
     FooterComponent,
     CommonModule,
+    NgxDatatableModule,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',

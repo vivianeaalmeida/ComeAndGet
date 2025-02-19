@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ButtonComponent } from '../button/button.component';
-import { AdvServiceService } from '../../Services/adv-service.service';
+import { AdvService } from '../../Services/adv.service';
 import Swal from 'sweetalert2';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -15,7 +15,7 @@ export class CreateAdvComponent {
   buttonText: string = 'EnzoGabriel';
   imagem!: File | string;
 
-  constructor(private adServ: AdvServiceService) {}
+  constructor(private adServ: AdvService) {}
 
   submit() {
     const formData = new FormData();

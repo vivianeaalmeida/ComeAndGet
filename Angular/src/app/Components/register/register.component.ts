@@ -6,11 +6,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-// import { User1 } from '../../Models/user1';
-// import { UsersService } from '../../Services/users.service';
+
 import { Router } from '@angular/router';
-import { NgFor, NgIf } from '@angular/common';
+import { NgIf } from '@angular/common';
 import Swal from 'sweetalert2';
+import { UsersService } from '../../Services/users.service';
 
 @Component({
   selector: 'app-register',
@@ -23,12 +23,14 @@ export class RegisterComponent {
   registerForm: FormGroup;
 
   constructor(
-    // private addsrv: UsersService,
+    private addsrv: UsersService,
     private myRouter: Router,
     private fb: FormBuilder
   ) {
     this.registerForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
+      phoneNumber: ['', [Validators.required, Validators.minLength(9)]],
+      username: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
@@ -37,27 +39,26 @@ export class RegisterComponent {
   onSubmit() {
     if (this.registerForm.valid) {
       // Chamar o método para registrar o usuário
-      // this.registerNewUser();
-      console.log('Ok');
+      this.registerNewUser();
     }
   }
 
-  // registerNewUser() {
-  //   if (this.registerForm.valid) {
-  //     this.addsrv.registerUser(this.registerForm.value).subscribe(() => {
-  //       Swal.fire({
-  //         icon: 'success',
-  //         title: 'New user registered successfully!',
-  //       });
-  //       this.myRouter.navigate(['login']);
-  //     });
-  //   } else {
-  //     Swal.fire({
-  //       icon: 'error',
-  //       title: 'Error registering new user! Please try again.',
-  //     });
-  //   }
-  // }
+  registerNewUser() {
+    if (this.registerForm.valid) {
+      this.addsrv.registerUser(this.registerForm.value).subscribe(() => {
+        Swal.fire({
+          icon: 'success',
+          title: 'New user registered successfully!',
+        });
+        this.myRouter.navigate(['login']);
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error registering new user! Please try again.',
+      });
+    }
+  }
 
   loginUser(): void {
     this.myRouter.navigate(['login']);

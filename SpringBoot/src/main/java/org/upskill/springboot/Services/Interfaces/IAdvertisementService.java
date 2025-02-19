@@ -1,9 +1,8 @@
 package org.upskill.springboot.Services.Interfaces;
 
-import org.springframework.web.multipart.MultipartFile;
-import org.upskill.springboot.DTOs.*;
+import org.upskill.springboot.DTOs.AdvertisementDTO;
+import org.upskill.springboot.DTOs.AdvertisementUpdateDTO;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -72,39 +71,6 @@ public interface IAdvertisementService {
      * @return The updated {@link AdvertisementDTO} with the new status.
      */
     AdvertisementDTO deactivateAdvertisement(String id);
-
-
-    /**
-     * Creates a new advertisement based on the provided data.
-     *
-     * @param id The unique identifier of the advertisement.
-     * @param advertisementReservationAttemptDTO An object containing the request details for creating the advertisement.
-     * @return A {@code RequestResponseDTO} object containing the response of the request.
-     */
-    ReservationAttemptResponseDTO createAdvertisementReservationAttempt(String id, ReservationAttemptDTO advertisementReservationAttemptDTO);
-
-    /**
-     * Retrieves the advertisement request details based on the provided advertisement ID and request ID.
-     *
-     * @param idAdvertisement The unique identifier of the advertisement.
-     * @param idRequest The unique identifier of the request associated with the advertisement.
-     * @return A {@link ReservationAttemptResponseDTO} object containing the details of the advertisement request.
-     */
-    ReservationAttemptResponseDTO getAdvertisementRequestById(String idAdvertisement, String idRequest);
-
-    /**
-     * Updates the status of a request for an advertisement.
-     * This method calls the service to apply the changes to the status of a specific request related to an advertisement.
-     *
-     * @param idAdvertisement The unique identifier of the advertisement.
-     * @param idRequest The unique identifier of the request.
-     * @param reservationAttemptStatusDTO The object containing the new status information for the request.
-     *
-     * @return A {@link ReservationAttemptResponseDTO} object containing the details of the operation's response.
-     *
-     */
-
-    ReservationAttemptResponseDTO patchAdvertisementRequestStatus(String idAdvertisement, String idRequest, ReservationAttemptStatusDTO reservationAttemptStatusDTO);
 
     /**
      * Searches for advertisements based on the provided filters and returns a list of advertisements.

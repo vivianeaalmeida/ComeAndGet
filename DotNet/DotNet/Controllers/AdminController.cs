@@ -29,5 +29,16 @@ namespace DotNet.Controllers {
             var adminInfo = _adminService.GetAdminInfo();
             return Ok(adminInfo);
         }
+
+
+        /// <summary>
+        /// Retrieves the admin ID.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("token")]
+        public IActionResult GetAdminId() {
+            var id = _adminService.GetAdminId();
+            return Ok(id);
+        }
     }
 }

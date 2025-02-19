@@ -11,6 +11,6 @@
         /// <summary>
         /// Gets or sets the user's role.
         /// </summary>
-        public string Role { get; set; } = string.Empty;
+        public string Roles { get; set; } = string.Empty;
     }
 }

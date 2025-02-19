@@ -30,6 +30,6 @@ namespace DotNet.DTOs {
         /// </summary>
         public string PhoneNumber { get; set; } = string.Empty;
 
-        //public string Role { get; set; } = "User";
+        //public string Roles { get; set; } = "User";
     }
 }

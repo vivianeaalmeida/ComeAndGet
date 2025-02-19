@@ -59,5 +59,4 @@ public interface AdvertisementRepository extends JpaRepository<Advertisement, St
     List<Advertisement> searchAdvertisements(@Param("municipality") String municipality,
                                              @Param("keyword") String keyword,
                                              @Param("category") String category);
-
 }

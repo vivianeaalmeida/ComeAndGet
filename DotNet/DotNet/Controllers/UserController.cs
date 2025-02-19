@@ -30,5 +30,16 @@ namespace DotNet.Controllers {
             var userInfo = _userService.GetUserInfo();
             return Ok(userInfo);
         }
+
+
+        /// <summary>
+        /// Retrieves user ID.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("id")]
+        public IActionResult GetUserId() {
+            var id = _userService.GetUserId();
+            return Ok(id);
+        }
     }
 }

@@ -23,8 +23,7 @@ public interface ReservationAttemptRepository extends JpaRepository<ReservationA
      * @param advertisementId the ID of the advertisement to query
      * @return a list of requests for the given advertisement
      */
-    @Query("SELECT r FROM ReservationAttempt r WHERE r.advertisement.id = :advertisementId")
-    List<ReservationAttempt> getReservationAttemptsByAdvertisementId(String advertisementId);
+    List<ReservationAttempt> findByAdvertisement_Id(String advertisementId);
 
     /**
      * Checks if there are any requests associated with a specific advertisement.

@@ -29,37 +29,13 @@ public class CategoryController extends BaseController {
     /**
      * Retrieves a paginated list of categories.
      *
-     * @param page Optional parameter for the page number (default is 0).
-     * @param size Optional parameter for the page size (default is 10).
-     * @return A ResponseEntity containing a CollectionModel of CategoryDTO with HATEOAS links,
-     * including self, next, and previous page links and HTTP status 200 (Ok) if get is successful.
+     * @return A ResponseEntity containing a list of CategoryDTO and HTTP status 200 (Ok)
+     * if get is successful.
      */
     @GetMapping("/categories")
-    public ResponseEntity<CollectionModel<CategoryDTO>> getCategories(
-            @RequestParam Optional<Integer> page,
-            @RequestParam Optional<Integer> size) {
-        // Define pagination default values
-        int _page = page.orElse(0);
-        int _size = size.orElse(10);
-
-        Page<CategoryDTO> categoriesDTO = categoryService.getCategories(_page, _size);
-
-        Link selfLink = linkTo(methodOn(CategoryController.class)
-                .getCategories(Optional.of(_page), Optional.of(_size))).withSelfRel();
-
-        List<Link> links = new ArrayList<>();
-        links.add(selfLink);
-
-        if (categoriesDTO.hasNext()) {
-            links.add(linkTo(methodOn(CategoryController.class)
-                    .getCategories(Optional.of(_page + 1), Optional.of(_size))).withRel("next"));
-        }
-        if (categoriesDTO.hasPrevious()) {
-            links.add(linkTo(methodOn(CategoryController.class)
-                    .getCategories(Optional.of(_page - 1), Optional.of(_size))).withRel("previous"));
-        }
-
-        return new ResponseEntity<>(CollectionModel.of(categoriesDTO.getContent(), links), HttpStatus.OK);
+    public ResponseEntity<List<CategoryDTO>> getCategories() {
+        List<CategoryDTO> categoriesDTO = categoryService.getCategories();
+        return new ResponseEntity<>(categoriesDTO, HttpStatus.OK);
     }
 
     /**
@@ -72,10 +48,6 @@ public class CategoryController extends BaseController {
     @PostMapping("/categories")
     public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO request) {
         CategoryDTO categoryDTO = categoryService.createCategory(request);
-
-        // self
-        categoryDTO.add(linkTo(methodOn(CategoryController.class)
-                .createCategory(request)).withSelfRel());
 
         return new ResponseEntity<>(categoryDTO, HttpStatus.CREATED);
     }
@@ -94,12 +66,8 @@ public class CategoryController extends BaseController {
         if (!id.equals(request.getId())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
+        
         CategoryDTO categoryDTO = categoryService.updateCategory(id, request);
-
-        // self
-        categoryDTO.add(linkTo(methodOn(CategoryController.class)
-                .updateCategory(id, request)).withSelfRel());
 
         return new ResponseEntity<>(categoryDTO, HttpStatus.OK);
     }

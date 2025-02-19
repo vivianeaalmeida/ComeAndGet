@@ -15,7 +15,7 @@ import java.time.LocalDate;
  */
 @Getter
 @Setter
-public class AdvertisementDTO extends RepresentationModel<AdvertisementDTO> {
+public class AdvertisementDTO {
 
     /**
      * The unique identifier for the advertisement.

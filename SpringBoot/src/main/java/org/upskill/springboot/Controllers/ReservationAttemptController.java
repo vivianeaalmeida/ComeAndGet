@@ -50,15 +50,6 @@ public class ReservationAttemptController extends BaseController {
         List<Link> links = new ArrayList<>();
         links.add(selfLink);
 
-        if (reservationAttemptsDTO.hasNext()) {
-            links.add(linkTo(methodOn(CategoryController.class)
-                    .getCategories(Optional.of(_page + 1), Optional.of(_size))).withRel("next"));
-        }
-        if (reservationAttemptsDTO.hasPrevious()) {
-            links.add(linkTo(methodOn(CategoryController.class)
-                    .getCategories(Optional.of(_page - 1), Optional.of(_size))).withRel("previous"));
-        }
-
         return new ResponseEntity<>(CollectionModel.of(reservationAttemptsDTO.getContent(), links), HttpStatus.OK);
     }
 

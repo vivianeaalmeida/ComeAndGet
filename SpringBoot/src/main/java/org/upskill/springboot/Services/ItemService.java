@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.upskill.springboot.DTOs.ItemDTO;
 import org.upskill.springboot.Exceptions.CategoryNotFoundException;
+import org.upskill.springboot.Exceptions.InvalidFileExtensionException;
 import org.upskill.springboot.Exceptions.ItemNotFoundException;
 import org.upskill.springboot.Exceptions.ItemValidationException;
 import org.upskill.springboot.Mappers.CategoryMapper;
@@ -120,37 +121,50 @@ public class ItemService implements IItemService {
     }
 
 
+    /**
+     * Uploads an image file to the server, ensuring that the file is not empty and the directory exists.
+     * The method generates a unique file name for the image and saves it to a predefined directory.
+     *
+     * @param file the image file to be uploaded (must not be null or empty)
+     * @return the relative file path of the uploaded image (to store in the database)
+     * @throws IOException if there is an error while saving the file to the server
+     */
     public String uploadItemImage(MultipartFile file) throws IOException{
         if (file == null || file.isEmpty()) {
-            throw new IllegalArgumentException("O arquivo de imagem não pode estar vazio.");
+            throw new IllegalArgumentException("The image file cannot be empty.");
         }
 
-        // Garante que o diretório existe
+        // Ensures that the directory exists
         File uploadDir = new File(IMAGE_UPLOAD_DIR);
         if (!uploadDir.exists()) {
-            uploadDir.mkdirs(); // Cria os diretórios necessários
+            uploadDir.mkdirs(); // Creates the necessary directories
         }
 
-        // Gera um nome único para a imagem
+        // Generates a unique name for the image
         String fileExtension = getFileExtension(file.getOriginalFilename());
         String uniqueFileName = UUID.randomUUID().toString() + "." + fileExtension;
 
-        // Define o caminho completo onde a imagem será salva
+        // Defines the full path where the image will be saved
         Path filePath = Paths.get(IMAGE_UPLOAD_DIR, uniqueFileName);
         Files.write(filePath, file.getBytes());
 
-        // Retorna o caminho relativo da imagem para armazenar no banco
+        // Returns the relative path of the image to store in the database
         return IMAGE_UPLOAD_DIR + uniqueFileName;
     }
 
-    // Método auxiliar para obter a extensão do arquivo
+
+    /**
+     * Auxiliar method to extract the file extension from a given file name.
+     * This method checks if the file name is valid (not null and contains an extension).
+     * If the file name is invalid, an exception is thrown.
+     *
+     * @param fileName the name of the file from which the extension will be extracted
+     * @return the file extension (everything after the last dot in the file name)
+     */
     private String getFileExtension(String fileName) {
         if (fileName == null || fileName.lastIndexOf(".") == -1) {
-            throw new IllegalArgumentException("Nome de arquivo inválido.");
+            throw new InvalidFileExtensionException("Invalid file name.");
         }
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
-
-
-
 }

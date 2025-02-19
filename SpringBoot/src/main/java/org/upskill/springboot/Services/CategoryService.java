@@ -15,6 +15,8 @@ import org.upskill.springboot.Models.Category;
 import org.upskill.springboot.Repositories.CategoryRepository;
 import org.upskill.springboot.Services.Interfaces.ICategoryService;
 
+import java.util.List;
+
 /**
  * Service class responsible for handling business logic related to categories in the system.
  * This class provides methods for CRUD operations and validating category data.
@@ -45,16 +47,18 @@ public class CategoryService implements ICategoryService {
     }
 
     /**
-     * Retrieves a paginated list of the existing categories.
+     * Retrieves a list of the existing categories.
      *
-     * @param page the page number (zero-based index)
-     * @param size the number of elements per page
-     * @return a page of a CategoryDTO containing the requested categories
+     * @return a list of CategoryDTO
      */
     @Override
-    public Page<CategoryDTO> getCategories(int page, int size) {
-        return categoryRepository.findAll(PageRequest.of(page, size))
-                .map(CategoryMapper::toDTO);
+    public List<CategoryDTO> getCategories() {
+        List<CategoryDTO> categoriesDTO = categoryRepository.findAll()
+                .stream()
+                .map(CategoryMapper::toDTO)
+                .toList();
+
+        return  categoriesDTO;
     }
 
     /**

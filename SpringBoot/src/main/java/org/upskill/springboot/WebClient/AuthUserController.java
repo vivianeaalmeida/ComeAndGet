@@ -1,6 +1,5 @@
 package org.upskill.springboot.WebClient;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +25,6 @@ public class AuthUserController {
                 .retrieve()
                 .bodyToMono(String.class);
     }
-
 
 
     @GetMapping("/user")

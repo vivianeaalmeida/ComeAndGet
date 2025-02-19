@@ -3,7 +3,6 @@ using DotNet.Models;
 using DotNet.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -14,17 +13,13 @@ builder.Services.AddScoped<AccountService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AdminService>();
 
-builder.Services.AddDbContext<UserContext>(options => options.UseSqlServer
-    (builder.Configuration.GetConnectionString("UserDB"))
-    );
-
-
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<UserContext>(options =>
-options.UseSqlServer(builder.Configuration.GetConnectionString("UserDB")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("UserDB")));
+
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => {
     options.Password.RequiredLength = 8;

@@ -214,21 +214,24 @@ public class ReservationAttemptService implements IReservationAttemptService {
     }
 
     /**
-     * Rejects all reservations associated with an advertisement by its ID.
+     * Rejects all reservations associated with an advertisement by its ID,
+     * for reservations with status PENDING or ACCEPTED.
      *
      * @param advertisementId the ID of the advertisement
      */
     public void rejectReservationAttempts(String advertisementId) {
-        List<ReservationAttempt> reservationAttempts = getReservationAttemptsByAdvertisement(advertisementId);
+        // Get ReservationAttempts with pending and accepted status
+        List<ReservationAttempt> reservationAttempts = reservationAttemptRepository.findByAdvertisementIdAndStatusIn(
+                advertisementId, List.of(ReservationAttempt.ReservationAttemptStatus.PENDING, ReservationAttempt.ReservationAttemptStatus.ACCEPTED)
+        );
 
         //Set the reservation status to REJECTED
         for (ReservationAttempt reservationAttempt : reservationAttempts) {
-            if (reservationAttempt.getStatus() != ReservationAttempt.ReservationAttemptStatus.CANCELED) {
-                reservationAttempt.setStatus(ReservationAttempt.ReservationAttemptStatus.REJECTED);
-            }
+            reservationAttempt.setStatus(ReservationAttempt.ReservationAttemptStatus.REJECTED);
         }
 
         // Save the updated reservations
         reservationAttemptRepository.saveAll(reservationAttempts);
     }
+
 }

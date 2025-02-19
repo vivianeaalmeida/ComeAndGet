@@ -16,9 +16,18 @@ import java.util.List;
 public interface AdvertisementRepository extends JpaRepository<Advertisement, String> {
 
     /**
+     * Finds all advertisements except those with the specified status, with pagination.
+     *
+     * @param status   the status to be excluded from the results
+     * @param pageable the pagination information (page number, page size, etc.)
+     * @return a page of advertisements that do not have the specified status
+     */
+    Page<Advertisement> findByStatusNot(Advertisement.AdvertisementStatus status, Pageable pageable);
+
+    /**
      * Finds all advertisements with the specified status, with pagination.
      *
-     * @param status   the status of the advertisements (ACTIVE or CLOSED)
+     * @param status   the status of the advertisements
      * @param pageable the pagination information (page number, page size, etc.)
      * @return a page of advertisements with the given status
      */
@@ -27,7 +36,7 @@ public interface AdvertisementRepository extends JpaRepository<Advertisement, St
     /**
      * Finds all advertisements with the specified status
      *
-     * @param status   the status of the advertisements (ACTIVE or CLOSED)
+     * @param status   the status of the advertisements
      * @return a page of advertisements with the given status
      */
     List<Advertisement> findByStatus(Advertisement.AdvertisementStatus status);

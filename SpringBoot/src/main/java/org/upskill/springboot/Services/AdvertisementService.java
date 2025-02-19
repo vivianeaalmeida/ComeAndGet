@@ -80,25 +80,15 @@ public class AdvertisementService implements IAdvertisementService {
      * @return a page of advertisement data transfer objects
      */
     @Override
-    public Page<AdvertisementDTO> getAllAdvertisements(int page, int size) {
-        Page<Advertisement> advertisements = advertisementRepository.findAll(PageRequest.of(page, size));
+    public Page<AdvertisementDTO> getAdvertisements(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
 
-        // Get dto list of all advertisements without inactives
-        List<AdvertisementDTO> advertisementsDTO = advertisements.stream()
-                .filter(advertisement -> advertisement.getStatus() != Advertisement.AdvertisementStatus.INACTIVE)
+        return advertisementRepository.findByStatusNot(Advertisement.AdvertisementStatus.INACTIVE, pageRequest)
                 .map(advertisement -> {
                     AdvertisementDTO advertisementDTO = AdvertisementMapper.toDTO(advertisement);
                     advertisementDTO.setMunicipality(advertisement.getMunicipality());
                     return advertisementDTO;
-                })
-                .collect(Collectors.toList());
-
-        // Calculate the total number of advertisements without the inactives
-        long totalVisibleAdvertisements = advertisements.stream()
-                .filter(advertisement -> advertisement.getStatus() != Advertisement.AdvertisementStatus.INACTIVE)
-                .count();
-
-        return new PageImpl<>(advertisementsDTO, PageRequest.of(page, size), totalVisibleAdvertisements);
+                });
     }
 
     /**

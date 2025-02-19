@@ -49,6 +49,4 @@ public interface IReservationAttemptService {
     ReservationAttemptResponseDTO updateReservationAttemptStatus
     (String id, String idAdvertisement, ReservationAttemptStatusDTO reservationAttemptStatusDTO);
 
-
-
 }

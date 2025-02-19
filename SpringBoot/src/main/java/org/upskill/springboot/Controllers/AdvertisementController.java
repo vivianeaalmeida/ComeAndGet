@@ -1,10 +1,12 @@
 package org.upskill.springboot.Controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +26,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
  * REST controller for managing advertisements.
  */
 @RestController
+@CrossOrigin("*")
 public class AdvertisementController extends BaseController {
 
     @Autowired
@@ -222,11 +225,12 @@ public class AdvertisementController extends BaseController {
      * @param request the advertisement data transfer object
      * @return the created advertisement data transfer object with HTTP status CREATED
      */
-    @PostMapping("/advertisements")
+    @PostMapping(value = "/advertisements", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<AdvertisementDTO> createAdvertisement(
-            @RequestPart("advertisementDTO") AdvertisementDTO request,
+            @RequestPart(value = "advertisementDTO", required = true) @Valid AdvertisementDTO request,
             @RequestPart(value = "imageFile", required = false) MultipartFile imageFile) {
 
+        System.out.println("Esta entrando no metodo");
         // Chama o Service para criar o anúncio e salvar a imagem
         AdvertisementDTO advertisementDTO = null;
         try {

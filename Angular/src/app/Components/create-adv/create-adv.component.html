@@ -1,0 +1,24 @@
+<div class="font-[sans-serif] bg-whitetext-gray-800">
+  <div
+    class="min-h-screen flex flex-col items-center justify-center lg:p-6 p-4"
+  >
+    <div class="grid md:grid-cols-2 items-center gap-10 max-w-[80vw] w-full">
+      <div class="space-y-3">
+        <div>
+          <input
+            type="file"
+            class="bg-gray-300 focus:bg-transparent w-full text-sm px-4 py-3.5 rounded-md outline-gray-800 placeholder-purple-900"
+            (change)="onFileSelected($event)"
+            required
+          />
+        </div>
+        <app-button
+          [buttonText]="buttonText"
+          fontSize="1rem"
+          padding=".5rem 1rem"
+          (click)="submit()"
+        ></app-button>
+      </div>
+    </div>
+  </div>
+</div>

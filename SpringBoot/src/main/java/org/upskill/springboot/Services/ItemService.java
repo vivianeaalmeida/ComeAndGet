@@ -88,11 +88,6 @@ public class ItemService implements IItemService {
             throw new IllegalArgumentException("The item must be provided.");
         }
 
-        // Image validation
-        if (itemDTO.getImage() == null || itemDTO.getImage().isEmpty()) {
-            throw new ItemValidationException("The image URL must be provided.");
-        }
-
         // Condition validation
         if (itemDTO.getCondition() == null) {
             throw new ItemValidationException("The condition must be provided.");

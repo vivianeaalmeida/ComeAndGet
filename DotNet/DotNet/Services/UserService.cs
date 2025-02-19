@@ -41,5 +41,14 @@ namespace DotNet.Services {
                 Role = role
             };
         }
+
+        /// <summary>
+        /// Retrieves the ID of the current user.
+        /// </summary>
+        /// <returns></returns>
+        public string GetUserId() {
+            var user = _httpContextAccessor.HttpContext?.User;
+            return user?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
+        }
     }
 }

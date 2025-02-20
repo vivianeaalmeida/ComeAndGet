@@ -64,6 +64,24 @@ export class CategoriesDashboardComponent {
     });
   }
 
+  updateCategory(): void {
+    this.categoryServ.updateCategory(this.selectedCategory!.id, this.categoryForm.value).subscribe({
+      next: (response) => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Category updated successfully!.',
+        });
+        this.closeModal();
+      },
+      error: (error) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error updating category!',
+        });
+      },
+    });
+  }
+
   deleteCategory(id: string): void {
     Swal.fire({
       icon: 'warning',
@@ -100,7 +118,7 @@ export class CategoriesDashboardComponent {
     if (isEditingOrCreating === 'creating') {
       this.createCategory();
     } else if (isEditingOrCreating === 'editing') {
-      //this.updateCategory();
+      this.updateCategory();
     }
   }
 

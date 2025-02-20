@@ -26,7 +26,7 @@ import java.util.UUID;
  * Service class for managing items.
  */
 @Service
-public class ItemService implements IItemService {
+public class  ItemService implements IItemService {
 
     private static final String IMAGE_UPLOAD_DIR = "uploads/images/";
 

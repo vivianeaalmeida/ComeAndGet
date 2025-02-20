@@ -58,25 +58,33 @@ public class ReservationAttemptController extends BaseController {
      * @return a ResponseEntity containing the created ReservationAttemptResponseDTO and HTTP status OK if creation is successful
      */
     @PostMapping("/reservationAttempts")
-    public ResponseEntity<ReservationAttemptResponseDTO> postReservationAttempt(@RequestBody ReservationAttemptDTO reservationAttemptDTO) {
-        ReservationAttemptResponseDTO responseDTO = reservationAttemptService.createReservationAttempt(reservationAttemptDTO);
+    public ResponseEntity<ReservationAttemptResponseDTO> postReservationAttempt(
+            @RequestBody ReservationAttemptDTO reservationAttemptDTO,
+            @RequestHeader("Authorization") String authorization
+    ) {
+        ReservationAttemptResponseDTO responseDTO = reservationAttemptService.createReservationAttempt(reservationAttemptDTO, authorization);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
-
-    /**
-     * Endpoint to update the status of a reservation request for a specific advertisement.
-     * This method handles a PATCH request and invokes the service to update the reservation request status for the specified advertisement.
-     *
-     * @param reservationId The unique identifier of the reservation request.
-     * @param requestDTO The object containing the new status information for the reservation request.
-     *
-     * @return A {@link ResponseEntity} containing a {@link ReservationAttemptResponseDTO} object with the details of the operation's response, including the HTTP status.
-     */
     @PatchMapping("reservationAttempts/{reservationId}/status")
     public ResponseEntity<ReservationAttemptResponseDTO> patchReservationAttemptStatus(@PathVariable String reservationId, @RequestBody ReservationAttemptStatusDTO requestDTO) {
         ReservationAttemptResponseDTO response = reservationAttemptService.updateReservationAttemptStatus( reservationId , requestDTO);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    /*metodos que vieram do userController*/
+    /*
+    @GetMapping("/users/{userId}/reservationAttempts")
+    public ResponseEntity<List<ReservationAttemptResponseDTO>> getReservationAttemptsByUserId(@PathVariable String userId) {
+        List<ReservationAttemptResponseDTO> response = this.userService.getReservationAttemptByUserId(userId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/users/{userId}/advertisements/reservationAttempt")
+    public ResponseEntity<List<ReservationAttemptResponseDTO>> getAdvertisementReservationAttemptsByUserId(@PathVariable String userId){
+
+        List<ReservationAttemptResponseDTO> response = userService.getReservationAttemptFromAdvertisementOfUser(userId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }*/
 
 }

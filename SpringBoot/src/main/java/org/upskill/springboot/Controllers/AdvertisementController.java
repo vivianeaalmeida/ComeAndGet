@@ -11,9 +11,6 @@ import org.upskill.springboot.Services.AdvertisementService;
 import java.util.List;
 import java.util.Optional;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 /**
  * REST controller for managing advertisements.
  */
@@ -99,10 +96,6 @@ public class AdvertisementController extends BaseController {
 
         // Chama o service e passa o token JWT
         AdvertisementDTO advertisementDTO = advertisementService.createAdvertisement(request, authorization);
-
-        // Adiciona link HATEOAS
-        advertisementDTO.add(linkTo(methodOn(AdvertisementController.class)
-                .createAdvertisement(request, authorization)).withSelfRel());
 
         return new ResponseEntity<>(advertisementDTO, HttpStatus.CREATED);
     }

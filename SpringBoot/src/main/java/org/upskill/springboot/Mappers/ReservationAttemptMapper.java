@@ -10,7 +10,7 @@ public class ReservationAttemptMapper {
         ReservationAttemptResponseDTO requestDTO = new ReservationAttemptResponseDTO();
         requestDTO.setId(reservationAttempt.getId());
         requestDTO.setStatus(reservationAttempt.getStatus().toString());
-        requestDTO.setUserId(reservationAttempt.getUser().getId());
+        requestDTO.setUserId(reservationAttempt.getClientId());
         requestDTO.setDate(reservationAttempt.getDate());
         requestDTO.setAdvertisementId(reservationAttempt.getAdvertisement().getId());
         return requestDTO;
@@ -19,6 +19,9 @@ public class ReservationAttemptMapper {
 
     public static ReservationAttempt toEntity(ReservationAttemptDTO reservationAttemptDTO) {
         ReservationAttempt reservationAttempt = new ReservationAttempt();
+        reservationAttempt.setClientId(reservationAttemptDTO.getUserId());
+        //reservationAttempt.setAdvertisement(reservationAttemptDTO.getAdvertisementId());
+
         if(reservationAttemptDTO.getStatus() != null) {
             reservationAttempt.setStatus(ReservationAttempt.ReservationAttemptStatus.valueOf(reservationAttemptDTO.getStatus().toUpperCase()));
         }

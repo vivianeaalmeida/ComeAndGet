@@ -4,7 +4,7 @@ import { LoginComponent } from './Components/login/login.component';
 import { RegisterComponent } from './Components/register/register.component';
 import { CreateAdvComponent } from './Components/create-adv/create-adv.component';
 import { NotFoundComponent } from './Components/not-found/not-found.component';
-import { CategorieslistingComponent } from './Components/categorieslisting/categorieslisting.component';
+import { CategoriesDashboardComponent } from './Components/categories-dashboard/categories-dashboard.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -12,6 +12,6 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'createadv', component: CreateAdvComponent },
-  { path: 'dashboard', component: CategorieslistingComponent },
+  { path: 'dashboard', component: CategoriesDashboardComponent },
   { path: '**', component: NotFoundComponent },
 ];

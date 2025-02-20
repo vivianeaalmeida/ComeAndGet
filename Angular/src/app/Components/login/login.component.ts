@@ -51,12 +51,13 @@ export class LoginComponent implements OnInit {
     const { email, password } = this.loginForm.value;
 
     this.loginServ.login(email, password).subscribe({
-      next: (reponse) => {
+      next: (response) => {
         this.isAuthorized = true;
+        console.log(response);
         if (this.isLogged.roles == 'User') {
           this.myRouter.navigate(['/']);
         } else {
-          this.myRouter.navigate(['home']);
+          this.myRouter.navigate(['dashboard']);
         }
       },
       error: (error: any) => {

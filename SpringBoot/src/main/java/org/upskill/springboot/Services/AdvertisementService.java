@@ -80,17 +80,22 @@ public class AdvertisementService implements IAdvertisementService {
      */
     @Override
     public List<AdvertisementDTO> getAdvertisements() {
-        List<AdvertisementDTO> advertisementsDTO = advertisementRepository
+        return advertisementRepository
                 .findByStatusNot(Advertisement.AdvertisementStatus.INACTIVE)
                 .stream()
                 .map(advertisement -> {
                     AdvertisementDTO advertisementDTO = AdvertisementMapper.toDTO(advertisement);
                     advertisementDTO.setMunicipality(advertisement.getMunicipality());
+
+                    // Verifica se há um item e define a imagem corretamente
+                    if (advertisement.getItem() != null && advertisement.getItem().getImage() != null) {
+                        String imagePath = "/uploads/" + advertisement.getItem().getImage();
+                        advertisementDTO.getItem().setImage(imagePath);
+                    }
+
                     return advertisementDTO;
                 })
                 .toList();
-
-        return advertisementsDTO;
     }
 
     /**

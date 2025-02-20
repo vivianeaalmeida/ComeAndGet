@@ -1,26 +1,33 @@
 <div
-  class="cursor-pointer group relative flex flex-col my-6 bg-white shadow-sm border border-slate-200 rounded-lg w-[20vw] max-w-[20vw] hover:shadow-lg transition-shadow duration-300"
+  class="cursor-pointer group relative flex flex-col my-6 bg-white shadow-sm border border-slate-200 rounded-lg h-[55vh] min-h-[55vh] w-[20vw] max-w-[20vw] hover:shadow-lg transition-shadow duration-300 justify-between"
 >
-  <div class="relative h-48 m-2.5 overflow-hidden text-white rounded-md">
+  <div
+    class="relative h-48 min-h-48 max-h-48 m-2.5 overflow-hidden text-white rounded-md"
+  >
     <img
-      class="transition-transform duration-500 ease-[cubic-bezier(0.25, 1, 0.5, 1)] transform group-hover:scale-110"
+      class="transition-transform duration-500 ease-[cubic-bezier(0.25, 1, 0.5, 1)] transform group-hover:scale-120"
       [src]="imageSrc"
       [alt]="title"
     />
   </div>
   <div class="px-4">
-    <h6 class="mb-2 text-slate-800 text-2xl font-semibold">
+    <h6
+      class="mb-2 text-slate-800 text-2xl font-semibold leading-none line-clamp-2 text-ellipsis"
+    >
       {{ title }}
     </h6>
-    <p class="text-slate-600 leading-normal font-medium text-lg">
+    <p
+      class="text-slate-600 leading-normal font-medium text-lg line-clamp-2 text-ellipsis"
+    >
       {{ description }}
     </p>
   </div>
-  <div class="px-4 pb-4 pt-0 flex justify-center">
+  <div class="flex justify-center overflow-hidden">
     <app-button
       [buttonText]="buttonText"
       fontSize="1rem"
       padding=".5rem 1rem"
+      class="mb-10"
     ></app-button>
   </div>
 </div>

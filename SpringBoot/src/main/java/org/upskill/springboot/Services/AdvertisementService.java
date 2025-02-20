@@ -33,8 +33,6 @@ public class AdvertisementService implements IAdvertisementService {
   
     @Autowired
     private ItemService itemService;
-  
-    private final UserService userService;
 
     private final ReservationAttemptService reservationAttemptService;
 
@@ -45,8 +43,7 @@ public class AdvertisementService implements IAdvertisementService {
     private AuthUserWebClient webClient;
 
     @Autowired
-    public AdvertisementService(@Lazy UserService userService, @Lazy ReservationAttemptService reservationAttemptService) {
-        this.userService = userService;
+    public AdvertisementService(@Lazy ReservationAttemptService reservationAttemptService) {
         this.reservationAttemptService = reservationAttemptService;
     }
 

@@ -99,7 +99,9 @@ public class AdvertisementController extends BaseController {
             @RequestPart(value = "imageFile", required = true) MultipartFile imageFile,
             @RequestHeader("Authorization") String authorization) {
 
-        // Calls service to create advertisement and saves the image
+        System.out.println("Received advertisementDTO: " + request);
+        System.out.println("Received imageFile: " + imageFile.getOriginalFilename());
+
         AdvertisementDTO advertisementDTO;
         try {
             advertisementDTO = advertisementService.createAdvertisement(request, imageFile, authorization);

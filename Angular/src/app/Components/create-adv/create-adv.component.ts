@@ -80,7 +80,7 @@ export class CreateAdvComponent implements OnInit {
   }
 
   submitAdv() {
-    console.log("Entrou no submitAdv");
+    console.log('Entrou no submitAdv');
     this.submitted = true;
 
     console.log(this.formData.value.category);
@@ -89,7 +89,7 @@ export class CreateAdvComponent implements OnInit {
 
     if (this.formData.valid) {
       const formValue = this.formData.value;
-      console.log("Está válido");
+      console.log('Está válido');
 
       const advertisementDTO = {
         title: formValue.title,
@@ -97,7 +97,7 @@ export class CreateAdvComponent implements OnInit {
         municipality: formValue.municipality,
         item: {
           condition: formValue.condition,
-          category: { id: formValue.category.id },
+          category: { id: formValue.category },
         },
       };
 

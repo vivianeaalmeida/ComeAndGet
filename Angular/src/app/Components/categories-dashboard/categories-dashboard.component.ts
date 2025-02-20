@@ -4,13 +4,12 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Category } from '../../Models/category';
 import Swal from 'sweetalert2';
-import { CommonModule } from '@angular/common';
 
 
 @Component({
   selector: 'app-categories-dashboard',
   standalone: true,
-  imports: [NgxDatatableModule, ReactiveFormsModule, CommonModule],
+  imports: [NgxDatatableModule, ReactiveFormsModule],
   templateUrl: './categories-dashboard.component.html',
   styleUrl: './categories-dashboard.component.css'
 })
@@ -20,7 +19,7 @@ export class CategoriesDashboardComponent {
   categoryForm!: FormGroup;
   isEditingOrCreating: string = '';
   isModalOpen: boolean = false;
-  selectedCategory: any;
+  selectedCategory!: Category | null;
 
 
   constructor(private categoryServ: CategoryService, private fb: FormBuilder) { }
@@ -54,13 +53,12 @@ export class CategoriesDashboardComponent {
           icon: 'success',
           title: 'Category added successfully!.',
         });
-        this.getCategories();
         this.closeModal();
       },
       error: (error) => {
         Swal.fire({
           icon: 'error',
-          title: `Error adding this category! - ${error?.error?.message}`,
+          title: 'Error adding this category!',
         });
       },
     });
@@ -78,7 +76,7 @@ export class CategoriesDashboardComponent {
       error: (error) => {
         Swal.fire({
           icon: 'error',
-          title: `Error updating category! - ${error?.error?.message}`,
+          title: 'Error updating category!',
         });
       },
     });
@@ -124,7 +122,7 @@ export class CategoriesDashboardComponent {
     }
   }
 
-  openModal(isEditingOrCreating: string, category?: Category) {
+  openModal(isEditingOrCreating: string, category: Category) {
     this.isEditingOrCreating = isEditingOrCreating;
     this.selectedCategory = category;
     this.isModalOpen = true;

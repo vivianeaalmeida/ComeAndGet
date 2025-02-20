@@ -29,6 +29,5 @@ export const routes: Routes = [
   // CRIAR: path> 'view-all' ---> Lista dos admins
   { path: 'dashboard', component: CategoriesDashboardComponent },
   { path: 'advertisements', component: AdvlistingComponent },
-  { path: 'view-all', component: AdvlistingComponent }, // Lista do admin
   { path: '**', component: NotFoundComponent },
 ];

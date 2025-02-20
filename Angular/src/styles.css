@@ -133,3 +133,9 @@ h6 {
   .datatable-body-cell {
   font-weight: bold;
 }
+
+.validation-error {
+  color: red;
+  text-align: left;
+  font-size: .8rem;
+}

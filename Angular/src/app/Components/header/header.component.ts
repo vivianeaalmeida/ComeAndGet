@@ -13,6 +13,7 @@ import { map } from 'rxjs';
 })
 export class HeaderComponent implements OnInit {
   isDropdownOpen = false;
+  isDropdown2Open = false;
   isLoggedIn$!: any;
   checkRole: string | null = null;
 
@@ -33,5 +34,9 @@ export class HeaderComponent implements OnInit {
   // Função para controlar a exibição do dropdown
   toggleDropdown(isOpen: boolean) {
     this.isDropdownOpen = isOpen;
+  }
+
+  toggleDropdown2(isOpen: boolean) {
+    this.isDropdown2Open = isOpen;
   }
 }

@@ -21,21 +21,49 @@
       </button>
     </div>
 
-    <!-- Início dos botões -->
     <div class="items-center flex space-x-8">
-      <!-- Exibe os links de Advertisements e Blog para todos -->
-      <a routerLink="/advertisements"
-        class="text-xl text-gray-800 font-bold hover:text-lime-700 cursor-pointer">
-        Advertisements
-      </a>
+      <div class="relative"
+        (mouseover)="toggleDropdown2(true)"
+        (mouseleave)="toggleDropdown2(false)">
+        <button class="text-xl font-bold text-gray-800 hover:text-lime-700 flex items-center focus:outline-none">
+          Advertisements <i class="fa-solid fa-chevron-down ml-2 text-sm"></i>
+        </button>
+
+        <!-- Itens do Dropdown -->
+        <!-- User -->
+        <div *ngIf="isDropdown2Open"
+          class="absolute bg-gray-100 shadow-md rounded-md w-40 right-0 transition-opacity duration-300 text-lg">
+          <a routerLink="/see-active"
+            class="block px-4 py-2 text-gray-800 hover:bg-lime-200 cursor-pointer rounded-md">
+            View all
+          </a>
+          <a routerLink="/createadv"
+            class="block px-4 py-2 text-gray-800 hover:bg-lime-200 cursor-pointer rounded-md">
+            Create yours
+          </a>
+        </div>
+
+        <!-- Admin -->
+        <div *ngIf="isDropdown2Open && checkRole === 'Admin'"
+          class="absolute bg-gray-100 shadow-md rounded-md w-40 right-0 transition-opacity duration-300 text-lg">
+          <a routerLink="/see-active"
+            class="block px-4 py-2 text-gray-800 hover:bg-lime-200 cursor-pointer rounded-md">
+            See active
+          </a>
+          <a routerLink="/see-all"
+            class="block px-4 py-2 text-gray-800 hover:bg-lime-200 cursor-pointer rounded-md">
+            See all
+          </a>
+        </div>
+      </div>
+
       <a routerLink="/blog"
         class="text-xl text-gray-800 font-bold hover:text-lime-700 cursor-pointer">
         Blog
       </a>
 
-      <!-- Verificação se o usuário está logado -->
+      <!-- Verificação se o utilizador está logado -->
       <div *ngIf="!(isLoggedIn$ | async)">
-        <!-- Dropdown Login Area quando não está logado -->
         <div class="relative"
           (mouseover)="toggleDropdown(true)"
           (mouseleave)="toggleDropdown(false)">
@@ -45,7 +73,7 @@
 
           <!-- Itens do Dropdown -->
           <div *ngIf="isDropdownOpen"
-            class="absolute bg-gray-100 shadow-md rounded-md w-40 right-0 transition-opacity duration-300">
+            class="absolute bg-gray-100 shadow-md rounded-md w-40 right-0 transition-opacity duration-300 text-lg">
             <a routerLink="/login"
               class="block px-4 py-2 text-gray-800 hover:bg-lime-200 cursor-pointer rounded-md">
               Login
@@ -58,9 +86,8 @@
         </div>
       </div>
 
-      <!-- Exibe os botões lado a lado para usuários logados -->
-      <div *ngIf="isLoggedIn$ | async" class="space-x-8 flex">
-        <!-- Exibe os botões de User Area ou Dashboard baseado no role -->
+      <div *ngIf="isLoggedIn$ | async"
+        class="space-x-8 flex">
         <a *ngIf="checkRole === 'User'"
           routerLink="/user-area"
           class="text-xl text-gray-800 font-bold hover:text-lime-700 cursor-pointer">
@@ -72,7 +99,6 @@
           Dashboard
         </a>
 
-        <!-- Botão de Logout -->
         <a (click)="authService.logout()"
           class="text-xl text-gray-800 font-bold hover:text-lime-700 cursor-pointer">
           Logout

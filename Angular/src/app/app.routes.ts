@@ -7,17 +7,20 @@ import { NotFoundComponent } from './Components/not-found/not-found.component';
 import { CategorieslistingComponent } from './Components/categorieslisting/categorieslisting.component';
 import { UserAreaComponent } from './Components/user-area/user-area.component';
 import { clientGuard } from './Guards/client.guard';
+import { AdvlistingComponent } from './Components/advlisting/advlisting.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'home', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   {
-    path: 'user-area', component: UserAreaComponent,
-    canActivate: [clientGuard]
-   },
+    path: 'user-area',
+    component: UserAreaComponent,
+    canActivate: [clientGuard],
+  },
   { path: 'register', component: RegisterComponent },
   { path: 'createadv', component: CreateAdvComponent },
+  { path: 'view-all', component: AdvlistingComponent }, // Lista do admin
   { path: 'dashboard', component: CategorieslistingComponent },
   { path: '**', component: NotFoundComponent },
 ];

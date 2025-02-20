@@ -10,6 +10,7 @@ import {
 import { HttpClient } from '@angular/common/http';
 import { TokenService } from './token.service';
 import { User1 } from '../Models/user1';
+import { Route, Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +21,7 @@ export class AuthService {
   private userSubject = new BehaviorSubject<User1 | null>(null);
   public user: Observable<User1 | null>;
 
-  constructor(private http: HttpClient, private tokenSrv: TokenService) {
+  constructor(private http: HttpClient, private tokenSrv: TokenService, private router: Router) {
     if (this.tokenSrv.hasToken('user')) {
       this.userSubject.next(JSON.parse(this.tokenSrv.getToken('user')));
     }
@@ -43,6 +44,7 @@ export class AuthService {
   logout() {
     this.tokenSrv.deleteToken('user');
     this.userSubject.next(null);
+    this.router.navigate(['/']);
   }
 
   hasToken() {

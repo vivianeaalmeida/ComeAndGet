@@ -34,7 +34,7 @@ public interface IReservationAttemptService {
      * @param reservationAttemptDTO the reservation DTO containing the details of the new request
      * @return the created request response data transfer object
      */
-    ReservationAttemptResponseDTO createReservationAttempt(ReservationAttemptDTO reservationAttemptDTO);
+    ReservationAttemptResponseDTO createReservationAttempt(ReservationAttemptDTO reservationAttemptDTO, String authorization);
 
     /**
      * Partially updates a reservation attempts
@@ -45,5 +45,8 @@ public interface IReservationAttemptService {
      */
     ReservationAttemptResponseDTO updateReservationAttemptStatus
     (String id, ReservationAttemptStatusDTO reservationAttemptStatusDTO);
+
+    /*userInterface*/
+    //List<ReservationAttemptResponseDTO> getReservationAttemptByUserId(String id);
 
 }

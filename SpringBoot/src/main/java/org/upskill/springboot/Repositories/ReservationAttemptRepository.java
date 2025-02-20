@@ -1,7 +1,6 @@
 package org.upskill.springboot.Repositories;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -17,12 +16,7 @@ import java.util.Optional;
 @Repository
 public interface ReservationAttemptRepository extends JpaRepository<ReservationAttempt, String> {
 
-    /**
-     * Finds all requests for a given advertisement.
-     *
-     * @param advertisementId the ID of the advertisement to query
-     * @return a list of requests for the given advertisement
-     */
+
     List<ReservationAttempt> findByAdvertisement_Id(String advertisementId);
 
     /**
@@ -42,13 +36,7 @@ public interface ReservationAttemptRepository extends JpaRepository<ReservationA
      */
     Optional<ReservationAttempt> findByIdAndAdvertisementId(String id, String advertisementId);
 
-    /**
-     * Retrieves a list of requests associated with a specific user ID.
-     *
-     * @param userId the unique identifier of the user
-     * @return a list of {@link ReservationAttempt} entities linked to the given user ID
-     */
-    Page<ReservationAttempt> findRequestByUser_Id(String userId, Pageable pageable);
+    List<ReservationAttempt> findByClientId(String clientId);
 
     /**
      * Checks if a request exists for a given advertisement and user.
@@ -57,7 +45,7 @@ public interface ReservationAttemptRepository extends JpaRepository<ReservationA
      * @param user_Id the ID of the user
      * @return true if a request exists for the given advertisement and user, false otherwise
      */
-    boolean existsByAdvertisement_IdAndUser_Id(String advertisement_id, String user_Id);
+    boolean existsByAdvertisement_IdAndClientId(String advertisement_id, String user_Id);
 
     /**
      * Checks if there are any requests in the "DONATED" state for a specific advertisement.
@@ -71,12 +59,11 @@ public interface ReservationAttemptRepository extends JpaRepository<ReservationA
     /**
      * Retrieves all reservation attempts associated with a given user based on their advertisement's client ID.
      *
-     * @param userId the ID of the user
-     * @param pageable the pagination information (page number, page size, etc.)
+     * @param clientId the ID of the user
      * @return a {@link Page} of {@link ReservationAttempt} entities associated with the user's advertisement.
      */
-    @Query("SELECT r FROM ReservationAttempt r INNER JOIN Advertisement ad ON r.advertisement.id = ad.id WHERE ad.clientId = :userId")
-    Page<ReservationAttempt> findReservationAttemptsFromAdvertisementOfUser(String userId, Pageable pageable);
+    @Query("SELECT r FROM ReservationAttempt r INNER JOIN Advertisement ad ON r.advertisement.id = ad.id WHERE ad.clientId = :clientId")
+    List<ReservationAttempt> findReservationAttemptsFromAdvertisementOfUser(String clientId);
 
     /**
      * Finds all reservation attempts for a specific advertisement and with statuses included in a list.

@@ -2,7 +2,6 @@ package org.upskill.springboot.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.upskill.springboot.DTOs.ReservationAttemptResponseDTO;
 import org.upskill.springboot.DTOs.UserDTO;
@@ -66,17 +65,7 @@ public class UserService implements IUserService {
      * @param size Optional parameter for the page size (default is 10)
      * @return a list of {@link ReservationAttemptResponseDTO} objects representing the user's requests
      */
-    @Override
-    public Page<ReservationAttemptResponseDTO> getReservationAttemptByUserId(String id, int page, int size){
 
-        return this.reservationAttemptService.getRequestsByUserId(id, page, size);
-    }
-
-    @Override
-    public Page<ReservationAttemptResponseDTO> getReservationAttemptFromAdvertisementOfUser(String id, int page, int size) {
-
-        return reservationAttemptService.getReservationAttemptFromAdvertisementOfUser(id, page, size);
-    }
 
 
 }

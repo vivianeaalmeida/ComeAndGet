@@ -1,18 +1,13 @@
 package org.upskill.springboot.Controllers;
 
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
-import org.upskill.springboot.DTOs.*;
+import org.upskill.springboot.DTOs.AdvertisementDTO;
+import org.upskill.springboot.DTOs.AdvertisementUpdateDTO;
 import org.upskill.springboot.Services.AdvertisementService;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -144,49 +139,6 @@ public class AdvertisementController extends BaseController {
     public ResponseEntity<AdvertisementDTO> deactivateAdvertisement(@PathVariable String id) {
         AdvertisementDTO advertisementDTO = advertisementService.deactivateAdvertisement(id);
         return new ResponseEntity<>(advertisementDTO, HttpStatus.OK);
-    }
-
-    /**
-     * Create a new advertisement request.
-     *
-     * @param id The unique identifier of the advertisement.
-     * @param reservationAttemptDTO The request data for creating the advertisement request.
-     * @return A ResponseEntity containing the response data.
-     */
-    @PostMapping("/advertisements/{id}/reservationAttempts")
-    public ResponseEntity<ReservationAttemptResponseDTO> createAdvertisementRequest(@PathVariable String id, @RequestBody ReservationAttemptDTO reservationAttemptDTO) {
-        ReservationAttemptResponseDTO response = advertisementService.createAdvertisementReservationAttempt(id, reservationAttemptDTO);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    /**
-     * Retrieve an advertisement request by its advertisement ID and request ID.
-     *
-     * @param adId The unique identifier of the advertisement.
-     * @param reservationId The unique identifier of the request associated with the advertisement.
-     * @return A {ResponseEntity containing the  ReservationAttemptResponseDTO with the advertisement request details,
-     *         and an HTTP status of 200 OK if the request is successful.
-     */
-    @GetMapping("/advertisements/{adId}/reservationAttempts/{reservationId}")
-    public ResponseEntity<ReservationAttemptResponseDTO> getAdvertisementReservationAttemptById(@PathVariable String adId, @PathVariable String reservationId) {
-        ReservationAttemptResponseDTO response = advertisementService.getAdvertisementRequestById(adId, reservationId);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    /**
-     * Endpoint to update the status of a reservation request for a specific advertisement.
-     * This method handles a PATCH request and invokes the service to update the reservation request status for the specified advertisement.
-     *
-     * @param adId The unique identifier of the advertisement.
-     * @param reservationId The unique identifier of the reservation request.
-     * @param requestDTO The object containing the new status information for the reservation request.
-     *
-     * @return A ResponseEntity containing a ReservationAttemptResponseDTO object with the details of the operation's response, including the HTTP status.
-     */
-    @PatchMapping("/advertisements/{adId}/reservationAttempts/{reservationId}/status")
-    public ResponseEntity<ReservationAttemptResponseDTO> patchReservationAttemptStatus(@PathVariable String adId, @PathVariable String reservationId, @RequestBody ReservationAttemptStatusDTO requestDTO) {
-        ReservationAttemptResponseDTO response = advertisementService.patchAdvertisementRequestStatus(adId, reservationId , requestDTO);
-        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 

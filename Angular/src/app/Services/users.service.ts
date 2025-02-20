@@ -14,4 +14,7 @@ export class UsersService {
   registerUser(newUser: User1): Observable<any> {
     return this.myWebApiClient.post<any>(this.theEndpoint, newUser);
   }
+
+  
+
 }

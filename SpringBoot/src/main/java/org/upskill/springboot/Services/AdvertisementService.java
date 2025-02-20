@@ -5,8 +5,10 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-import org.upskill.springboot.DTOs.*;
+import org.upskill.springboot.DTOs.AdvertisementDTO;
+import org.upskill.springboot.DTOs.AdvertisementUpdateDTO;
+import org.upskill.springboot.DTOs.ItemDTO;
+import org.upskill.springboot.DTOs.MunicipalityDTO;
 import org.upskill.springboot.Exceptions.*;
 import org.upskill.springboot.Mappers.AdvertisementMapper;
 import org.upskill.springboot.Mappers.ItemMapper;
@@ -17,7 +19,6 @@ import org.upskill.springboot.Services.Interfaces.IAdvertisementService;
 import org.upskill.springboot.WebClient.AuthUserWebClient;
 import org.upskill.springboot.WebClient.MunicipalityWebClient;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -254,48 +255,6 @@ public class AdvertisementService implements IAdvertisementService {
         updatedAdvertisementDTO.setMunicipality(advertisement.getMunicipality());
 
         return updatedAdvertisementDTO;
-    }
-
-    /**
-     * Creates a new advertisement based on the provided data.
-     *
-     * @param id The unique identifier of the advertisement.
-     * @param advertisementReservationAttemptDTO An object containing the reservation attempt details for creating the advertisement.
-     * @return A {@code RequestResponseDTO} object containing the response of the reservation attempt.
-     */
-    public ReservationAttemptResponseDTO createAdvertisementReservationAttempt(String id, ReservationAttemptDTO advertisementReservationAttemptDTO){
-        advertisementReservationAttemptDTO.setAdvertisementId(id);
-        return reservationAttemptService.createReservationAttempt(advertisementReservationAttemptDTO);
-    }
-
-    /**
-     * Retrieves the advertisement reservation attempt details based on the provided advertisement ID and request ID.
-     *
-     * @param idAdvertisement The unique identifier of the advertisement.
-     * @param idRequest The unique identifier of the reservation attempt associated with the advertisement.
-     * @return A {@link ReservationAttemptResponseDTO} object containing the details of the advertisement reservation attempt.
-     */
-    public ReservationAttemptResponseDTO getAdvertisementRequestById(String idAdvertisement, String idRequest){
-        ReservationAttemptResponseDTO response = reservationAttemptService.getReservationAttemptById(idRequest);
-        if(!response.getAdvertisementId().equals(idAdvertisement)){
-            throw new ReservationAttemptNotFoundException("Advertisement id invalid.");
-        }
-        return response;
-    }
-
-    /**
-     * Updates the status of a reservation attempt for an advertisement.
-     * This method calls the service to apply the changes to the status of a specific reservation attempt related to an advertisement.
-     *
-     * @param idAdvertisement The unique identifier of the advertisement.
-     * @param idReservationAttempt The unique identifier of the reservation attempt.
-     * @param reservationAttemptStatusDTO The object containing the new status information for the reservation attempt.
-     *
-     * @return A {@link ReservationAttemptResponseDTO} object containing the details of the operation's response.
-     *
-     */
-    public ReservationAttemptResponseDTO patchAdvertisementRequestStatus(String idAdvertisement, String idReservationAttempt, ReservationAttemptStatusDTO reservationAttemptStatusDTO){
-        return reservationAttemptService.updateReservationAttemptStatus(idReservationAttempt, idAdvertisement, reservationAttemptStatusDTO);
     }
 
     /**

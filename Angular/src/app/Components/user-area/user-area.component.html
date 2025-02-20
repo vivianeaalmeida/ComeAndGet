@@ -1,0 +1,43 @@
+<section *ngIf="user"
+  class="flex items-center justify-center p-10 m-28">
+  <div class="flex flex-col lg:flex-row-reverse w-full max-w-7xl gap-10">
+
+    <!-- Imagem -->
+    <div
+      class="w-full lg:w-1/2 flex justify-center items-center">
+      <img src="../../../assets/user-area.jpg"
+        alt="Image two people sharing a little box"
+        class="w-full h-auto rounded-lg shadow-xl">
+    </div>
+
+    <!-- Dados do Usuário -->
+    <div *ngIf="user; else loading"
+      class="w-full lg:w-1/2 p-10 bg-white rounded-2xl shadow-xl bg-gradient-to-br from-white to-lime-50">
+      <h1
+        class="text-5xl font-extrabold text-gray-800 mb-8 bg-gradient-to-r from-lime-500 to-lime-900 bg-clip-text text-transparent">
+        Welcome, {{ user.name || 'Guest' }}</h1>
+      <div class="space-y- text-lg text-gray-700">
+        <p><span class="font-semibold text-gray-900">Name:</span> {{ user.name }}</p>
+        <p><span class="font-semibold text-gray-900">Email:</span> {{ user.email }}</p>
+        <p><span class="font-semibold text-gray-900">Phone:</span> {{ user.phoneNumber }}</p>
+      </div>
+      <app-button buttonText="Edit profile"
+        fontSize="1rem"
+        padding=".5rem 1rem"></app-button>
+    </div>
+
+    <!-- Loading -->
+    <ng-template #loading>
+      <div class="w-full lg:w-2/5 p-10 bg-white rounded-2xl shadow-lg">
+        <div class="animate-pulse space-y-6">
+          <div class="h-10 bg-gray-200 rounded w-3/4 mb-6"></div>
+          <div class="h-6 bg-gray-200 rounded w-1/2"></div>
+          <div class="h-6 bg-gray-200 rounded w-1/2"></div>
+          <div class="h-6 bg-gray-200 rounded w-1/2"></div>
+          <div class="h-6 bg-gray-200 rounded w-1/2"></div>
+        </div>
+      </div>
+    </ng-template>
+
+  </div>
+</section>

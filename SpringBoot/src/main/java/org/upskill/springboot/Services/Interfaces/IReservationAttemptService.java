@@ -1,10 +1,8 @@
 package org.upskill.springboot.Services.Interfaces;
 
-import org.springframework.data.domain.Page;
 import org.upskill.springboot.DTOs.ReservationAttemptDTO;
 import org.upskill.springboot.DTOs.ReservationAttemptResponseDTO;
 import org.upskill.springboot.DTOs.ReservationAttemptStatusDTO;
-import org.upskill.springboot.Models.ReservationAttempt;
 
 import java.util.List;
 
@@ -18,7 +16,7 @@ public interface IReservationAttemptService {
      *
      * @return a list of all reservation response data transfer objects
      */
-    Page<ReservationAttemptResponseDTO> getReservationAttempts(int page, int size);
+    List<ReservationAttemptResponseDTO> getReservationAttempts();
 
     /**
      * Retrieves a specific reservation by its ID.
@@ -28,7 +26,7 @@ public interface IReservationAttemptService {
      */
     ReservationAttemptResponseDTO getReservationAttemptById(String id);
 
-    List<ReservationAttempt> getReservationAttemptsByAdvertisement(String advertisementId);
+    List<ReservationAttemptResponseDTO> getReservationAttemptsByAdvertisement(String advertisementId);
 
     /**
      * Creates a new reservation attempt
@@ -42,11 +40,10 @@ public interface IReservationAttemptService {
      * Partially updates a reservation attempts
      *
      * @param id the ID of the reservation attempt to be partially updated
-     * @param idAdvertisement  the ID of the advertisement
      * @param reservationAttemptStatusDTO   the object with the new status
      * @return the partially updated response data transfer object
      */
     ReservationAttemptResponseDTO updateReservationAttemptStatus
-    (String id, String idAdvertisement, ReservationAttemptStatusDTO reservationAttemptStatusDTO);
+    (String id, ReservationAttemptStatusDTO reservationAttemptStatusDTO);
 
 }

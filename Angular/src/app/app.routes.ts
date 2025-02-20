@@ -20,12 +20,7 @@ export const routes: Routes = [
   },
   { path: 'register', component: RegisterComponent },
   { path: 'createadv', component: CreateAdvComponent },
-<<<<<<< HEAD
   { path: 'view-all', component: AdvlistingComponent }, // Lista do admin
-  { path: 'dashboard', component: CategorieslistingComponent },
-=======
   { path: 'dashboard', component: CategoriesDashboardComponent },
-  { path: 'advertisements', component: AdvlistingComponent },
->>>>>>> fa52a254db7f54494721ff5a22a30437bb94d26e
   { path: '**', component: NotFoundComponent },
 ];

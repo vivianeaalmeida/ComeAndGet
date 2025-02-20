@@ -123,7 +123,7 @@ public class ReservationAttemptService implements IReservationAttemptService {
 
     public List<ReservationAttemptResponseDTO> getReservationAttemptFromAdvertisementOfUser(String userId) {
         List<ReservationAttempt> reservationAttempts = reservationAttemptRepository.findReservationAttemptsFromAdvertisementOfUser(userId);
-        List<org.upskill.springboot.DTOs.ReservationAttemptResponseDTO> reservationAttemptResponseDTOS = new ArrayList<>();
+        List<ReservationAttemptResponseDTO> reservationAttemptResponseDTOS = new ArrayList<>();
         for (ReservationAttempt reservationAttempt : reservationAttempts) {
             reservationAttemptResponseDTOS.add(ReservationAttemptMapper.toDTO(reservationAttempt)) ;
         }

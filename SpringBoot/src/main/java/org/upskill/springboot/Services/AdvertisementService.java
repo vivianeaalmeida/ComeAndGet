@@ -1,10 +1,12 @@
 package org.upskill.springboot.Services;
 
+import io.jsonwebtoken.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import org.upskill.springboot.DTOs.AdvertisementDTO;
 import org.upskill.springboot.DTOs.AdvertisementUpdateDTO;
 import org.upskill.springboot.DTOs.ItemDTO;
@@ -160,7 +162,7 @@ public class AdvertisementService implements IAdvertisementService {
      * @return the created advertisement data transfer object
      */
     @Transactional
-    public AdvertisementDTO createAdvertisement(AdvertisementDTO advertisementDTO, String authorization) {
+    public AdvertisementDTO createAdvertisement(AdvertisementDTO advertisementDTO, MultipartFile imageFile, String authorization) throws IOException, java.io.IOException {
         // Obtém o ID do usuário autenticado usando o token JWT
         String clientId = webClient.getUserId(authorization);
         System.out.println("Client ID: " + clientId); // Verifique se o clientId está sendo retornado corretamente
@@ -171,6 +173,12 @@ public class AdvertisementService implements IAdvertisementService {
         // Valida o ItemDTO
         ItemDTO itemDTO = advertisementDTO.getItem();
         itemService.validateItem(itemDTO);
+
+        // Uploads the image and save the path in the DB
+        if (imageFile != null && !imageFile.isEmpty()) {
+            String imagePath = itemService.uploadItemImage(imageFile);
+            itemDTO.setImage(imagePath);
+        }
 
         // Cria o item no banco de dados
         ItemDTO savedItemDTO = itemService.createItem(itemDTO);

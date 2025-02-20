@@ -21,6 +21,7 @@ export class CategoriesDashboardComponent {
   isEditingOrCreating: string = '';
   isModalOpen: boolean = false;
   selectedCategory: any;
+  categoryId: string = '';
 
 
   constructor(private categoryServ: CategoryService, private fb: FormBuilder) { }
@@ -35,7 +36,7 @@ export class CategoriesDashboardComponent {
       designation: ['', [Validators.required]],
     });
   }
-
+  
   getCategories(): void {
     this.categoryServ.getCategories().subscribe({
       next: (response) => {
@@ -67,12 +68,19 @@ export class CategoriesDashboardComponent {
   }
 
   updateCategory(): void {
-    this.categoryServ.updateCategory(this.selectedCategory!.id, this.categoryForm.value).subscribe({
+    // Criar uma cópia do formulário e adicionar o ID manualmente
+    const categoryData = { 
+      ...this.categoryForm.value, 
+      id: this.categoryId 
+    };
+  
+    this.categoryServ.updateCategory(this.categoryId, categoryData).subscribe({
       next: (response) => {
         Swal.fire({
           icon: 'success',
           title: 'Category updated successfully!.',
         });
+        this.getCategories();
         this.closeModal();
       },
       error: (error) => {
@@ -83,6 +91,10 @@ export class CategoriesDashboardComponent {
       },
     });
   }
+
+  setCategoryId(id: string) {
+    this.categoryId = id;
+}
 
   deleteCategory(id: string): void {
     Swal.fire({
@@ -113,7 +125,9 @@ export class CategoriesDashboardComponent {
 
 
   fillCategoryForm(category: Category) {
-    this.categoryForm.get('designation')?.setValue(category.designation);
+    if (category != null) {
+      this.categoryForm.get('designation')?.setValue(category.designation);
+    }
   }
 
   createOrUpdate(isEditingOrCreating: string) {
@@ -129,6 +143,7 @@ export class CategoriesDashboardComponent {
     this.selectedCategory = category;
     this.isModalOpen = true;
     this.fillCategoryForm(this.selectedCategory);
+    console.log(this.selectedCategory);
   }
 
   closeModal() {

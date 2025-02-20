@@ -32,7 +32,6 @@ Migrations/
 # Angular
 /node_modules/
 /dist/
-/angular/
 src/environments/environment*.ts
 
 # Spring Boot

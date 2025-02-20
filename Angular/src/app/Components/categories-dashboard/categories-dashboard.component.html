@@ -19,7 +19,7 @@
                 <ngx-datatable-column name="Actions" [width]="20">
                     <ng-template let-row="row" ngx-datatable-cell-template>
                         <div class="flex space-x-4">
-                            <button type="button" (click)="openModal('editing')">
+                            <button type="button" (click)="setCategoryId(row.id)" (click)="openModal('editing')">
                                 <i class="fa-solid fa-pen-to-square fa-lg"></i>
                             </button>
                             <button type="button" (click)="deleteCategory(row.id)">
@@ -31,7 +31,7 @@
             </ngx-datatable>
         </div>
 
-        <!-- Inicio do modal livros -->
+        <!-- Start modal category -->
         <div *ngIf="isModalOpen" class="mt-20 fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
             <div class="bg-white p-6 rounded-lg shadow-lg w-2/4" (click)="$event.stopPropagation()">
                 <div class="flex justify-end">
@@ -71,5 +71,5 @@
             </div>
         </div>
     </div>
-    <!-- fim do modal -->
+    <!-- end modal -->
 </div>

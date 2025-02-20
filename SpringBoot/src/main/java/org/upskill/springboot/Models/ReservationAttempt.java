@@ -1,7 +1,12 @@
 package org.upskill.springboot.Models;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
+
 import java.time.LocalDate;
 
 /**
@@ -48,10 +53,9 @@ public class ReservationAttempt {
      * The ID of the user who made the reservation attempt.
      * This is a required field.
      */
-    @NonNull
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Nullable
+    @Column(name = "client_id")
+    private String clientId;
 
     /**
      * The date the reservation attempt was created.

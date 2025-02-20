@@ -179,7 +179,7 @@
 ---
 
 ## US16 - Create ReservationAttempt on advertisement
-- **Endpoint**: `POST /advertisements/{id}/ReservationAttempts`
+- **Endpoint**: `POST /ReservationAttempts`
 - **Description**: As a client, I want to create a ReservationAttempt on an advertisement so that I can ReservationAttempt the item being donated.
 - **Permissions/Role**: Client
 - **Acceptance Criteria**:
@@ -191,7 +191,7 @@
 ---
 
 ## US17 - View ReservationAttempt
-- **Endpoint**: `GET /advertisements/{adId}/ReservationAttempts/{ReservationAttemptId}`
+- **Endpoint**: `GET reservationAttempts/{id}`
 - **Description**: As a client, I want to view the details of a ReservationAttempt so that I can track its status and relevant information.
 - **Permissions/Role**: Client (ReservationAttempter or advertisement owner)
 - **Acceptance Criteria**:
@@ -212,7 +212,7 @@
 ---
 
 ## US19 - View ReservationAttempts on my advertisements
-- **Endpoint**: `GET /users/{userId}/advertisements/ReservationAttempts`
+- **Endpoint**: `GET /users/advertisements/ReservationAttempts`
 - **Description**: As a client (advertisement owner), I want to see the list of ReservationAttempts made on my advertisements so that I can track interest and respond accordingly.
 - **Permissions/Role**: Client (advertisement owner)
 - **Acceptance Criteria**:
@@ -222,7 +222,7 @@
 ---
 
 ## US20 - Update ReservationAttempt status
-- **Endpoint**: `PATCH /advertisements/{id}/ReservationAttempts/{id}/status`
+- **Endpoint**: `PATCH /reservationAttempts/{reservationId}/status`
 - **Description**: As a client, I want to change a ReservationAttempt so that I can canceled my ReservationAttempt or decline/accepted/conclude a ReservationAttempt made to my advertisement.
 - **Permissions/Role**: Client (ReservationAttempter or advertisement creator)
 - **Acceptance Criteria**:

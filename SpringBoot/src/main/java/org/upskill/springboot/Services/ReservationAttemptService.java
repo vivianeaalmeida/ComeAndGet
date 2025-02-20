@@ -1,20 +1,20 @@
 package org.upskill.springboot.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.upskill.springboot.DTOs.*;
+import org.upskill.springboot.DTOs.AdvertisementDTO;
+import org.upskill.springboot.DTOs.ReservationAttemptDTO;
+import org.upskill.springboot.DTOs.ReservationAttemptResponseDTO;
+import org.upskill.springboot.DTOs.ReservationAttemptStatusDTO;
 import org.upskill.springboot.Exceptions.AdvertisementValidationException;
 import org.upskill.springboot.Exceptions.ReservationAttemptNotFoundException;
 import org.upskill.springboot.Mappers.AdvertisementMapper;
 import org.upskill.springboot.Mappers.ReservationAttemptMapper;
-import org.upskill.springboot.Mappers.UserMapper;
 import org.upskill.springboot.Models.Advertisement;
 import org.upskill.springboot.Models.ReservationAttempt;
-import org.upskill.springboot.Models.User;
 import org.upskill.springboot.Repositories.ReservationAttemptRepository;
 import org.upskill.springboot.Services.Interfaces.IReservationAttemptService;
+import org.upskill.springboot.WebClient.AuthUserWebClient;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class ReservationAttemptService implements IReservationAttemptService {
     private AdvertisementService advertisementService;
 
     @Autowired
-    private UserService userService;
+    private AuthUserWebClient userWebClient;
 
     /**
      * Retrieves all requests from the database.
@@ -73,18 +73,17 @@ public class ReservationAttemptService implements IReservationAttemptService {
      * @throws AdvertisementValidationException if the advertisement associated with the request is not active
      */
     @Override
-    public ReservationAttemptResponseDTO createReservationAttempt(ReservationAttemptDTO reservationAttemptDTO) {
+    public ReservationAttemptResponseDTO createReservationAttempt(ReservationAttemptDTO reservationAttemptDTO, String authorization) {
         AdvertisementDTO advertisementDTO = advertisementService.getAdvertisementById(reservationAttemptDTO.getAdvertisementId());
-        UserDTO userDTO = userService.getUserById(reservationAttemptDTO.getUserId());
+        String clientId = userWebClient.getUserId(authorization);
         validateReservationAttempt(reservationAttemptDTO, advertisementDTO);
 
         ReservationAttempt reservationAttempt = ReservationAttemptMapper.toEntity(reservationAttemptDTO);
 
         Advertisement adEntity = AdvertisementMapper.toEntity(advertisementDTO);
-        User userEntity = UserMapper.toEntity(userDTO);
 
         reservationAttempt.setAdvertisement(adEntity);
-        reservationAttempt.setUser(userEntity);
+        reservationAttempt.setClientId(clientId);
         reservationAttempt.setDate(LocalDate.now());
 
         return ReservationAttemptMapper.toDTO(reservationAttemptRepository.save(reservationAttempt));
@@ -112,28 +111,24 @@ public class ReservationAttemptService implements IReservationAttemptService {
         }
     }
 
-    /**
-     * Retrieves a page of requests associated with a specific user ID and maps them to DTOs.
-     *
-     * @param userId the unique identifier of the user
-     * @return a page of {@link ReservationAttemptResponseDTO} objects representing the user's requests
-     */
-    public Page<ReservationAttemptResponseDTO> getRequestsByUserId(String userId, int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Page<ReservationAttempt> requests = reservationAttemptRepository.findRequestByUser_Id(userId,pageRequest);
-        return requests.map(ReservationAttemptMapper::toDTO);
+    public List<ReservationAttemptResponseDTO> getReservationAttemptByClientId(String clientId) {
+        List<ReservationAttempt> reservationAttempts = reservationAttemptRepository.findByClientId(clientId);
+
+        List<ReservationAttemptResponseDTO> reservationAttemptResponseDTOS = new ArrayList<>();
+        for (ReservationAttempt reservationAttempt : reservationAttempts) {
+            reservationAttemptResponseDTOS.add(ReservationAttemptMapper.toDTO(reservationAttempt));
+        }
+        return reservationAttemptResponseDTOS;
     }
 
-    /**
-     * Retrieves a page of requests associated with a specific user ID and maps them to DTOs.
-     *
-     * @param userId the unique identifier of the user
-     * @return a page of {@link ReservationAttemptResponseDTO} objects representing the user's requests
-     */
-    public Page<ReservationAttemptResponseDTO> getReservationAttemptFromAdvertisementOfUser(String userId, int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Page<ReservationAttempt> requests = reservationAttemptRepository.findReservationAttemptsFromAdvertisementOfUser(userId,pageRequest);
-        return requests.map(ReservationAttemptMapper::toDTO);
+    public List<ReservationAttemptResponseDTO> getReservationAttemptFromAdvertisementOfUser(String userId) {
+        List<ReservationAttempt> reservationAttempts = reservationAttemptRepository.findReservationAttemptsFromAdvertisementOfUser(userId);
+        List<ReservationAttemptResponseDTO> reservationAttemptResponseDTOS = new ArrayList<>();
+        for (ReservationAttempt reservationAttempt : reservationAttempts) {
+            reservationAttemptResponseDTOS.add(ReservationAttemptMapper.toDTO(reservationAttempt)) ;
+        }
+        return reservationAttemptResponseDTOS;
+
     }
 
     /**
@@ -147,29 +142,8 @@ public class ReservationAttemptService implements IReservationAttemptService {
         reservationAttempt.setAdvertisement(AdvertisementMapper.toEntity(adDTO));
     }
 
-    /**
-     * Sets the user for the request using the provided RequestDTO.
-     *
-     * @param reservationAttemptDTO the RequestDTO object containing the user ID
-     * @param reservationAttempt    the Request entity to update with the user
-     */
-    private void setUser(ReservationAttemptDTO reservationAttemptDTO, ReservationAttempt reservationAttempt) {
-        UserDTO userDTO = userService.getUserById(reservationAttemptDTO.getUserId());
-        reservationAttempt.setUser(UserMapper.toEntity(userDTO));
-    }
-
-    /**
-     * Validates the request based on various conditions such as whether the user has already made a request
-     * for the advertisement, if the user is the owner of the advertisement, and if the advertisement is active.
-     *
-     * @param reservationAttemptDTO the {@link ReservationAttemptDTO} object containing the request details
-     * @return {@code true} if the request is valid, otherwise an exception is thrown
-     * @throws IllegalStateException if the user has already made a request for the advertisement
-     * @throws IllegalArgumentException if the user is the owner of the advertisement
-     * @throws AdvertisementValidationException if the advertisement is not active
-     */
     private boolean validateReservationAttempt(ReservationAttemptDTO reservationAttemptDTO, AdvertisementDTO advertisementDTO) {
-        if (reservationAttemptRepository.existsByAdvertisement_IdAndUser_Id(advertisementDTO.getId(), reservationAttemptDTO.getUserId())) {
+        if (reservationAttemptRepository.existsByAdvertisement_IdAndClientId(advertisementDTO.getId(), reservationAttemptDTO.getUserId())) {
             throw new IllegalStateException("The user has already made a request for this advertisement.");
         }
         if (advertisementDTO.getClientId()!=null && advertisementDTO.getClientId().equals(reservationAttemptDTO.getUserId())){
@@ -240,5 +214,22 @@ public class ReservationAttemptService implements IReservationAttemptService {
         // Save the updated reservations
         reservationAttemptRepository.saveAll(reservationAttempts);
     }
+
+    /*metodos do user service*/
+    //chamar na interface e no endpoint
+    //apagar
+    /*
+    @Override
+    public List<ReservationAttemptResponseDTO> getReservationAttemptByUserId(String id){
+
+        return this.reservationAttemptService.getRequestsByUserId(id);
+    }
+
+    @Override
+    public List<ReservationAttemptResponseDTO> getReservationAttemptFromAdvertisementOfUser(String id) {
+
+        return reservationAttemptService.getReservationAttemptFromAdvertisementOfUser(id);
+    }
+     */
 
 }

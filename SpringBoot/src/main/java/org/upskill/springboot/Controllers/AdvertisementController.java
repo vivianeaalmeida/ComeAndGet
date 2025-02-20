@@ -1,18 +1,20 @@
 package org.upskill.springboot.Controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 import org.upskill.springboot.DTOs.AdvertisementDTO;
 import org.upskill.springboot.DTOs.AdvertisementUpdateDTO;
 import org.upskill.springboot.Services.AdvertisementService;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 /**
  * REST controller for managing advertisements.
@@ -29,7 +31,6 @@ public class AdvertisementController extends BaseController {
      *
      * @param id the ID of the advertisement
      * @return A ResponseEntity containing a list of AdvertisementDTO
-     *
      */
     @GetMapping("/advertisements/{id}")
     public ResponseEntity<AdvertisementDTO> getAdvertisementById(@PathVariable String id) {
@@ -92,34 +93,34 @@ public class AdvertisementController extends BaseController {
      * @param request the advertisement data transfer object
      * @return the created advertisement data transfer object with HTTP status CREATED
      */
-    @PostMapping("/advertisements")
+    @PostMapping(value = "/advertisements", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<AdvertisementDTO> createAdvertisement(
-            @RequestBody AdvertisementDTO request,
+            @RequestPart(value = "advertisementDTO", required = true) @Valid AdvertisementDTO request,
+            @RequestPart(value = "imageFile", required = true) MultipartFile imageFile,
             @RequestHeader("Authorization") String authorization) {
 
-        // Chama o service e passa o token JWT
-        AdvertisementDTO advertisementDTO = advertisementService.createAdvertisement(request, authorization);
-
-        // Adiciona link HATEOAS
-        advertisementDTO.add(linkTo(methodOn(AdvertisementController.class)
-                .createAdvertisement(request, authorization)).withSelfRel());
-
-        return new ResponseEntity<>(advertisementDTO, HttpStatus.CREATED);
+        // Calls service to create advertisement and saves the image
+        AdvertisementDTO advertisementDTO;
+        try {
+            advertisementDTO = advertisementService.createAdvertisement(request, imageFile, authorization);
+            return ResponseEntity.status(HttpStatus.CREATED).body(advertisementDTO);
+        } catch (IOException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error processing image", e);
+        }
     }
 
 
     /**
      * Updates an existing advertisement by its ID.
      *
-     * @param id The unique identifier of the advertisement to be updated.
+     * @param id      The unique identifier of the advertisement to be updated.
      * @param request The AdvertisementUpdateDTO object containing the advertisement data to be updated.
      * @return A ResponseEntity containing the updated AdvertisementDTO with a self HATEOAS link
      * and HTTP status 200 (Ok) if the update is successful.
      */
     @PutMapping("/advertisements/{id}")
     public ResponseEntity<AdvertisementDTO> updateAdvertisement(@PathVariable("id") String id,
-                                                                @RequestBody AdvertisementUpdateDTO request)
-    {
+                                                                @RequestBody AdvertisementUpdateDTO request) {
         if (!id.equals(request.getId())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -133,7 +134,7 @@ public class AdvertisementController extends BaseController {
      * Deactivates an advertisement by updating the status of an advertisement to INACTIVE.
      *
      * @param id The ID of the advertisement to be deactivated.
-     * @return  A ResponseEntity containing the deactivated AdvertisementDTO
+     * @return A ResponseEntity containing the deactivated AdvertisementDTO
      */
     @PatchMapping("/advertisements/{id}/deactivate")
     public ResponseEntity<AdvertisementDTO> deactivateAdvertisement(@PathVariable String id) {
@@ -146,13 +147,11 @@ public class AdvertisementController extends BaseController {
      * Retrieves a list active advertisements based on search filters
      * This method allows the user to search for active advertisements by applying filters such as keyword, municipality, and category
      *
-     * @param keyword A keyword to search advertisements whose title or description contain the specified text (optional).
+     * @param keyword      A keyword to search advertisements whose title or description contain the specified text (optional).
      * @param municipality The municipality to filter the advertisements (optional).
-     * @param category The category to filter the advertisements (optional).
-     *
+     * @param category     The category to filter the advertisements (optional).
      * @return A ResponseEntity containing a list of AdvertisementDTO that match the provided criteria
-     *         The HTTP status returned will be 200 OK if the operation is successful.
-     *
+     * The HTTP status returned will be 200 OK if the operation is successful.
      */
     @GetMapping("/advertisements/active/search")
     public ResponseEntity<List<AdvertisementDTO>> searchAdvertisements(

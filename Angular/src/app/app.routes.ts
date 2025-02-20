@@ -4,7 +4,7 @@ import { LoginComponent } from './Components/login/login.component';
 import { RegisterComponent } from './Components/register/register.component';
 import { CreateAdvComponent } from './Components/create-adv/create-adv.component';
 import { NotFoundComponent } from './Components/not-found/not-found.component';
-import { CategorieslistingComponent } from './Components/categorieslisting/categorieslisting.component';
+import { CategoriesDashboardComponent } from './Components/categories-dashboard/categories-dashboard.component';
 import { UserAreaComponent } from './Components/user-area/user-area.component';
 import { clientGuard } from './Guards/client.guard';
 import { AdvlistingComponent } from './Components/advlisting/advlisting.component';
@@ -20,7 +20,12 @@ export const routes: Routes = [
   },
   { path: 'register', component: RegisterComponent },
   { path: 'createadv', component: CreateAdvComponent },
+<<<<<<< HEAD
   { path: 'view-all', component: AdvlistingComponent }, // Lista do admin
   { path: 'dashboard', component: CategorieslistingComponent },
+=======
+  { path: 'dashboard', component: CategoriesDashboardComponent },
+  { path: 'advertisements', component: AdvlistingComponent },
+>>>>>>> fa52a254db7f54494721ff5a22a30437bb94d26e
   { path: '**', component: NotFoundComponent },
 ];

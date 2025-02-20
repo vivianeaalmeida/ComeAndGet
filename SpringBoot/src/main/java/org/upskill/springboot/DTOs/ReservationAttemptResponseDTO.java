@@ -1,5 +1,6 @@
 package org.upskill.springboot.DTOs;
 
+import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class ReservationAttemptResponseDTO {
     private String id;
+    @Nullable
     private String userId;
     private String status;
     private String advertisementId;

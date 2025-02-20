@@ -2,7 +2,132 @@
   <div class="min-w-[80vw] max-w-[80vw]">
     <!-- Título -->
     <div class="mt-20 px-4 text-center">
-      <h1 class="font-bold text-white text-4xl md:text-6xl">Advertisements</h1>
+      <h1 class="font-bold text-lime-900 text-4xl md:text-6xl">
+        Advertisements
+      </h1>
+    </div>
+
+    <!--filter-->
+    <div class="w-full flex justify-end items-center mt-10">
+      <label for="selectCategory" class="text-lime-900 text-lg font-bold mr-3">
+        Filter by Category:
+      </label>
+      <select
+        id="selectCategory"
+        name="selectCategory"
+        (change)="filterByCategory($event.target)"
+        class="bg-white text-lime-800 font-semibold border border-lime-500 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-lime-500"
+      >
+        <option value="all" selected>All Categories</option>
+        @for (category of allCategories; track $index) {
+        <option [value]="category.designation" class="text-lime-900">
+          {{ category.designation }}
+        </option>
+        }
+      </select>
+    </div>
+
+    <!--grid adv-->
+    <div class="w-full mt-14 pb-20 mb-60">
+      @if(this.selectedCategory == 'all' || existingAdv > 0) {
+      <div class="grid grid-cols-4 gap-20">
+        @for (adv of advCollection; track $index) { @if(this.selectedCategory ==
+        adv.item.category.designation || this.selectedCategory == 'all'){
+        <div
+          class="cursor-pointer flex flex-col justify-between"
+          (click)="openModal(adv)"
+        >
+          <app-advertisement-card
+            [imageSrc]="getSafeImageUrl(adv.item.image)"
+            [title]="adv.title"
+            [description]="adv.description"
+          >
+          </app-advertisement-card>
+        </div>
+        } }
+      </div>
+      } @else {
+      <h1
+        class="mt-20 flex justify-center font-semibold text-white text-3xl text-center"
+      >
+        Sorry! No Advertisments found.
+      </h1>
+      }
+    </div>
+
+    <div
+      *ngIf="openedModal"
+      class="mt-20 fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+      (click)="closeModalOut($event)"
+    >
+      <div
+        class="bg-white p-6 rounded-lg shadow-lg w-2/4"
+        (click)="$event.stopPropagation()"
+      >
+        <div class="flex justify-end">
+          <button
+            type="button"
+            (click)="closeModal()"
+            class="text-xl text-lime-600 font-bold"
+          >
+            X
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <!-- Imagem -->
+          <div>
+            <img
+              [src]="getSafeImageUrl(selectedAdv.item.image)"
+              alt="AdImage"
+              class="w-full h-[54vh] object-contain rounded-lg"
+            />
+          </div>
+
+          <!-- Texto + Botão -->
+          <div class="flex flex-col justify-between h-full">
+            <div>
+              <h3 class="ml-5 text-4xl font-bold text-left mb-4">
+                {{ selectedAdv?.title }}
+              </h3>
+              <p
+                class="ml-5 font-semibold text-left text-xl text-lime-800 mb-2"
+              >
+                {{ selectedAdv?.description }}
+              </p>
+              <div class="flex">
+                <p
+                  class="ml-5 font-semibold text-left text-xl text-lime-800 mb-2"
+                >
+                  Condition:
+                </p>
+                <p
+                  class="capitalize ml-1 font-semibold text-left text-xl text-lime-800 mb-2"
+                >
+                  {{ selectedAdv?.item.condition }}
+                </p>
+              </div>
+
+              <p class="ml-5 text-left text-lg text-lime-800 mb-2">
+                Localization: {{ selectedAdv?.municipality }}
+              </p>
+              <p class="ml-5 text-left text-lg text-lime-800 mb-2">
+                Date: {{ selectedAdv?.date }}
+              </p>
+            </div>
+
+            <!-- Botão agora fica no final -->
+            <button
+              type="button"
+              class="w-[20vw] mx-auto text-center text-xl font-bold text-white py-2 rounded-md bg-lime-800 hover:bg-lime-900"
+              (click)="redirect()"
+            >
+              Request this donation
+              <i class="ml-3 fa-solid fa-lg fa-hand-holding-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

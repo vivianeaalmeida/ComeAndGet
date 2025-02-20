@@ -3,6 +3,8 @@
     /// Represents a user information response entity with username, email, name, phone number, and role.
     /// </summary>
     public class UserInfoResponseDTO {
+        public string UserId { get; set; } = string.Empty;
+
         /// <summary>
         /// Gets or sets the username.
         /// </summary>

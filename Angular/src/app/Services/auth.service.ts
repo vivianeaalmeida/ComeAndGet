@@ -18,10 +18,15 @@ import { Route, Router } from '@angular/router';
 export class AuthService {
   private endpoint = 'http://localhost:5016/api/v1/account/';
   private endpoint2 = 'http://localhost:5016/api/v1/user/';
+  private endpoint3 = 'htpp://localhost:8080/api/v1/userId';
   private userSubject = new BehaviorSubject<User1 | null>(null);
   public user: Observable<User1 | null>;
 
-  constructor(private http: HttpClient, private tokenSrv: TokenService, private router: Router) {
+  constructor(
+    private http: HttpClient,
+    private tokenSrv: TokenService,
+    private router: Router
+  ) {
     if (this.tokenSrv.hasToken('user')) {
       this.userSubject.next(JSON.parse(this.tokenSrv.getToken('user')));
     }
@@ -60,12 +65,13 @@ export class AuthService {
     };
   }
 
-    getUser(): Observable<User1> {
+  getUser(): Observable<User1> {
     console.log('Fetching user data...');
     return this.http.get<User1>(this.endpoint2).pipe(
       map((user) => {
         console.log('User data received:', user);
         return {
+          userId: user.userId,
           username: user.username,
           email: user.email,
           name: user.name,
@@ -75,5 +81,9 @@ export class AuthService {
       }),
       catchError(this.handleError<User1>('getUser'))
     );
+  }
+
+  getUserId(): Observable<any> {
+    return this.http.get<any>(this.endpoint3);
   }
 }

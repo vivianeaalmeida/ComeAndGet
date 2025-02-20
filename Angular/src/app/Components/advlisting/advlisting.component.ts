@@ -99,8 +99,9 @@ export class AdvlistingComponent implements OnInit {
   }
 
   getSafeImageUrl(imagePath: string): SafeResourceUrl {
+    console.log(imagePath);
     return this.sanitizer.bypassSecurityTrustResourceUrl(
-      'http://localhost:8080' + imagePath
+      'http://localhost:8080/' + imagePath
     );
   }
 

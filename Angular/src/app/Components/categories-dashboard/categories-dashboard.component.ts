@@ -1,20 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { CategoryService } from '../../Services/category.service';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Category } from '../../Models/category';
 import Swal from 'sweetalert2';
-
 
 @Component({
   selector: 'app-categories-dashboard',
   standalone: true,
   imports: [NgxDatatableModule, ReactiveFormsModule],
   templateUrl: './categories-dashboard.component.html',
-  styleUrl: './categories-dashboard.component.css'
+  styleUrl: './categories-dashboard.component.css',
 })
 export class CategoriesDashboardComponent {
-
   categories: Category[] = [];
   categoryForm!: FormGroup;
   isEditingOrCreating: string = '';
@@ -22,7 +26,7 @@ export class CategoriesDashboardComponent {
   selectedCategory: any;
   categoryId: string = '';
 
-  constructor(private categoryServ: CategoryService, private fb: FormBuilder) { }
+  constructor(private categoryServ: CategoryService, private fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.initForm();
@@ -34,7 +38,7 @@ export class CategoriesDashboardComponent {
       designation: ['', [Validators.required]],
     });
   }
-  
+
   getCategories(): void {
     this.categoryServ.getCategories().subscribe({
       next: (response) => {
@@ -66,11 +70,11 @@ export class CategoriesDashboardComponent {
 
   updateCategory(): void {
     // Criar uma cópia do formulário e adicionar o ID manualmente
-    const categoryData = { 
-      ...this.categoryForm.value, 
-      id: this.categoryId 
+    const categoryData = {
+      ...this.categoryForm.value,
+      id: this.categoryId,
     };
-  
+
     this.categoryServ.updateCategory(this.categoryId, categoryData).subscribe({
       next: (response) => {
         Swal.fire({
@@ -91,7 +95,7 @@ export class CategoriesDashboardComponent {
 
   setCategoryId(id: string) {
     this.categoryId = id;
-}
+  }
 
   deleteCategory(id: string): void {
     Swal.fire({
@@ -103,7 +107,9 @@ export class CategoriesDashboardComponent {
       if (result.isConfirmed) {
         this.categoryServ.deleteCategory(id).subscribe({
           next: (response) => {
-            this.categories = this.categories.filter(category => category.id !== id)
+            this.categories = this.categories.filter(
+              (category) => category.id !== id
+            );
             Swal.fire({
               icon: 'success',
               title: 'Category deleted successfully!',
@@ -120,7 +126,6 @@ export class CategoriesDashboardComponent {
     });
   }
 
-
   fillCategoryForm(category: Category) {
     if (category != null) {
       this.categoryForm.get('designation')?.setValue(category.designation);
@@ -135,7 +140,7 @@ export class CategoriesDashboardComponent {
     }
   }
 
-  openModal(isEditingOrCreating: string, category: Category) {
+  openModal(isEditingOrCreating: string, category?: Category) {
     this.isEditingOrCreating = isEditingOrCreating;
     this.selectedCategory = category;
     this.isModalOpen = true;
@@ -155,15 +160,6 @@ export class CategoriesDashboardComponent {
     }
   }
 }
-
-
-
-
-
-
-
-
-
 
 /*
 

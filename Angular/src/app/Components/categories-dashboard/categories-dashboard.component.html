@@ -1,4 +1,5 @@
 <div
+<<<<<<< HEAD
     class="min-h-screen mt-20 bg-gradient-to-r from-purple-900 via-purple-800 to-purple-600 flex flex-col items-center">
     <div class="min-w-[80vw] max-w-[80vw]">
         <!-- Título -->
@@ -72,4 +73,51 @@
         </div>
     </div>
     <!-- end modal -->
+=======
+  class="min-h-screen mt-20 bg-gradient-to-r from-purple-900 via-purple-800 to-purple-600 flex flex-col items-center"
+>
+  <div class="min-w-[80vw] max-w-[80vw]">
+    <!-- Título -->
+    <div class="mt-20 px-4 text-center">
+      <h1 class="font-bold text-white text-4xl md:text-6xl">Dashboard</h1>
+    </div>
+
+    <button
+    class="w-[10vw] shadow-sm py-1.5 px-2 text-md font-semibold rounded-md text-white bg-purple-700 hover:bg-purple-900 focus:outline-none ml-5"
+    type="button"
+  >
+    Add new Category
+  </button>
+
+    <div>
+      <ngx-datatable
+        class="bootstrap table bg-white fixed-header mb-20"
+        [rows]="categories"
+        [columnMode]="'force'"
+        [headerHeight]="50"
+        [footerHeight]="50"
+        [rowHeight]="'auto'"
+      >
+        <ngx-datatable-column
+          name="Designation"
+          [width]="30"
+          prop="designation"
+        ></ngx-datatable-column>
+
+        <ngx-datatable-column name="Actions" [width]="20">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <div class="flex space-x-4">
+              <button type="button">
+                <i class="fa-solid fa-pen-to-square fa-lg"></i>
+              </button>
+              <button type="button" (click)="deleteCategory(row.id)">
+                <i class="fa-solid fa-trash-can fa-lg"></i>
+              </button>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
+    </div>
+  </div>
+>>>>>>> e42105db007addc49823d385d25ab184b5ccaf86
 </div>

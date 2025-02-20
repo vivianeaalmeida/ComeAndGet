@@ -19,8 +19,15 @@ export const routes: Routes = [
     canActivate: [clientGuard],
   },
   { path: 'register', component: RegisterComponent },
-  { path: 'createadv', component: CreateAdvComponent },
-  { path: 'view-all', component: AdvlistingComponent }, // Lista do admin
+  {
+    path: 'create-adv',
+    component: CreateAdvComponent,
+    canActivate: [clientGuard],
+  },
+
+  { path: 'view-active', component: AdvlistingComponent }, // Lista dos users
+  // CRIAR: path> 'view-all' ---> Lista dos admins
   { path: 'dashboard', component: CategoriesDashboardComponent },
+  { path: 'advertisements', component: AdvlistingComponent },
   { path: '**', component: NotFoundComponent },
 ];

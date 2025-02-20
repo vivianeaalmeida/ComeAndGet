@@ -22,23 +22,7 @@ INSERT INTO ITEM (ID, IMAGE, CONDITION, CATEGORY_ID) VALUES
 (4, 'https://example.com/image4.jpg', 2, 4),
 
 --Tecnologia
-(5, 'https://example.com/image5.jpg', 2, 2),
-(6, 'https://example.com/image6.jpg', 1, 2),
-
--- Roupas
-(7, 'https://example.com/image7.jpg', 2, 3),
-
--- Livros e Material Escolar
-(8, 'https://example.com/image8.jpg', 1, 7),
-
--- Ferramentas e Bricolage
-(9, 'https://example.com/image9.jpg', 2, 5),
-
--- Brinquedos e Jogos
-(10, 'https://example.com/image10.jpg', 1, 6),
-
--- Utensílios Domésticos
-(11, 'https://example.com/image11.jpg', 2, 8);
+(5, 'https://example.com/image5.jpg', 2, 2);
 
 -- Insert advertisements
 INSERT INTO ADVERTISEMENT (ID, TITLE, DESCRIPTION, DATE, MUNICIPALITY, STATUS, ITEM_ID, CLIENT_ID) VALUES
@@ -49,14 +33,7 @@ INSERT INTO ADVERTISEMENT (ID, TITLE, DESCRIPTION, DATE, MUNICIPALITY, STATUS, I
 
 -- 647fe1ef-40b5-4957-96cc-c83a4b3131da
 (4, 'Sofá 3 lugares', 'Sofá de 3 lugares em ótimo estado. Ideal para a sua sala de estar.', '2025-02-10', 'Porto', 0, 4, '647fe1ef-40b5-4957-96cc-c83a4b3131da'),
-(5, 'Televisão LED 40 polegadas', 'Televisão LED de 40 polegadas em excelente estado de funcionamento.', '2025-02-15', 'Porto', 0, 5, '647fe1ef-40b5-4957-96cc-c83a4b3131da'),
-
-(6, 'Computador portátil - bom estado', 'Portátil HP com bom desempenho, ideal para estudantes.', '2025-02-18', 'Lisboa', 0, 6, '647fe1ef-40b5-4957-96cc-c83a4b3131da'),
-(7, 'Casaco de inverno tamanho M', 'Casaco quente, perfeito para o frio.', '2025-02-18', 'Lisboa', 0, 7, '647fe1ef-40b5-4957-96cc-c83a4b3131da'),
-(8, 'Livros escolares do 9º ano', 'Vários livros do ensino básico para doação.', '2025-02-18', 'Porto', 0, 8, '647fe1ef-40b5-4957-96cc-c83a4b3131da'),
-(9, 'Kit de ferramentas básico', 'Kit com chave de fendas, alicate e martelo.', '2025-02-18', 'Braga', 0, 9, '647fe1ef-40b5-4957-96cc-c83a4b3131da'),
-(10, 'Carrinho de brinquedo elétrico', 'Carrinho elétrico para crianças de 3 a 6 anos.', '2025-02-18', 'Coimbra', 0, 10, '647fe1ef-40b5-4957-96cc-c83a4b3131da'),
-(11, 'Conjunto de panelas inox', 'Conjunto com 3 panelas de inox em bom estado.', '2025-02-18', 'Faro', 0, 11, '647fe1ef-40b5-4957-96cc-c83a4b3131da');
+(5, 'Televisão LED 40 polegadas', 'Televisão LED de 40 polegadas em excelente estado de funcionamento.', '2025-02-15', 'Porto', 0, 5, '647fe1ef-40b5-4957-96cc-c83a4b3131da');
 
 -- Insert reservationAttempts
 INSERT INTO RESERVATION_ATTEMPT (ID, ADVERTISEMENT_ID, CLIENT_ID, DATE, STATUS) VALUES

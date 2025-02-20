@@ -1,0 +1,67 @@
+<div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+  <div class="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
+    <h2 class="text-2xl font-semibold text-lime-900 mb-4">Update Advertisement</h2>
+
+    <!-- Formulário -->
+    <form [formGroup]="updateAdvForm"
+      (ngSubmit)="onSubmit()">
+      <!-- Campo de título do anúncio -->
+      <div class="space-y-2">
+        <label for="title"
+          class="block text-gray-700 font-medium">Title</label>
+        <input id="title"
+          formControlName="title"
+          class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:outline-none focus:border-lime-800 transition-colors"
+          placeholder="Enter title" />
+        <div *ngIf="updateAdvForm.get('title')!.invalid && updateAdvForm.get('title')!.touched"
+          class="text-red-500 text-sm">
+          <p *ngIf="updateAdvForm.get('title')!.errors?.['required']">Title is required.</p>
+          <p *ngIf="updateAdvForm.get('title')!.errors?.['minlength']">Title must be at least 5 characters long.</p>
+        </div>
+      </div>
+
+      <!-- Campo de descrição do anúncio -->
+      <div class="space-y-2">
+        <label for="description"
+          class="block text-gray-700 font-medium">Description</label>
+        <textarea id="description"
+          formControlName="description"
+          class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:outline-none focus:border-lime-800 transition-colors"
+          placeholder="Enter description"
+          rows="4"></textarea>
+        <div *ngIf="updateAdvForm.get('description')!.invalid && updateAdvForm.get('description')!.touched"
+          class="text-red-500 text-sm">
+          <p *ngIf="updateAdvForm.get('description')!.errors?.['required']">Description is required.</p>
+          <p *ngIf="updateAdvForm.get('description')!.errors?.['minlength']">Description must be at least 10 characters
+            long.</p>
+        </div>
+      </div>
+
+      <!-- Campo de status do anúncio -->
+      <div class="space-y-2">
+        <label for="status"
+          class="block text-gray-700 font-medium">Status</label>
+        <select id="status"
+          formControlName="status"
+          class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:outline-none focus:border-lime-800 transition-colors">
+          <option value="ACTIVE">Active</option>
+          <option value="CLOSED">Closed</option>
+        </select>
+      </div>
+
+      <!-- Botões de Ação -->
+      <div class="flex justify-end space-x-4 mt-6">
+        <button type="button"
+          class="px-4 py-2 text-black border border-lime-800 rounded-lg hover:bg-lime-300 transition"
+          (click)="close(false)">
+          Cancel
+        </button>
+        <button type="submit"
+          class="px-4 py-2 bg-lime-800 text-white rounded-lg hover:bg-lime-900 transition"
+          [disabled]="updateAdvForm.invalid">
+          Update Advertisement
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

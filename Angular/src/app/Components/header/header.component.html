@@ -3,69 +3,80 @@
     <!-- Logo -->
     <div>
       <a routerLink="/home">
-        <img src="../assets/Logo.png" alt="Logo" class="w-44" />
+        <img src="../assets/Logo.png"
+          alt="Logo"
+          class="w-44" />
       </a>
     </div>
 
     <!-- Barra de Pesquisa -->
-    <div class="relative w-full max-w-[600px] flex">
-      <input
-        type="search"
+    <div class="relative w-full max-w-[550px] flex">
+      <input type="search"
         placeholder="Search items"
-        class="w-full py-2 pl-4 pr-12 border rounded-l-full rounded-r-none bg-white text-gray-800 shadow-md focus:outline-none focus:border-lime-500 text-lg"
-      />
+        class="w-full py-2 pl-4 pr-12 border rounded-l-full rounded-r-none bg-white text-gray-800 shadow-md focus:outline-none focus:border-lime-500 text-lg" />
       <button
         class="bg-lime-800 text-white px-4 rounded-r-full border-l border-gray-700 flex justify-center items-center shadow-md"
-        type="button"
-      >
+        type="button">
         <i class="fa-solid fa-lg fa-magnifying-glass"></i>
       </button>
     </div>
 
-    <!--Inicio do botões-->
+    <!-- Início dos botões -->
     <div class="items-center flex space-x-8">
-      <a
-        routerLink="/advertisements"
-        class="text-xl text-gray-800 font-bold hover:text-lime-700 cursor-pointer"
-      >
+      <!-- Exibe os links de Advertisements e Blog para todos -->
+      <a routerLink="/advertisements"
+        class="text-xl text-gray-800 font-bold hover:text-lime-700 cursor-pointer">
         Advertisements
       </a>
-      <a
-        routerLink="/blog"
-        class="text-xl text-gray-800 font-bold hover:text-lime-700 cursor-pointer"
-      >
+      <a routerLink="/blog"
+        class="text-xl text-gray-800 font-bold hover:text-lime-700 cursor-pointer">
         Blog
       </a>
-      <!-- Dropdown -->
-      <div
-        class="relative"
-        (mouseover)="toggleDropdown(true)"
-        (mouseleave)="toggleDropdown(false)"
-      >
-        <button
-          class="text-xl font-bold text-gray-800 hover:text-lime-700 flex items-center focus:outline-none"
-        >
-          Login Area <i class="fa-solid fa-chevron-down ml-2 text-sm"></i>
-        </button>
 
-        <!-- Itens do Dropdown (aparece ao passar o mouse) -->
-        <div
-          *ngIf="isDropdownOpen"
-          class="absolute bg-gray-100 shadow-md rounded-md w-40 right-0 transition-opacity duration-300"
-        >
-          <a
-            routerLink="/login"
-            class="block px-4 py-2 text-gray-800 hover:bg-lime-200 cursor-pointer rounded-md"
-          >
-            Login
-          </a>
-          <a
-            routerLink="/register"
-            class="block px-4 py-2 text-gray-800 hover:bg-lime-200 cursor-pointer rounded-md"
-          >
-            Register
-          </a>
+      <!-- Verificação se o usuário está logado -->
+      <div *ngIf="!(isLoggedIn$ | async)">
+        <!-- Dropdown Login Area quando não está logado -->
+        <div class="relative"
+          (mouseover)="toggleDropdown(true)"
+          (mouseleave)="toggleDropdown(false)">
+          <button class="text-xl font-bold text-gray-800 hover:text-lime-700 flex items-center focus:outline-none">
+            Login Area <i class="fa-solid fa-chevron-down ml-2 text-sm"></i>
+          </button>
+
+          <!-- Itens do Dropdown -->
+          <div *ngIf="isDropdownOpen"
+            class="absolute bg-gray-100 shadow-md rounded-md w-40 right-0 transition-opacity duration-300">
+            <a routerLink="/login"
+              class="block px-4 py-2 text-gray-800 hover:bg-lime-200 cursor-pointer rounded-md">
+              Login
+            </a>
+            <a routerLink="/register"
+              class="block px-4 py-2 text-gray-800 hover:bg-lime-200 cursor-pointer rounded-md">
+              Register
+            </a>
+          </div>
         </div>
+      </div>
+
+      <!-- Exibe os botões lado a lado para usuários logados -->
+      <div *ngIf="isLoggedIn$ | async" class="space-x-8 flex">
+        <!-- Exibe os botões de User Area ou Dashboard baseado no role -->
+        <a *ngIf="checkRole === 'User'"
+          routerLink="/user-area"
+          class="text-xl text-gray-800 font-bold hover:text-lime-700 cursor-pointer">
+          User Area
+        </a>
+        <a *ngIf="checkRole === 'Admin'"
+          routerLink="/dashboard"
+          class="text-xl text-gray-800 font-bold hover:text-lime-700 cursor-pointer">
+          Dashboard
+        </a>
+
+        <!-- Botão de Logout -->
+        <a (click)="authService.logout()"
+          class="text-xl text-gray-800 font-bold hover:text-lime-700 cursor-pointer">
+          Logout
+        </a>
       </div>
     </div>
   </div>

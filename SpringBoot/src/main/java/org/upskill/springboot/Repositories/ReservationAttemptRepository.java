@@ -63,7 +63,7 @@ public interface ReservationAttemptRepository extends JpaRepository<ReservationA
      * @return a {@link Page} of {@link ReservationAttempt} entities associated with the user's advertisement.
      */
     @Query("SELECT r FROM ReservationAttempt r INNER JOIN Advertisement ad ON r.advertisement.id = ad.id WHERE ad.clientId = :clientId")
-    List<ReservationAttempt> findReservationAttemptsFromAdvertisementOfUser(String clientId);
+    List<ReservationAttempt> findReservationAttemptsFromClientAdvertisement(String clientId);
 
     /**
      * Finds all reservation attempts for a specific advertisement and with statuses included in a list.

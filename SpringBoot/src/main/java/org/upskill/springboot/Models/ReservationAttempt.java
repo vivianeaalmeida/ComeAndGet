@@ -1,6 +1,5 @@
 package org.upskill.springboot.Models;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -53,7 +52,7 @@ public class ReservationAttempt {
      * The ID of the user who made the reservation attempt.
      * This is a required field.
      */
-    @Nullable
+    @NonNull
     @Column(name = "client_id")
     private String clientId;
 

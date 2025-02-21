@@ -66,25 +66,23 @@ public class ReservationAttemptController extends BaseController {
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
-    @PatchMapping("reservationAttempts/{reservationId}/status")
-    public ResponseEntity<ReservationAttemptResponseDTO> patchReservationAttemptStatus(@PathVariable String reservationId, @RequestBody ReservationAttemptStatusDTO requestDTO) {
-        ReservationAttemptResponseDTO response = reservationAttemptService.updateReservationAttemptStatus( reservationId , requestDTO);
+    @PatchMapping("/reservationAttempts/{reservationId}/status")
+    public ResponseEntity<ReservationAttemptResponseDTO> patchReservationAttemptStatus(@PathVariable String reservationId, @RequestHeader("Authorization") String authorization, @RequestBody ReservationAttemptStatusDTO requestDTO) {
+        ReservationAttemptResponseDTO response = reservationAttemptService.updateReservationAttemptStatus( reservationId , authorization, requestDTO);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    /*metodos que vieram do userController*/
-    /*
-    @GetMapping("/users/{userId}/reservationAttempts")
-    public ResponseEntity<List<ReservationAttemptResponseDTO>> getReservationAttemptsByUserId(@PathVariable String userId) {
-        List<ReservationAttemptResponseDTO> response = this.userService.getReservationAttemptByUserId(userId);
+    @GetMapping("/reservationAttempts/advertisement?ownerId={clientId}")
+    public ResponseEntity<List<ReservationAttemptResponseDTO>> getReservationAttemptsByUserId(@RequestParam String clientId) {
+        List<ReservationAttemptResponseDTO> response = this.reservationAttemptService.getAttemptsInMyAdvertisements(clientId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/users/{userId}/advertisements/reservationAttempt")
-    public ResponseEntity<List<ReservationAttemptResponseDTO>> getAdvertisementReservationAttemptsByUserId(@PathVariable String userId){
+    @GetMapping("/reservationAttempts?clientId={clientId}")
+    public ResponseEntity<List<ReservationAttemptResponseDTO>> getAdvertisementReservationAttemptsByUserId(@RequestParam String clientId){
 
-        List<ReservationAttemptResponseDTO> response = userService.getReservationAttemptFromAdvertisementOfUser(userId);
+        List<ReservationAttemptResponseDTO> response = this.reservationAttemptService.getAttemptsDoneByClientId(clientId);
         return new ResponseEntity<>(response, HttpStatus.OK);
-    }*/
+    }
 
 }

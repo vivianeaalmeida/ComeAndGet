@@ -50,6 +50,7 @@ export class CreateAdvComponent implements OnInit {
       municipality: new FormControl('', [Validators.required]),
       condition: new FormControl('', [Validators.required]),
       category: new FormControl('', [Validators.required]),
+      file: new FormControl('', [Validators.required]),
     });
   }
 
@@ -84,6 +85,8 @@ export class CreateAdvComponent implements OnInit {
     if (file) {
       this.imagem = file;
       this.fileName = file.name;
+      this.formData.patchValue({ file: file });
+      this.formData.get('file')?.updateValueAndValidity();
     } else {
       this.imagem = '';
       this.fileName = null;

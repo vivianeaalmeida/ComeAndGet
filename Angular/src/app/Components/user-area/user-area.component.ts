@@ -6,12 +6,13 @@ import { ButtonComponent } from '../button/button.component';
 import { AdvService } from '../../Services/adv.service';
 import { map } from 'rxjs';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { ButtonUpdateAdvComponent } from '../button-update-adv/button-update-adv.component';
+import { ButtonUpdateAdvComponent } from '../Buttons/button-update-adv/button-update-adv.component';
+import { ButtonDeactivateAdvertisementComponent } from '../Buttons/button-deactivate-advertisement/button-deactivate-advertisement.component';
 
 @Component({
   selector: 'app-user-area',
   standalone: true,
-  imports: [NgIf, ButtonComponent, CommonModule, ButtonUpdateAdvComponent],
+  imports: [NgIf, ButtonComponent, CommonModule, ButtonUpdateAdvComponent, ButtonDeactivateAdvertisementComponent],
   templateUrl: './user-area.component.html',
   styleUrl: './user-area.component.css',
 })

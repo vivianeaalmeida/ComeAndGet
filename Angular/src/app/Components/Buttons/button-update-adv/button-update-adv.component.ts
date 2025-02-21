@@ -1,9 +1,9 @@
 // button-update-adv.component.ts
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { AdvService } from '../../Services/adv.service';
-import { UpdateAdvModalComponent } from '../update-adv-modal/update-adv-modal.component';
-import { Advertisement } from '../../Models/advertisement';
+import { AdvService } from '../../../Services/adv.service';
+import { UpdateAdvModalComponent } from '../../update-adv-modal/update-adv-modal.component';
+import { Advertisement } from '../../../Models/advertisement';
 
 @Component({
   selector: 'app-button-update-adv',

@@ -34,4 +34,12 @@ export class AdvService {
       advertisement
     );
   }
+
+  // Deactivate advertisement
+  deactivateAdvertisement(id: string): Observable<Advertisement> {
+    return this.myWeb.patch<Advertisement>(
+      `${this.endpoint}advertisements/${id}/deactivate`,
+      {}
+    );
+  }
 }

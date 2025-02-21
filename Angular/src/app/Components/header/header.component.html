@@ -3,113 +3,180 @@
     <!-- Logo -->
     <div>
       <a routerLink="/home">
-        <img src="../assets/Logo.png"
-          alt="Logo"
-          class="w-44" />
+        <img src="../assets/Logo.png" alt="Logo" class="w-44" />
       </a>
     </div>
 
     <!-- Barra de Pesquisa -->
     <div class="relative w-full max-w-[550px] flex">
-      <input type="search"
+      <input
+        type="search"
         placeholder="Search items"
-        class="w-full py-2 pl-4 pr-12 border rounded-l-full rounded-r-none bg-white text-gray-800 shadow-md focus:outline-none focus:border-lime-500 text-lg" />
+        class="w-full py-2 pl-4 pr-12 border rounded-l-full rounded-r-none bg-white text-gray-800 shadow-md focus:outline-none focus:border-lime-500 text-lg"
+      />
       <button
         class="bg-lime-800 text-white px-4 rounded-r-full border-l border-gray-700 flex justify-center items-center shadow-md"
-        type="button">
+        type="button"
+      >
         <i class="fa-solid fa-lg fa-magnifying-glass"></i>
       </button>
     </div>
 
     <div class="items-center flex space-x-8">
-      <div class="relative"
+      <div
+        class="relative"
         (mouseover)="toggleDropdown2(true)"
-        (mouseleave)="toggleDropdown2(false)">
-        <button class="text-xl font-bold text-gray-800 hover:text-lime-700 flex items-center focus:outline-none">
+        (mouseleave)="toggleDropdown2(false)"
+      >
+        <button
+          class="text-xl font-bold text-gray-800 hover:text-lime-700 flex items-center focus:outline-none"
+        >
           Advertisements <i class="fa-solid fa-chevron-down ml-2 text-sm"></i>
         </button>
 
         <!-- Itens do Dropdown -->
         <!-- User -->
-        <div *ngIf="isDropdown2Open"
-          class="absolute bg-gray-100 shadow-md rounded-md w-40 right-0 transition-opacity duration-300 text-lg">
-          <a routerLink="/view-active"
-            class="block px-4 py-2 text-gray-800 hover:bg-lime-200 cursor-pointer rounded-md">
+        <div
+          *ngIf="isDropdown2Open"
+          class="absolute bg-gray-100 shadow-md rounded-md w-40 right-0 transition-opacity duration-300 text-lg"
+        >
+          <a
+            routerLink="/view-active"
+            class="block px-4 py-2 text-gray-800 hover:bg-lime-200 cursor-pointer rounded-md"
+          >
             View all
           </a>
           <ng-container *ngIf="isLoggedIn$ | async; else notLoggedIn">
-            <a routerLink="/create-adv"
-              class="block px-4 py-2 text-gray-800 hover:bg-lime-200 cursor-pointer rounded-md">
+            <a
+              routerLink="/create-adv"
+              class="block px-4 py-2 text-gray-800 hover:bg-lime-200 cursor-pointer rounded-md"
+            >
               Create yours
             </a>
           </ng-container>
           <ng-template #notLoggedIn>
-            <a routerLink="/login"
-              class="block px-4 py-2 text-gray-800 hover:bg-lime-200 cursor-pointer rounded-md">
+            <a
+              routerLink="/login"
+              class="block px-4 py-2 text-gray-800 hover:bg-lime-200 cursor-pointer rounded-md"
+            >
               Create yours
             </a>
           </ng-template>
         </div>
 
-
         <!-- Admin -->
-        <div *ngIf="isDropdown2Open && checkRole === 'Admin'"
-          class="absolute bg-gray-100 shadow-md rounded-md w-40 right-0 transition-opacity duration-300 text-lg">
-          <a routerLink="/view-active"
-            class="block px-4 py-2 text-gray-800 hover:bg-lime-200 cursor-pointer rounded-md">
+        <div
+          *ngIf="isDropdown2Open && checkRole === 'Admin'"
+          class="absolute bg-gray-100 shadow-md rounded-md w-40 right-0 transition-opacity duration-300 text-lg"
+        >
+          <a
+            routerLink="/view-active"
+            class="block px-4 py-2 text-gray-800 hover:bg-lime-200 cursor-pointer rounded-md"
+          >
             View active
           </a>
-          <a routerLink="/view-all"
-            class="block px-4 py-2 text-gray-800 hover:bg-lime-200 cursor-pointer rounded-md">
+          <a
+            routerLink="/view-all"
+            class="block px-4 py-2 text-gray-800 hover:bg-lime-200 cursor-pointer rounded-md"
+          >
             View all
           </a>
         </div>
       </div>
 
-      <a routerLink="/blog"
-        class="text-xl text-gray-800 font-bold hover:text-lime-700 cursor-pointer">
+      <a
+        routerLink="/blog"
+        class="text-xl text-gray-800 font-bold hover:text-lime-700 cursor-pointer"
+      >
         Blog
       </a>
 
       <!-- Verificação se o utilizador está logado -->
       <div *ngIf="!(isLoggedIn$ | async)">
-        <div class="relative"
+        <div
+          class="relative"
           (mouseover)="toggleDropdown(true)"
-          (mouseleave)="toggleDropdown(false)">
-          <button class="text-xl font-bold text-gray-800 hover:text-lime-700 flex items-center focus:outline-none">
+          (mouseleave)="toggleDropdown(false)"
+        >
+          <button
+            class="text-xl font-bold text-gray-800 hover:text-lime-700 flex items-center focus:outline-none"
+          >
             Login Area <i class="fa-solid fa-chevron-down ml-2 text-sm"></i>
           </button>
 
           <!-- Itens do Dropdown -->
-          <div *ngIf="isDropdownOpen"
-            class="absolute bg-gray-100 shadow-md rounded-md w-40 right-0 transition-opacity duration-300 text-lg">
-            <a routerLink="/login"
-              class="block px-4 py-2 text-gray-800 hover:bg-lime-200 cursor-pointer rounded-md">
+          <div
+            *ngIf="isDropdownOpen"
+            class="absolute bg-gray-100 shadow-md rounded-md w-40 right-0 transition-opacity duration-300 text-lg"
+          >
+            <a
+              routerLink="/login"
+              class="block px-4 py-2 text-gray-800 hover:bg-lime-200 cursor-pointer rounded-md"
+            >
               Login
             </a>
-            <a routerLink="/register"
-              class="block px-4 py-2 text-gray-800 hover:bg-lime-200 cursor-pointer rounded-md">
+            <a
+              routerLink="/register"
+              class="block px-4 py-2 text-gray-800 hover:bg-lime-200 cursor-pointer rounded-md"
+            >
               Register
             </a>
           </div>
         </div>
       </div>
 
-      <div *ngIf="isLoggedIn$ | async"
-        class="space-x-8 flex">
-        <a *ngIf="checkRole === 'User'"
+      <div *ngIf="isLoggedIn$ | async" class="space-x-8 flex">
+        <a
+          *ngIf="checkRole === 'User'"
           routerLink="/user-area"
-          class="text-xl text-gray-800 font-bold hover:text-lime-700 cursor-pointer">
+          class="text-xl text-gray-800 font-bold hover:text-lime-700 cursor-pointer"
+        >
           User Area
         </a>
-        <a *ngIf="checkRole === 'Admin'"
-          routerLink="/dashboard"
-          class="text-xl text-gray-800 font-bold hover:text-lime-700 cursor-pointer">
-          Dashboard
-        </a>
+        <div *ngIf="checkRole === 'Admin'">
+          <div
+            class="relative"
+            (mouseover)="toggleDropdown3(true)"
+            (mouseleave)="toggleDropdown3(false)"
+          >
+            <button
+              class="text-xl font-bold text-gray-800 hover:text-lime-700 flex items-center focus:outline-none"
+              (click)="toDash()"
+            >
+              Dashboard <i class="fa-solid fa-chevron-down ml-2 text-sm"></i>
+            </button>
 
-        <a (click)="authService.logout()"
-          class="text-xl text-gray-800 font-bold hover:text-lime-700 cursor-pointer">
+            <!-- Itens do Dropdown -->
+            <div
+              *ngIf="isDropdown3Open"
+              class="absolute bg-gray-100 shadow-md rounded-md w-40 right-0 transition-opacity duration-300 text-lg"
+            >
+              <a
+                routerLink="advertisementsDash"
+                class="block px-4 py-2 text-gray-800 hover:bg-lime-200 cursor-pointer rounded-md"
+              >
+                Advertisements
+              </a>
+              <a
+                routerLink="categoriesDash"
+                class="block px-4 py-2 text-gray-800 hover:bg-lime-200 cursor-pointer rounded-md"
+              >
+                Categories
+              </a>
+              <a
+                routerLink="tipsDash"
+                class="block px-4 py-2 text-gray-800 hover:bg-lime-200 cursor-pointer rounded-md"
+              >
+                Tips
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <a
+          (click)="authService.logout()"
+          class="text-xl text-gray-800 font-bold hover:text-lime-700 cursor-pointer"
+        >
           Logout
         </a>
       </div>

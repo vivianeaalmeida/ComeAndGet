@@ -1,67 +1,67 @@
 {
-  "hash": "52ed38a2",
+  "hash": "73154412",
   "configHash": "50bc9def",
-  "lockfileHash": "812c002d",
-  "browserHash": "9fd73e81",
+  "lockfileHash": "505685d7",
+  "browserHash": "d84092b2",
   "optimized": {
     "@angular/common": {
       "src": "../../../../../node_modules/@angular/common/fesm2022/common.mjs",
       "file": "@angular_common.js",
-      "fileHash": "f96875fe",
+      "fileHash": "e3c179e9",
       "needsInterop": false
     },
     "@angular/common/http": {
       "src": "../../../../../node_modules/@angular/common/fesm2022/http.mjs",
       "file": "@angular_common_http.js",
-      "fileHash": "16cbb0db",
+      "fileHash": "3addd159",
       "needsInterop": false
     },
     "@angular/core": {
       "src": "../../../../../node_modules/@angular/core/fesm2022/core.mjs",
       "file": "@angular_core.js",
-      "fileHash": "5145a536",
+      "fileHash": "89faee8b",
       "needsInterop": false
     },
     "@angular/forms": {
       "src": "../../../../../node_modules/@angular/forms/fesm2022/forms.mjs",
       "file": "@angular_forms.js",
-      "fileHash": "3479e52a",
+      "fileHash": "05023dd9",
       "needsInterop": false
     },
     "@angular/material/dialog": {
       "src": "../../../../../node_modules/@angular/material/fesm2022/dialog.mjs",
       "file": "@angular_material_dialog.js",
-      "fileHash": "1a4d4178",
+      "fileHash": "1b27f9b3",
       "needsInterop": false
     },
     "@angular/platform-browser": {
       "src": "../../../../../node_modules/@angular/platform-browser/fesm2022/platform-browser.mjs",
       "file": "@angular_platform-browser.js",
-      "fileHash": "906079c8",
+      "fileHash": "011629cf",
       "needsInterop": false
     },
     "@angular/router": {
       "src": "../../../../../node_modules/@angular/router/fesm2022/router.mjs",
       "file": "@angular_router.js",
-      "fileHash": "bfa64b1b",
+      "fileHash": "98ff67e1",
       "needsInterop": false
     },
     "@swimlane/ngx-datatable": {
       "src": "../../../../../node_modules/@swimlane/ngx-datatable/fesm2020/swimlane-ngx-datatable.mjs",
       "file": "@swimlane_ngx-datatable.js",
-      "fileHash": "b9eae95b",
+      "fileHash": "db4fd99d",
       "needsInterop": false
     },
     "rxjs": {
       "src": "../../../../../node_modules/rxjs/dist/esm5/index.js",
       "file": "rxjs.js",
-      "fileHash": "872a6ad5",
+      "fileHash": "0f98d314",
       "needsInterop": false
     },
     "sweetalert2": {
       "src": "../../../../../node_modules/sweetalert2/dist/sweetalert2.esm.all.js",
       "file": "sweetalert2.js",
-      "fileHash": "deca4e2e",
+      "fileHash": "0c790ea0",
       "needsInterop": false
     }
   },

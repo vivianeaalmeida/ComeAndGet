@@ -14,6 +14,7 @@ import { map } from 'rxjs';
 export class HeaderComponent implements OnInit {
   isDropdownOpen = false;
   isDropdown2Open = false;
+  isDropdown3Open = false;
   isLoggedIn$!: any;
   checkRole: string | null = null;
 
@@ -38,5 +39,13 @@ export class HeaderComponent implements OnInit {
 
   toggleDropdown2(isOpen: boolean) {
     this.isDropdown2Open = isOpen;
+  }
+
+  toggleDropdown3(isOpen: boolean) {
+    this.isDropdown3Open = isOpen;
+  }
+
+  toDash() {
+    this.myrouter.navigate(['dashboard']);
   }
 }

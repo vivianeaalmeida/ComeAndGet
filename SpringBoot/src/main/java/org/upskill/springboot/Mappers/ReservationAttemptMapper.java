@@ -1,8 +1,11 @@
 package org.upskill.springboot.Mappers;
 
-import org.upskill.springboot.DTOs.ReservationAttemptDTO;
+import jakarta.validation.constraints.NotNull;
 import org.upskill.springboot.DTOs.ReservationAttemptResponseDTO;
+import org.upskill.springboot.Models.Advertisement;
 import org.upskill.springboot.Models.ReservationAttempt;
+
+import java.time.LocalDate;
 
 public class ReservationAttemptMapper {
 
@@ -10,26 +13,24 @@ public class ReservationAttemptMapper {
         ReservationAttemptResponseDTO requestDTO = new ReservationAttemptResponseDTO();
         requestDTO.setId(reservationAttempt.getId());
         requestDTO.setStatus(reservationAttempt.getStatus().toString());
-        requestDTO.setUserId(reservationAttempt.getClientId());
+        requestDTO.setClientId(reservationAttempt.getClientId());
         requestDTO.setDate(reservationAttempt.getDate());
         requestDTO.setAdvertisementId(reservationAttempt.getAdvertisement().getId());
         return requestDTO;
 
     }
 
-    public static ReservationAttempt toEntity(ReservationAttemptDTO reservationAttemptDTO) {
+    //nenhuma informação, exceto o status, vem do request do usuario (DTO)
+    public static ReservationAttempt toEntity(@NotNull String status, @NotNull String clientId, @NotNull Advertisement advertisement ) {
         ReservationAttempt reservationAttempt = new ReservationAttempt();
-        reservationAttempt.setClientId(reservationAttemptDTO.getUserId());
-        //reservationAttempt.setAdvertisement(reservationAttemptDTO.getAdvertisementId());
 
-        if(reservationAttemptDTO.getStatus() != null) {
-            reservationAttempt.setStatus(ReservationAttempt.ReservationAttemptStatus.valueOf(reservationAttemptDTO.getStatus().toUpperCase()));
+        if(status != null) {
+            reservationAttempt.setStatus(ReservationAttempt.ReservationAttemptStatus.valueOf(status.toUpperCase()));
         }
+        reservationAttempt.setClientId(clientId);
+        reservationAttempt.setAdvertisement(advertisement);
+        reservationAttempt.setDate(LocalDate.now());
         return reservationAttempt;
     }
 
 }
-
-//requestDTO.setStatus(request.getStatus());
-//requestDTO.setEmail(request.getEmail());
-//requestDTO.setPhone(request.setPhone);

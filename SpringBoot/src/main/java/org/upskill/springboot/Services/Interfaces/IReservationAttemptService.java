@@ -36,17 +36,12 @@ public interface IReservationAttemptService {
      */
     ReservationAttemptResponseDTO createReservationAttempt(ReservationAttemptDTO reservationAttemptDTO, String authorization);
 
-    /**
-     * Partially updates a reservation attempts
-     *
-     * @param id the ID of the reservation attempt to be partially updated
-     * @param reservationAttemptStatusDTO   the object with the new status
-     * @return the partially updated response data transfer object
-     */
-    ReservationAttemptResponseDTO updateReservationAttemptStatus
-    (String id, ReservationAttemptStatusDTO reservationAttemptStatusDTO);
 
-    /*userInterface*/
-    //List<ReservationAttemptResponseDTO> getReservationAttemptByUserId(String id);
+    ReservationAttemptResponseDTO updateReservationAttemptStatus
+    (String id,String authorization, ReservationAttemptStatusDTO reservationAttemptStatusDTO);
+
+    List<ReservationAttemptResponseDTO> getAttemptsDoneByClientId(String id);
+
+    List<ReservationAttemptResponseDTO> getAttemptsInMyAdvertisements(String clientId);
 
 }

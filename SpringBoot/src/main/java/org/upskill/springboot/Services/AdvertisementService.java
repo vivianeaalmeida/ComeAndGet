@@ -309,6 +309,14 @@ public class AdvertisementService implements IAdvertisementService {
         return advertisementsDTO;
     }
 
+
+    public void closeAdvertisement(String id) {
+        Advertisement advertisement = advertisementRepository.findById(id)
+                .orElseThrow(() -> new AdvertisementNotFoundException("Advertisement not found"));
+        advertisement.setStatus(Advertisement.AdvertisementStatus.CLOSED);
+        advertisementRepository.save(advertisement);
+    }
+
     /**
      * Validates the advertisement data transfer object.
      *

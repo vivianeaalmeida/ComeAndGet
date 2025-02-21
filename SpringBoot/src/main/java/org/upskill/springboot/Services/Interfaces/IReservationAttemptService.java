@@ -16,7 +16,10 @@ public interface IReservationAttemptService {
      *
      * @return a list of all reservation response data transfer objects
      */
-    List<ReservationAttemptResponseDTO> getReservationAttempts();
+    List<ReservationAttemptResponseDTO> getReservationAttempts(
+            String reservationAttemptClientId,
+       String advertisementClientId,
+       String advertisementId);
 
     /**
      * Retrieves a specific reservation by its ID.
@@ -39,9 +42,5 @@ public interface IReservationAttemptService {
 
     ReservationAttemptResponseDTO updateReservationAttemptStatus
     (String id,String authorization, ReservationAttemptStatusDTO reservationAttemptStatusDTO);
-
-    List<ReservationAttemptResponseDTO> getAttemptsDoneByClientId(String id);
-
-    List<ReservationAttemptResponseDTO> getAttemptsInMyAdvertisements(String clientId);
 
 }

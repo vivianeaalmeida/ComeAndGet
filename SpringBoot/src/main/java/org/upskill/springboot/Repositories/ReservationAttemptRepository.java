@@ -3,6 +3,7 @@ package org.upskill.springboot.Repositories;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.upskill.springboot.Models.ReservationAttempt;
 
@@ -26,6 +27,16 @@ public interface ReservationAttemptRepository extends JpaRepository<ReservationA
      * @return {@code true} if at least one request exists for the given advertisement, otherwise {@code false}.
      */
     boolean existsByAdvertisement_Id(String advertisementId);
+
+    @Query("SELECT r FROM ReservationAttempt r " +
+            "WHERE (:reservationAttemptClientId IS NULL OR r.clientId = :reservationAttemptClientId) " +
+            "AND (:advertisementClientId IS NULL OR r.advertisement.clientId = :advertisementClientId) " +
+            "AND (:advertisementId IS NULL OR r.advertisement.id = :advertisementId)")
+    List<ReservationAttempt> findAllBy(
+            @Param("reservationAttemptClientId") String reservationAttemptClientId,
+            @Param("advertisementClientId") String advertisementClientId,
+            @Param("advertisementId") String advertisementId
+    );
 
     /**
      * Finds a request by its ID and associated advertisement ID.

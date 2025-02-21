@@ -49,8 +49,10 @@ public class ReservationAttemptService implements IReservationAttemptService {
      * @return a list of RequestDTO objects representing all requests
      */
     @Override
-    public List<ReservationAttemptResponseDTO> getReservationAttempts() {
-        List<ReservationAttempt> reservationAttempts = reservationAttemptRepository.findAll();
+    public List<ReservationAttemptResponseDTO> getReservationAttempts(String reservationAttemptClientId,
+                                                                      String advertisementClientId,
+                                                                      String advertisementId) {
+        List<ReservationAttempt> reservationAttempts = reservationAttemptRepository.findAllBy(reservationAttemptClientId,advertisementClientId,advertisementId);
         List<ReservationAttemptResponseDTO> reservationAttemptResponseDTOS = new ArrayList<>();
         for (ReservationAttempt reservationAttempt : reservationAttempts) {
             reservationAttemptResponseDTOS.add(ReservationAttemptMapper.toDTO(reservationAttempt)) ;
@@ -155,26 +157,6 @@ public class ReservationAttemptService implements IReservationAttemptService {
         } else {
             throw new IllegalStateException("Only the request owner or the advertisement owner can update the newStatus.");
         }
-    }
-
-    public List<ReservationAttemptResponseDTO> getAttemptsDoneByClientId(String clientId) {
-        List<ReservationAttempt> reservationAttempts = reservationAttemptRepository.findByClientId(clientId);
-
-        List<ReservationAttemptResponseDTO> reservationAttemptResponseDTOS = new ArrayList<>();
-        for (ReservationAttempt reservationAttempt : reservationAttempts) {
-            reservationAttemptResponseDTOS.add(ReservationAttemptMapper.toDTO(reservationAttempt));
-        }
-        return reservationAttemptResponseDTOS;
-    }
-
-    public List<ReservationAttemptResponseDTO> getAttemptsInMyAdvertisements(String clientId) {
-        List<ReservationAttempt> reservationAttempts = reservationAttemptRepository.findReservationAttemptsFromClientAdvertisement(clientId);
-        List<ReservationAttemptResponseDTO> reservationAttemptResponseDTOS = new ArrayList<>();
-        for (ReservationAttempt reservationAttempt : reservationAttempts) {
-            reservationAttemptResponseDTOS.add(ReservationAttemptMapper.toDTO(reservationAttempt)) ;
-        }
-        return reservationAttemptResponseDTOS;
-
     }
 
     private boolean validateReservationAttempt(ReservationAttemptDTO reservationAttemptDTO, AdvertisementDTO advertisementDTO, String loggedClientId) {

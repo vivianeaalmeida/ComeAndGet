@@ -25,7 +25,7 @@ export class CategoriesDashboardComponent {
   isEditingOrCreating: string = '';
   isModalOpen: boolean = false;
   selectedCategory: any;
-  categoryId: string = '';
+  categoryId?: string = '';
 
   constructor(private categoryServ: CategoryService, private fb: FormBuilder) {}
 
@@ -76,7 +76,7 @@ export class CategoriesDashboardComponent {
       id: this.categoryId,
     };
 
-    this.categoryServ.updateCategory(this.categoryId, categoryData).subscribe({
+    this.categoryServ.updateCategory(this.categoryId!, categoryData).subscribe({
       next: (response) => {
         Swal.fire({
           icon: 'success',
@@ -92,10 +92,6 @@ export class CategoriesDashboardComponent {
         });
       },
     });
-  }
-
-  setCategoryId(id: string) {
-    this.categoryId = id;
   }
 
   deleteCategory(id: string): void {
@@ -144,6 +140,7 @@ export class CategoriesDashboardComponent {
   openModal(isEditingOrCreating: string, category?: Category) {
     this.isEditingOrCreating = isEditingOrCreating;
     this.selectedCategory = category;
+    this.categoryId = category?.id;
     this.isModalOpen = true;
     this.fillCategoryForm(this.selectedCategory);
   }

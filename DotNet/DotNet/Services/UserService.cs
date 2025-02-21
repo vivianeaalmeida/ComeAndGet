@@ -27,6 +27,7 @@ namespace DotNet.Services {
         public UserInfoResponseDTO GetUserInfo() {
             var user = _httpContextAccessor.HttpContext?.User;
 
+            var userId = user?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var userName = user?.Identity?.Name;
             var email = user?.FindFirst(ClaimTypes.Email)?.Value;
             var name = user?.FindFirst(ClaimTypes.Name)?.Value;
@@ -34,6 +35,7 @@ namespace DotNet.Services {
             var role = user?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "User";
 
             return new UserInfoResponseDTO {
+                UserId = userId ?? string.Empty,
                 Username = userName ?? string.Empty,
                 Email = email ?? string.Empty,
                 Name = name ?? string.Empty,

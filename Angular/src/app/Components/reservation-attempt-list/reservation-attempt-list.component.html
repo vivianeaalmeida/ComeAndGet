@@ -1,0 +1,29 @@
+<div class="min-h-screen mt-10 flex flex-col items-center">
+    <div class="min-w-[80vw] max-w-[80vw]">
+      <div class="grid grid-cols-3 gap-6 mt-5">
+        <div
+          *ngFor="let item of reservationAttempt"
+          class="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow"
+        >
+          <p class="text-lg font-bold text-lime-900">ID: {{ item.id }}</p>
+          <p class="text-base text-lime-800">Client: {{ item.userId }}</p>
+          <p class="text-base text-lime-800">Advertisement: {{ item.advertisementId }}</p>
+          <p class="text-base text-lime-800">Date: {{ item.date }}</p>
+          <p class="text-base font-semibold"
+            [ngClass]="{
+              'text-green-600': item.status === 'APPROVED',
+              'text-yellow-600': item.status === 'PENDING',
+              'text-red-600': item.status === 'REJECTED'
+            }">
+            Status: {{ item.status }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!--"id": "1",
+    "clientId": "6da5e884-ef26-4f1b-9aea-613dfeaaad84",
+    "status": "PENDING",
+    "advertisementId": "1",
+    "date": "2025-02-14"-->

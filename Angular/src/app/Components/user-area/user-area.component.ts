@@ -6,11 +6,12 @@ import { ButtonComponent } from '../button/button.component';
 import { AdvService } from '../../Services/adv.service';
 import { map } from 'rxjs';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { ReservationAttemptListComponent } from '../reservation-attempt-list/reservation-attempt-list.component';
 
 @Component({
   selector: 'app-user-area',
   standalone: true,
-  imports: [NgIf, ButtonComponent, CommonModule],
+  imports: [NgIf, ButtonComponent, CommonModule, ReservationAttemptListComponent],
   templateUrl: './user-area.component.html',
   styleUrl: './user-area.component.css',
 })

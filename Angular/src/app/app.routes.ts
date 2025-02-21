@@ -8,6 +8,7 @@ import { CategoriesDashboardComponent } from './Components/categories-dashboard/
 import { UserAreaComponent } from './Components/user-area/user-area.component';
 import { clientGuard } from './Guards/client.guard';
 import { AdvlistingComponent } from './Components/advlisting/advlisting.component';
+import { ReservationAttemptListComponent } from './Components/reservation-attempt-list/reservation-attempt-list.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -29,5 +30,6 @@ export const routes: Routes = [
   // CRIAR: path> 'view-all' ---> Lista dos admins
   { path: 'dashboard', component: CategoriesDashboardComponent },
   { path: 'advertisements', component: AdvlistingComponent },
+  { path: 'reservation-attempts', component: ReservationAttemptListComponent},
   { path: '**', component: NotFoundComponent },
 ];

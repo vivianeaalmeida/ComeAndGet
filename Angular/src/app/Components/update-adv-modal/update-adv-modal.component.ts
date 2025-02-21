@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-update-adv-modal',
@@ -17,7 +18,6 @@ export class UpdateAdvModalComponent {
     private dialogRef: MatDialogRef<UpdateAdvModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    // Criação do FormGroup com dados iniciais passados pelo dialog
     this.updateAdvForm = new FormGroup({
       title: new FormControl(data?.title || '', [
         Validators.required,
@@ -37,7 +37,22 @@ export class UpdateAdvModalComponent {
 
   onSubmit() {
     if (this.updateAdvForm.valid) {
-      this.dialogRef.close(this.updateAdvForm.value);
+      // Exibe um alerta de sucesso
+      Swal.fire({
+        title: 'Success!',
+        text: 'Advertisement updated succesfully.',
+        icon: 'success',
+        confirmButtonText: 'OK',
+      }).then(() => {
+        this.dialogRef.close(this.updateAdvForm.value);
+      });
+    } else {
+      Swal.fire({
+        title: 'Erro!',
+        text: 'Please, fill in all the required data properly.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
     }
   }
 }

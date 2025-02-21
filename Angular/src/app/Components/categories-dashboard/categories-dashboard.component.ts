@@ -10,11 +10,12 @@ import {
 } from '@angular/forms';
 import { Category } from '../../Models/category';
 import Swal from 'sweetalert2';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-categories-dashboard',
   standalone: true,
-  imports: [NgxDatatableModule, ReactiveFormsModule],
+  imports: [NgxDatatableModule, ReactiveFormsModule, NgIf],
   templateUrl: './categories-dashboard.component.html',
   styleUrl: './categories-dashboard.component.css',
 })

@@ -26,10 +26,10 @@ INSERT INTO ITEM (ID, IMAGE, CONDITION, CATEGORY_ID) VALUES
 
 -- Insert advertisements
 INSERT INTO ADVERTISEMENT (ID, TITLE, DESCRIPTION, DATE, MUNICIPALITY, STATUS, ITEM_ID, CLIENT_ID) VALUES
---00ec311a-9631-4221-baec-fc706af9cc95
-(1, 'Frigorífico para doar - urgente', 'Frigorifico com congelador para doar. Tenho urgência que venham retirar', '2025-02-14', 'Porto', 0, 1, '00ec311a-9631-4221-baec-fc706af9cc95'),
-(2, 'Máquina de lavar a loiça para doar', 'Máquina de lavar a loiça em funcionamento.', '2025-02-10', 'Porto', 1, 2, '00ec311a-9631-4221-baec-fc706af9cc95'),
-(3, 'Máquina de café', 'Máquina de café da Nespresso em bom estado.', '2025-01-01', 'Porto', 0, 3, '00ec311a-9631-4221-baec-fc706af9cc95'),
+--533c0768-8da4-478e-b089-fbe05f5f4dda
+(1, 'Frigorífico para doar - urgente', 'Frigorifico com congelador para doar. Tenho urgência que venham retirar', '2025-02-14', 'Porto', 0, 1, '533c0768-8da4-478e-b089-fbe05f5f4dda'),
+(2, 'Máquina de lavar a loiça para doar', 'Máquina de lavar a loiça em funcionamento.', '2025-02-10', 'Porto', 1, 2, '533c0768-8da4-478e-b089-fbe05f5f4dda'),
+(3, 'Máquina de café', 'Máquina de café da Nespresso em bom estado.', '2025-01-01', 'Porto', 0, 3, '533c0768-8da4-478e-b089-fbe05f5f4dda'),
 
 -- 647fe1ef-40b5-4957-96cc-c83a4b3131da
 (4, 'Sofá 3 lugares', 'Sofá de 3 lugares em ótimo estado. Ideal para a sua sala de estar.', '2025-02-10', 'Porto', 0, 4, '647fe1ef-40b5-4957-96cc-c83a4b3131da'),

@@ -405,7 +405,7 @@ public class AdvertisementService implements IAdvertisementService {
         }
 
         // Check if the description is less than 5 or more than 50 characters
-        if (description.length() < 5 || description.length() > 50) {
+        if (description.length() < 5 || description.length() > 200) {
             throw new AdvertisementValidationException("The description must have between 5 and 50 characters.");
         }
 

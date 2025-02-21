@@ -3,7 +3,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AdvService } from '../../Services/adv.service';
 import { UpdateAdvModalComponent } from '../update-adv-modal/update-adv-modal.component';
-import { Adv } from '../../Models/adv'; // Importe o tipo Adv corretamente
 import { Advertisement } from '../../Models/advertisement';
 
 @Component({
@@ -15,7 +14,7 @@ import { Advertisement } from '../../Models/advertisement';
 })
 export class ButtonUpdateAdvComponent implements OnInit {
   @Input() id!: string;
-  advertisement: Advertisement | null = null; // Usando null ao invés de valores vazios
+  advertisement: Advertisement | null = null;
 
   constructor(private dialog: MatDialog, private advService: AdvService) {}
 
@@ -48,7 +47,6 @@ export class ButtonUpdateAdvComponent implements OnInit {
       });
 
       dialogRef.afterClosed().subscribe((updatedData) => {
-        console.log('Dados atualizados:', updatedData);
         if (updatedData) {
           // Enviar o ID junto com os dados da atualização
           const updatedAdvertisement = {

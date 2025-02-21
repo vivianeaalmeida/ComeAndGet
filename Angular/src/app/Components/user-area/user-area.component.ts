@@ -6,11 +6,12 @@ import { ButtonComponent } from '../button/button.component';
 import { AdvService } from '../../Services/adv.service';
 import { map } from 'rxjs';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { ButtonUpdateAdvComponent } from '../button-update-adv/button-update-adv.component';
 
 @Component({
   selector: 'app-user-area',
   standalone: true,
-  imports: [NgIf, ButtonComponent, CommonModule],
+  imports: [NgIf, ButtonComponent, CommonModule, ButtonUpdateAdvComponent],
   templateUrl: './user-area.component.html',
   styleUrl: './user-area.component.css',
 })
@@ -27,6 +28,7 @@ export class UserAreaComponent implements OnInit {
   name?: string;
   userId?: string;
   isLogged: any;
+  selectedAdv: any | null = null;
 
   constructor(
     private authService: AuthService,
@@ -103,5 +105,10 @@ export class UserAreaComponent implements OnInit {
     return this.sanitizer.bypassSecurityTrustResourceUrl(
       'http://localhost:8080/' + imagePath
     );
+  }
+
+  selectAdv(adv: any) {
+    this.selectedAdv = adv;
+    console.log('Selected adv:' + this.selectAdv);
   }
 }

@@ -29,6 +29,7 @@ export class CreateAdvComponent implements OnInit {
   submitted = false;
   allCategories: Category[] = [];
   allMunicipalities: string[] = [];
+  fileName: string | null = null;
 
   constructor(
     private adServ: AdvService,
@@ -79,6 +80,14 @@ export class CreateAdvComponent implements OnInit {
 
   onFileSelected(event: any) {
     this.imagem = event.target.files[0];
+    const file = event.target.files[0];
+    if (file) {
+      this.imagem = file;
+      this.fileName = file.name;
+    } else {
+      this.imagem = '';
+      this.fileName = null;
+    }
   }
 
   submitAdv() {
@@ -118,7 +127,18 @@ export class CreateAdvComponent implements OnInit {
 
       this.adServ.add('advertisements', formData).subscribe({
         next: () =>
-          Swal.fire({ icon: 'success', title: 'Ad added successfully!' }),
+          Swal.fire({
+            icon: 'success',
+            title: 'Ad added successfully!',
+            text: 'Do you want to see your adds in your user area?',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = '/user-area';
+            }
+          }),
         error: () => Swal.fire({ icon: 'error', title: 'Error adding ad!' }),
       });
     }

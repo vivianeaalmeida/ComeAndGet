@@ -10,11 +10,12 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { AdvertisementCardComponent } from '../advertisement-card/advertisement-card.component';
 import { CommonModule, NgIf } from '@angular/common';
 import { map } from 'rxjs';
+import { ButtonCreateResAttemptComponent } from '../Buttons/button-create-res-attempt/button-create-res-attempt.component';
 
 @Component({
   selector: 'app-advlisting',
   standalone: true,
-  imports: [AdvertisementCardComponent, NgIf, CommonModule],
+  imports: [AdvertisementCardComponent, NgIf, CommonModule, ButtonCreateResAttemptComponent],
   templateUrl: './advlisting.component.html',
   styleUrl: './advlisting.component.css',
 })

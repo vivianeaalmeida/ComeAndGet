@@ -1,34 +1,41 @@
 <div
-  class="cursor-pointer group relative flex flex-col my-6 bg-white shadow-md rounded-lg h-[50vh] min-h-[410px] w-[22vw] max-w-[20vw] hover:shadow-lg transition-shadow duration-300 justify-evenly">
+  class="cursor-pointer group relative flex flex-col bg-white shadow-md rounded-lg h-[50vh] min-h-[410px] w-[19vw] max-w-[19vw] hover:shadow-lg transition-shadow duration-300 justify-evenly"
+>
   <!-- Imagem -->
-  <div class="relative h-48 min-h-48 max-h-48 m-2.5 overflow-hidden text-white rounded-md">
+  <div
+    class="relative h-48 min-h-48 max-h-48 m-2.5 overflow-hidden text-white rounded-md"
+  >
     <img
       class="absolute top-0 left-0 w-full h-full object-cover transform transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-105"
       [src]="imageSrc"
-      [alt]="title" />
+      [alt]="title"
+    />
   </div>
-
 
   <!-- Título e Descrição -->
   <div class="px-4 flex flex-col flex-grow">
     <!-- Título -->
     <h6
-      class="mb-2 mt-2 text-slate-800 text-2xl font-semibold leading-none line-clamp-2 text-ellipsis overflow-hidden min-h-[3.5rem]">
+      class="mb-2 mt-2 text-slate-800 text-2xl font-semibold leading-none line-clamp-2 text-ellipsis overflow-hidden min-h-[3.5rem]"
+    >
       {{ title }}
     </h6>
 
     <!-- Descrição -->
     <p
-      class="text-slate-600 leading-normal font-medium text-lg line-clamp-2 text-ellipsis overflow-hidden min-h-[3.5rem]">
+      class="text-slate-600 leading-normal font-medium text-lg line-clamp-2 text-ellipsis overflow-hidden min-h-[3.5rem]"
+    >
       {{ description }}
     </p>
   </div>
 
   <!-- Botão -->
   <div class="flex justify-center overflow-hidden">
-    <app-button [buttonText]="buttonText"
+    <app-button
+      [buttonText]="buttonText"
       fontSize="1rem"
       padding=".5rem 1rem"
-      class="mb-36"></app-button>
+      class="mb-36"
+    ></app-button>
   </div>
 </div>

@@ -28,7 +28,7 @@ export class CreateAdvComponent implements OnInit {
   formData: FormGroup;
   submitted = false;
   allCategories: Category[] = [];
-  allMunicipalities: string[] = []; // Corrigido para 'string[]'
+  allMunicipalities: string[] = [];
 
   constructor(
     private adServ: AdvService,
@@ -39,10 +39,12 @@ export class CreateAdvComponent implements OnInit {
       title: new FormControl('', [
         Validators.required,
         Validators.minLength(5),
+        Validators.maxLength(50),
       ]),
       description: new FormControl('', [
         Validators.required,
-        Validators.minLength(20),
+        Validators.minLength(5),
+        Validators.maxLength(200),
       ]),
       municipality: new FormControl('', [Validators.required]),
       condition: new FormControl('', [Validators.required]),

@@ -2,9 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-  font-family: "Dosis", sans-serif;
-}
+* { font-family: Dosis, "Helvetica Neue", sans-serif; }
 
 h1,
 h2,
@@ -137,5 +135,23 @@ h6 {
 .validation-error {
   color: red;
   text-align: left;
-  font-size: .8rem;
+  font-size: 1rem;
+  font-weight: 500;
 }
+
+.validation-error {
+  color: red;
+  text-align: left;
+  font-size: 1rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+.validation-error::before {
+  content: "❗";
+  margin-right: 0.3rem;
+}
+
+html, body { height: 100%; }
+body { margin: 0; background-color: rgb(236 252 203 / var(--tw-bg-opacity, 1)) }

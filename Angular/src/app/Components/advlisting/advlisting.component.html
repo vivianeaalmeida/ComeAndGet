@@ -30,7 +30,7 @@
     <!--grid adv-->
     <div class="w-full mt-14 pb-20 mb-60">
       @if(this.selectedCategory == 'all' || existingAdv > 0) {
-      <div class="grid grid-cols-4 gap-20">
+      <div class="grid grid-cols-4 gap-10">
         @for (adv of advCollection; track $index) { @if(this.selectedCategory ==
         adv.item.category.designation || this.selectedCategory == 'all'){
         <div
@@ -48,7 +48,7 @@
       </div>
       } @else {
       <h1
-        class="mt-20 flex justify-center font-semibold text-white text-3xl text-center"
+        class="mt-20 flex justify-center font-semibold text-lime-900 text-3xl text-center"
       >
         Sorry! No Advertisments found.
       </h1>

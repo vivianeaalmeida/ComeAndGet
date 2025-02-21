@@ -1,105 +1,138 @@
-<div class="space-y-12 m-36 w-1/2 mx-auto">
+<div class="space-y-12 m-36 w-3/5 mx-auto lime-100 bg-white p-8 rounded-md shadow-md border-red-50">
   <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">Create Advertisement</h1>
 
-  <form [formGroup]="formData"
-    (ngSubmit)="submitAdv()"
-    class="space-y-6 text-lg">
-
-    <!-- Title -->
-    <div class="space-y-2">
-      <label for="title"
-        class="block text-left text-gray-700 font-medium">Title</label>
-      <input type="text"
-        id="title"
-        formControlName="title"
-        class="w-full px-4 py-3 rounded-lg border-2 border-gray-400 focus:outline-none focus:ring-2 focus:ring-lime-800 transition-colors"
-        placeholder="Enter a title">
-      <div *ngIf="title!.invalid && submitted"
-        class="validation-error">
-        <p *ngIf="title!.errors?.['required']">Title is required.</p>
-        <p *ngIf="title!.errors?.['minlength']">Minimum 5 characters required.</p>
-      </div>
-    </div>
-
-    <!-- Description -->
-    <div class="space-y-2">
-      <label for="description"
-        class="block text-left text-gray-700 font-medium">Description</label>
-      <textarea id="description"
-        formControlName="description"
-        class="w-full px-4 py-3 rounded-lg border-2 border-gray-400 focus:outline-none focus:ring-2 focus:ring-lime-800 transition-colors"
-        placeholder="Enter a description"></textarea>
-      <div *ngIf="description!.invalid && submitted"
-        class="validation-error">
-        <p *ngIf="description!.errors?.['required']">Description is required.</p>
-        <p *ngIf="description!.errors?.['minlength']">Minimum 20 characters required.</p>
-      </div>
-    </div>
-
-    <div class="flex justify-between">
-      <!-- Condition -->
+  <div>
+    <form [formGroup]="formData"
+      (ngSubmit)="submitAdv()"
+      class="space-y-6 text-lg">
+      <!-- Title -->
       <div class="space-y-2">
-        <label for="condition"
-          class="block text-left text-gray-700 font-medium">Condition</label>
-        <select id="condition"
-          formControlName="condition"
-          class="w-full px-4 py-3 rounded-lg border-2 border-gray-400 focus:outline-none focus:ring-2 focus:ring-lime-800 overflow-y-auto max-h-48">
-          <option value=""
-            disabled
-            selected>Select a condition</option>
-          <option value="EXCELLENT">Excellent</option>
-          <option value="GOOD">Good</option>
-          <option value="ACCEPTABLE">Acceptable</option>
-          <option value="POOR">Poor</option>
-        </select>
+        <label for="title"
+          class="block text-left text-gray-700 font-semibold">Title</label>
+        <input type="text"
+          id="title"
+          formControlName="title"
+          class="w-full px-4 py-3 rounded-lg border-2 border-gray-400 focus:outline-none focus:ring-2 focus:ring-lime-800 transition-colors"
+          placeholder="Enter a title">
+        <div *ngIf="title!.invalid && title!.touched"
+          class="validation-error">
+          <p *ngIf="title!.errors?.['required']">Title is required.</p>
+          <p *ngIf="title!.errors?.['minlength']">Minimum 5 characters required.</p>
+          <p *ngIf="title!.errors?.['maxlength']">Maximum of 50 characters.</p>
+        </div>
       </div>
 
-      <!-- Category -->
+      <!-- Description -->
       <div class="space-y-2">
-        <label for="category"
-          class="block text-left text-gray-700 font-medium">Category</label>
-        <select id="category"
-          formControlName="category"
-          class="w-full px-4 py-3 rounded-lg border-2 border-gray-400">
-          <option value=""
-            disabled
-            selected>Select a category</option>
-          <option *ngFor="let category of allCategories"
-            [value]="category.id">
-            {{ category.designation }}
-          </option>
-        </select>
-
+        <label for="description"
+          class="block text-left text-gray-700 font-semibold">Description</label>
+        <textarea id="description"
+          formControlName="description"
+          class="w-full px-4 py-3 rounded-lg border-2 border-gray-400 focus:outline-none focus:ring-2 focus:ring-lime-800 transition-colors"
+          placeholder="Enter a description"></textarea>
+        <div *ngIf="description!.invalid && description!.touched"
+          class="validation-error">
+          <p *ngIf="description!.errors?.['required']">Description is required.</p>
+          <p *ngIf="description!.errors?.['minlength']">Minimum 20 characters required.</p>
+          <p *ngIf="description!.errors?.['maxlength']">Maximum of 200 characters.</p>
+        </div>
       </div>
 
-      <!-- Municipality -->
+      <div class="flex justify-between">
+        <!-- Condition -->
+        <div class="space-y-2">
+          <label for="condition"
+            class="block text-left text-gray-700 font-semibold">Condition</label>
+          <select id="condition"
+            formControlName="condition"
+            class="w-full px-4 py-3 rounded-lg border-2 border-gray-400 focus:outline-none focus:ring-2 focus:ring-lime-800 overflow-y-auto max-h-48">
+            <option value=""
+              disabled
+              selected>Select a condition</option>
+            <option value="EXCELLENT">Excellent</option>
+            <option value="GOOD">Good</option>
+            <option value="ACCEPTABLE">Acceptable</option>
+            <option value="POOR">Poor</option>
+          </select>
+          <div *ngIf="condition!.invalid && condition!.touched"
+            class="validation-error">
+            <p *ngIf="condition!.errors?.['required']">Condition is required.</p>
+          </div>
+        </div>
+
+        <!-- Category -->
+        <div class="space-y-2">
+          <label for="category"
+            class="block text-left text-gray-700 font-semibold">Category</label>
+          <select id="category"
+            formControlName="category"
+            class="w-full px-4 py-3 rounded-lg border-2 border-gray-400 focus:ring-lime-800">
+            <option value=""
+              disabled
+              selected>Select a category</option>
+            <option *ngFor="let category of allCategories"
+              [value]="category.id">
+              {{ category.designation }}
+            </option>
+          </select>
+          <div *ngIf="category!.invalid && category!.touched"
+            class="validation-error">
+            <p *ngIf="category!.errors?.['required']">Category is required.</p>
+          </div>
+        </div>
+
+        <!-- Municipality -->
+        <div class="space-y-2">
+          <label for="municipality"
+            class="block text-left text-gray-700 font-semibold">Municipality</label>
+          <select id="municipality"
+            formControlName="municipality"
+            class="w-full px-4 py-3 rounded-lg border-2 border-gray-400 focus:ring-lime-800">
+            <option value=""
+              disabled
+              selected>Select a municipality</option>
+            <option *ngFor="let municipality of allMunicipalities"
+              [value]="municipality">
+              {{ municipality }}
+            </option>
+          </select>
+          <div *ngIf="municipality!.invalid && municipality!.touched"
+            class="validation-error">
+            <p *ngIf="municipality!.errors?.['required']">Municipality is required.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upload Image -->
       <div class="space-y-2">
-        <label for="municipality"
-          class="block text-left text-gray-700 font-medium">Municipality</label>
-        <select id="municipality"
-          formControlName="municipality"
-          class="w-full px-4 py-3 rounded-lg border-2 border-gray-400">
-          <option value=""
-            disabled
-            selected>Select a municipality</option>
-          <option *ngFor="let municipality of allMunicipalities"
-            [value]="municipality">
-            {{ municipality }}
-          </option>
-        </select>
-
+        <label class="block text-left text-gray-700 font-semibold"
+          for="file_input">Upload image</label>
+        <div class="file-input-container">
+          <input type="file"
+            (change)="onFileSelected($event)"
+            id="fileInput"
+            class="file-input" />
+          <label for="fileInput"
+            class="file-input-label">
+            <span class="file-input-button">Choose File</span>
+            <span class="file-input-text">{{ fileName || 'No file chosen' }}</span>
+          </label>
+        </div>
       </div>
-    </div>
 
-    <input type="file"
-      (change)="onFileSelected($event)"
-      class="bg-gray-300 w-full text-sm px-4 py-3.5 rounded-md outline-gray-800 placeholder-purple-900" />
-
-
-    <!-- Submit Button -->
-    <button type="submit"
-      class="w-full bg-lime-800 text-white py-3 rounded-lg font-bold hover:bg-lime-700 transition">Submit
-      Ad</button>
-
-  </form>
+      <div class="flex flex-row gap-4 pt-6">
+        <!-- Submit Button -->
+         <button type="reset"
+          class="w-full border-2 border-lime-800 text-gray-700 py-3 rounded-lg font-bold hover:bg-lime-100 transition">
+          Reset
+        </button>
+        <button type="submit"
+          [disabled]="formData.invalid"
+          class="w-full bg-lime-800 text-white py-3 rounded-lg font-bold hover:bg-lime-700 transition disabled:bg-lime-800 disabled:cursor-not-allowed">
+          Submit Ad
+        </button>
+        
+      </div>
+    </form>
+  </div>
 </div>

@@ -1,8 +1,14 @@
-<div class="font-[sans-serif] bg-gradient-to-b from-lime-600 via-lime-700 to-lime-800 text-ground">
-  <div class="min-h-screen flex flex-col items-center justify-center lg:p-6 p-4">
+<div
+  class="font-[sans-serif] bg-gradient-to-b from-lime-600 via-lime-700 to-lime-800 text-ground"
+>
+  <div
+    class="min-h-screen flex flex-col items-center justify-center lg:p-6 p-4"
+  >
     <div class="grid grid-cols-2 items-center gap-10 max-w-[80vw] w-full mt-28">
       <div>
-        <h2 class="text-4xl font-extrabold lg:leading-[40px] text-white text-justify">
+        <h2
+          class="text-4xl font-extrabold lg:leading-[40px] text-white text-justify"
+        >
           At Come and Get, we believe in the power of community and the joy of
           giving!
         </h2>
@@ -14,56 +20,76 @@
         </p>
       </div>
 
-      <form [formGroup]="loginForm"
+      <form
+        [formGroup]="loginForm"
         (ngSubmit)="loginUser()"
-        class="bg-white rounded-xl px-6 py-8 space-y-6 max-w-[30vw] md:ml-auto w-full mb-32">
-        <h3 class="text-ground text-4xl justify-self-center font-extrabold mb-8">
+        class="bg-white rounded-xl px-6 py-8 space-y-6 max-w-[30vw] md:ml-auto w-full mb-32"
+      >
+        <h3
+          class="text-ground text-4xl justify-self-center font-extrabold mb-8"
+        >
           Login
         </h3>
 
         <div class="space-y-4">
           <div>
-            <label for="email"
-              class="block text-md font-medium text-ground mb-1">Email:</label>
-            <input type="text"
+            <label
+              for="email"
+              class="block text-md font-medium text-ground mb-1"
+              >Email:</label
+            >
+            <input
+              type="text"
               id="email"
               placeholder="Email"
               formControlName="email"
-              class="bg-gray-100 focus:bg-transparent w-full text-md px-4 py-3.5 rounded-md outline-ground" />
+              class="bg-gray-100 focus:bg-transparent w-full text-md px-4 py-3.5 rounded-md outline-ground"
+            />
           </div>
           <div>
-            <label for="password"
-              class="block text-md font-medium text-ground mb-1">Password:</label>
-            <input type="password"
+            <label
+              for="password"
+              class="block text-md font-medium text-ground mb-1"
+              >Password:</label
+            >
+            <input
+              type="password"
               id="password"
               placeholder="Password"
               formControlName="password"
-              class="bg-gray-100 focus:bg-transparent w-full text-md px-4 py-3.5 rounded-md outline-ground" />
+              class="bg-gray-100 focus:bg-transparent w-full text-md px-4 py-3.5 rounded-md outline-ground"
+            />
           </div>
         </div>
         <div>
-          <button type="submit"
+          <button
+            type="submit"
             class="w-full shadow-xl py-2 px-6 text-lg font-semibold rounded-md text-white bg-ground hover:bg-[#222] focus:outline-none"
             [disabled]="loginForm.invalid"
             [class]="
               loginForm.invalid ? 'cursor-not-allowed' : 'cursor-pointer'
-            ">
+            "
+          >
             Log in
           </button>
         </div>
         <p class="text-md mt-6 text-black">
           Don't have an account?
-          <a class="text-black font-semibold underline ml-1 cursor-pointer"
-            (click)="registerUser()">
+          <a
+            class="text-black font-semibold underline ml-1 cursor-pointer"
+            (click)="registerUser()"
+          >
             Register here
           </a>
         </p>
       </form>
     </div>
     <div>
-      <img src="assets/recycle-symbol.png"
+      <img
+        src="assets/recycle-symbol.png"
         alt=""
-        class="absolute w-52 left-80 -bottom-12 mx-auto" />
+        class="absolute w-52 left-80 bottom-12 mx-auto"
+      />
     </div>
   </div>
 </div>

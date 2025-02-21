@@ -4,10 +4,12 @@ import { LoginComponent } from './Components/login/login.component';
 import { RegisterComponent } from './Components/register/register.component';
 import { CreateAdvComponent } from './Components/create-adv/create-adv.component';
 import { NotFoundComponent } from './Components/not-found/not-found.component';
-import { CategoriesDashboardComponent } from './Components/categories-dashboard/categories-dashboard.component';
 import { UserAreaComponent } from './Components/user-area/user-area.component';
 import { clientGuard } from './Guards/client.guard';
 import { AdvlistingComponent } from './Components/advlisting/advlisting.component';
+import { DashboardComponent } from './Components/dashboard/dashboard.component';
+import { CategoriesDashboardComponent } from './Components/categories-dashboard/categories-dashboard.component';
+import { AdvertisementsDashboardComponent } from './Components/advertisements-dashboard/advertisements-dashboard.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -27,7 +29,10 @@ export const routes: Routes = [
 
   { path: 'view-active', component: AdvlistingComponent }, // Lista dos users
   // CRIAR: path> 'view-all' ---> Lista dos admins
-  { path: 'dashboard', component: CategoriesDashboardComponent },
+  { path: 'dashboard', component: DashboardComponent },
+  { path: 'categoriesDash', component: CategoriesDashboardComponent },
+  { path: 'advertisementsDash', component: AdvertisementsDashboardComponent },
+  { path: 'categoriesDash', component: CategoriesDashboardComponent },
   { path: 'advertisements', component: AdvlistingComponent },
   { path: '**', component: NotFoundComponent },
 ];

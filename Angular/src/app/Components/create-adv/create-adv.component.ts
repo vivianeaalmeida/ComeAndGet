@@ -28,7 +28,8 @@ export class CreateAdvComponent implements OnInit {
   formData: FormGroup;
   submitted = false;
   allCategories: Category[] = [];
-  allMunicipalities: string[] = []; // Corrigido para 'string[]'
+  allMunicipalities: string[] = [];
+  fileName: string | null = null;
 
   constructor(
     private adServ: AdvService,
@@ -39,14 +40,17 @@ export class CreateAdvComponent implements OnInit {
       title: new FormControl('', [
         Validators.required,
         Validators.minLength(5),
+        Validators.maxLength(50),
       ]),
       description: new FormControl('', [
         Validators.required,
-        Validators.minLength(20),
+        Validators.minLength(5),
+        Validators.maxLength(200),
       ]),
       municipality: new FormControl('', [Validators.required]),
       condition: new FormControl('', [Validators.required]),
       category: new FormControl('', [Validators.required]),
+      file: new FormControl('', [Validators.required]),
     });
   }
 
@@ -77,6 +81,16 @@ export class CreateAdvComponent implements OnInit {
 
   onFileSelected(event: any) {
     this.imagem = event.target.files[0];
+    const file = event.target.files[0];
+    if (file) {
+      this.imagem = file;
+      this.fileName = file.name;
+      this.formData.patchValue({ file: file });
+      this.formData.get('file')?.updateValueAndValidity();
+    } else {
+      this.imagem = '';
+      this.fileName = null;
+    }
   }
 
   submitAdv() {
@@ -116,7 +130,18 @@ export class CreateAdvComponent implements OnInit {
 
       this.adServ.add('advertisements', formData).subscribe({
         next: () =>
-          Swal.fire({ icon: 'success', title: 'Ad added successfully!' }),
+          Swal.fire({
+            icon: 'success',
+            title: 'Ad added successfully!',
+            text: 'Do you want to see your adds in your user area?',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = '/user-area';
+            }
+          }),
         error: () => Swal.fire({ icon: 'error', title: 'Error adding ad!' }),
       });
     }

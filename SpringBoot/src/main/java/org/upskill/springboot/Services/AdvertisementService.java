@@ -69,8 +69,13 @@ public class AdvertisementService implements IAdvertisementService {
         AdvertisementDTO advertisementDTO = AdvertisementMapper.toDTO(advertisement);
         advertisementDTO.setMunicipality(advertisement.getMunicipality());
 
+        if (advertisement.getItem() != null && advertisement.getItem().getImage() != null) {
+            advertisementDTO.getItem().setImage(advertisement.getItem().getImage());
+        }
+
         return advertisementDTO;
     }
+
 
     /**
      * Retrieves all advertisements (except inactives)
@@ -88,7 +93,7 @@ public class AdvertisementService implements IAdvertisementService {
 
                     // Verifica se há um item e define a imagem corretamente
                     if (advertisement.getItem() != null && advertisement.getItem().getImage() != null) {
-                        String imagePath = "/uploads/" + advertisement.getItem().getImage();
+                        String imagePath = advertisement.getItem().getImage();
                         advertisementDTO.getItem().setImage(imagePath);
                     }
 
@@ -104,18 +109,22 @@ public class AdvertisementService implements IAdvertisementService {
      */
     @Override
     public List<AdvertisementDTO> getActiveAdvertisements() {
-        List<AdvertisementDTO> advertisementsDTO = advertisementRepository
+        return advertisementRepository
                 .findByStatus(Advertisement.AdvertisementStatus.ACTIVE)
                 .stream()
                 .map(advertisement -> {
                     AdvertisementDTO advertisementDTO = AdvertisementMapper.toDTO(advertisement);
                     advertisementDTO.setMunicipality(advertisement.getMunicipality());
+
+                    if (advertisement.getItem() != null && advertisement.getItem().getImage() != null) {
+                        advertisementDTO.getItem().setImage(advertisement.getItem().getImage());
+                    }
+
                     return advertisementDTO;
                 })
                 .toList();
-
-        return advertisementsDTO;
     }
+
 
     /**
      * Retrieves all closed advertisements.
@@ -124,17 +133,20 @@ public class AdvertisementService implements IAdvertisementService {
      */
     @Override
     public List<AdvertisementDTO> getClosedAdvertisements() {
-        List<AdvertisementDTO> advertisementsDTO = advertisementRepository
+        return advertisementRepository
                 .findByStatus(Advertisement.AdvertisementStatus.CLOSED)
                 .stream()
                 .map(advertisement -> {
                     AdvertisementDTO advertisementDTO = AdvertisementMapper.toDTO(advertisement);
                     advertisementDTO.setMunicipality(advertisement.getMunicipality());
+
+                    if (advertisement.getItem() != null && advertisement.getItem().getImage() != null) {
+                        advertisementDTO.getItem().setImage(advertisement.getItem().getImage());
+                    }
+
                     return advertisementDTO;
                 })
                 .toList();
-
-        return advertisementsDTO;
     }
 
     /**
@@ -143,16 +155,21 @@ public class AdvertisementService implements IAdvertisementService {
      * @param clientId the ID of the client
      * @return a list of advertisements associated with the given client ID
      */
-    @Override
     public List<AdvertisementDTO> getAdvertisementsByClientId(String clientId) {
-        // Retrieve advertisements associated with the clientId
-        List<AdvertisementDTO> advertisementsDTO = advertisementRepository
+        return advertisementRepository
                 .findByClientIdAndStatusNot(clientId, Advertisement.AdvertisementStatus.INACTIVE)
                 .stream()
-                .map(AdvertisementMapper::toDTO)
-                .toList();
+                .map(advertisement -> {
+                    AdvertisementDTO advertisementDTO = AdvertisementMapper.toDTO(advertisement);
+                    advertisementDTO.setMunicipality(advertisement.getMunicipality());
 
-        return advertisementsDTO;
+                    if (advertisement.getItem() != null && advertisement.getItem().getImage() != null) {
+                        advertisementDTO.getItem().setImage(advertisement.getItem().getImage());
+                    }
+
+                    return advertisementDTO;
+                })
+                .toList();
     }
 
     /**
@@ -292,6 +309,14 @@ public class AdvertisementService implements IAdvertisementService {
         return advertisementsDTO;
     }
 
+
+    public void closeAdvertisement(String id) {
+        Advertisement advertisement = advertisementRepository.findById(id)
+                .orElseThrow(() -> new AdvertisementNotFoundException("Advertisement not found"));
+        advertisement.setStatus(Advertisement.AdvertisementStatus.CLOSED);
+        advertisementRepository.save(advertisement);
+    }
+
     /**
      * Validates the advertisement data transfer object.
      *
@@ -380,8 +405,8 @@ public class AdvertisementService implements IAdvertisementService {
         }
 
         // Check if the description is less than 5 or more than 50 characters
-        if (description.length() < 5 || description.length() > 50) {
-            throw new AdvertisementValidationException("The description must have between 5 and 50 characters.");
+        if (description.length() < 5 || description.length() > 200) {
+            throw new AdvertisementValidationException("The description must have between 5 and 200 characters.");
         }
 
         return true;

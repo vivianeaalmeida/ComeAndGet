@@ -203,8 +203,8 @@
 ---
 
 ## US18 - View my list of ReservationAttempts
-- **Endpoint**: `GET /users/{userId}/ReservationAttempts`
-- **Description**: As a client, I want to view the list of ReservationAttempts I have made on advertisements so that I can track their status and manage them
+- **Endpoint**: `GET /reservationAttempts?clientId={clientId}`
+- **Description**: As a client, I want to request all reservations attempts done by clientId
 - **Permissions/Role**: Client
 - **Acceptance Criteria**:
     - The client should be able to view a list of ReservationAttempts they have made on advertisements ordered by descending date.
@@ -214,7 +214,7 @@
 ---
 
 ## US19 - View ReservationAttempts on my advertisements
-- **Endpoint**: `GET /users/advertisements/ReservationAttempts`
+- **Endpoint**: `GET /reservationAttempts/advertisement?ownerId={clientId}`
 - **Description**: As a client (advertisement owner), I want to see the list of ReservationAttempts made on my advertisements so that I can track interest and respond accordingly.
 - **Permissions/Role**: Client (advertisement owner)
 - **Acceptance Criteria**:
@@ -228,13 +228,13 @@
 - **Description**: As a client, I want to change a ReservationAttempt so that I can canceled my ReservationAttempt or decline/accepted/conclude a ReservationAttempt made to my advertisement.
 - **Permissions/Role**: Client (ReservationAttempter or advertisement creator)
 - **Acceptance Criteria**:
-    - The only editable field is the ReservationAttempt status.
-    - Only the ReservationAttempter or the advertisement owner can update the status of the ReservationAttempt.
+    - The only editable field is the ReservationAttempt status.**
+    - Only the ReservationAttempter or the advertisement owner can update the status of the ReservationAttempt.**
     - The system should notify the involved parties when the status changes.
     - When the status is changed to finished the advertisement status is changed to finished.
     - It must only exist a ReservationAttempt with status donated per advertisement.
-    - ReservationAttempt with donated, canceled and rejected status cannot be changed by anyone.
-    - The ReservationAttempter can change is ReservationAttempt to canceled.
-    - The advertisement owner can change the pending ReservationAttempts to rejected. It can also change a pending ReservationAttempt to accepted, but it must only exist one accepted ReservationAttempt per advertisement.
+    - ReservationAttempt with donated, canceled and rejected status cannot be changed by anyone.**
+    - The ReservationAttempter can change is ReservationAttempt to canceled.**
+    - The advertisement owner can change the pending ReservationAttempts to rejected. It can also change a pending ReservationAttempt to accepted, but it must only exist one accepted ReservationAttempt per advertisement.**
     - Changing a ReservationAttempt to donated closes the corresponding advertisement (advertisement status must be updated to closed)
 ---

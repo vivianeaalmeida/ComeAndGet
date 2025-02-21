@@ -1,6 +1,7 @@
 package org.upskill.springboot.WebClient;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -29,7 +30,7 @@ public class AuthUserWebClient {
                 .bodyToMono(String.class);
     }
 
-    public String getUserId(String authorization) { // Removido @RequestHeader
+    public String getUserId(String authorization) { // @RequestHeader
         return webClient.get()
                 .uri("/user/id")
                 .header("Authorization", authorization)

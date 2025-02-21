@@ -22,8 +22,11 @@ public class ReservationAttemptController extends BaseController {
 
     @GetMapping("/reservationAttempts")
     public ResponseEntity<List<ReservationAttemptResponseDTO>> getReservationAttempts(
+            @RequestParam(required = false) String reservationAttemptClientId,
+            @RequestParam(required = false)  String advertisementClientId,
+            @RequestParam(required = false)  String advertisementId
     ) {
-        List<ReservationAttemptResponseDTO> reservationAttemptsDTO = reservationAttemptService.getReservationAttempts();
+        List<ReservationAttemptResponseDTO> reservationAttemptsDTO = reservationAttemptService.getReservationAttempts(reservationAttemptClientId, advertisementClientId, advertisementId);
         return new ResponseEntity<>(reservationAttemptsDTO, HttpStatus.OK);
     }
 
@@ -66,25 +69,10 @@ public class ReservationAttemptController extends BaseController {
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
-    @PatchMapping("reservationAttempts/{reservationId}/status")
-    public ResponseEntity<ReservationAttemptResponseDTO> patchReservationAttemptStatus(@PathVariable String reservationId, @RequestBody ReservationAttemptStatusDTO requestDTO) {
-        ReservationAttemptResponseDTO response = reservationAttemptService.updateReservationAttemptStatus( reservationId , requestDTO);
+    @PatchMapping("/reservationAttempts/{reservationId}/status")
+    public ResponseEntity<ReservationAttemptResponseDTO> patchReservationAttemptStatus(@PathVariable String reservationId, @RequestHeader("Authorization") String authorization, @RequestBody ReservationAttemptStatusDTO requestDTO) {
+        ReservationAttemptResponseDTO response = reservationAttemptService.updateReservationAttemptStatus( reservationId , authorization, requestDTO);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
-    /*metodos que vieram do userController*/
-    /*
-    @GetMapping("/users/{userId}/reservationAttempts")
-    public ResponseEntity<List<ReservationAttemptResponseDTO>> getReservationAttemptsByUserId(@PathVariable String userId) {
-        List<ReservationAttemptResponseDTO> response = this.userService.getReservationAttemptByUserId(userId);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @GetMapping("/users/{userId}/advertisements/reservationAttempt")
-    public ResponseEntity<List<ReservationAttemptResponseDTO>> getAdvertisementReservationAttemptsByUserId(@PathVariable String userId){
-
-        List<ReservationAttemptResponseDTO> response = userService.getReservationAttemptFromAdvertisementOfUser(userId);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }*/
 
 }

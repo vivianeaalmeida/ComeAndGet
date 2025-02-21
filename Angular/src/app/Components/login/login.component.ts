@@ -53,7 +53,6 @@ export class LoginComponent implements OnInit {
     this.loginServ.login(email, password).subscribe({
       next: (response) => {
         this.isAuthorized = true;
-        console.log(response);
         if (this.isLogged.roles == 'User') {
           this.myRouter.navigate(['/']);
         } else {
@@ -66,6 +65,7 @@ export class LoginComponent implements OnInit {
           icon: 'error',
           title: 'Login failed! Please check your email and password.',
         });
+        this.myRouter.navigate(['login']);
       },
     });
   }

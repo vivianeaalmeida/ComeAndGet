@@ -1,25 +1,27 @@
 # User Stories
 
-- US01 - Register new user *
-- US02 - Log In *
-- US03 - Create category *
-- US04 - View categories list
-- US05 - Update category
-- US06 - Delete category
-- US07 - Create an advertisement *
-- US08 - View advertisements list *
-- US09 - View active advertisements list
-- US10 - View closed advertisement list
-- US11 - View advertisement *
-- US12 - Search advertisements *
-- US13 - Update advertisement *
-- US14 - Delete/inactive advertisement
-- US15 - View my published advertisements
-- US16 - Create ReservationAttempt on advertisement
-- US17 - View ReservationAttempt
-- US18 - View my list of ReservationAttempts
-- US19 - View ReservationAttempts on my advertisements
-- US20 - Updates ReservationAttempt status *
+| US                                                   | Story Points |
+|------------------------------------------------------|--------------|
+| US01 - Register new user                             | 6            |
+| US02 - Log In                                        | 6            |
+| US03 - Create category                               | 5            |
+| US04 - View categories list                          | 2            |
+| US05 - Update category                               | 5            |
+| US06 - Delete category                               | 5            |
+| US07 - Create an advertisement                       | 10           |
+| US08 - View advertisements list                      | 3            |
+| US09 - View active advertisements list               | 3            |
+| US10 - View closed advertisement list                | 3            |
+| US11 - View advertisement                            | 3            |
+| US12 - Search advertisements                         | 12           |
+| US13 - Update advertisement                          | 11           |
+| US14 - Deactivate advertisement                      | 9            |
+| US15 - View my published advertisements              | 5            |
+| US16 - Create ReservationAttempt on advertisement    | 6            |
+| US17 - View ReservationAttempt                       | 5            |
+| US18 - View my list of ReservationAttempts           | 5            |
+| US19 - View ReservationAttempts on my advertisements | 9            |
+| US20 - Updates ReservationAttempt status             | 9            |
 
 ## US01 - Register new user
 - **Endpoint**: `POST /signup`

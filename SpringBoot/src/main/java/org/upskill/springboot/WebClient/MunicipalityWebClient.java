@@ -31,7 +31,7 @@ public class MunicipalityWebClient {
      * WebClient.Builder used for building WebClient instances for making HTTP requests.
      * This is typically injected and used to configure the client for making external API calls.
      */
-    private final WebClient.Builder webClientBuilder;
+    private final WebClient webClient;
 
     /**
      * A list that stores municipalities either fetched from the external API or loaded from the file.
@@ -43,7 +43,7 @@ public class MunicipalityWebClient {
      * The path to the municipalities data file where the fetched municipality data is stored.
      * If the cache is expired or empty, the data will be reloaded either from this file or fetched again from the external API.
      */
-    private final String MUNICIPALITIES_FILE = "municipalities.json";
+    private final String MUNICIPALITIES_FILE = "src/main/java/org/upskill/springboot/files/municipalities.json";
 
     /**
      * Constructor that sets up the WebClient builder and initializes the municipalities cache.
@@ -52,8 +52,12 @@ public class MunicipalityWebClient {
      */
     @Autowired
     public MunicipalityWebClient(WebClient.Builder webClientBuilder) {
-        this.webClientBuilder = webClientBuilder.baseUrl("https://json.geoapi.pt");
-        municipalitiesCache = new ArrayList<>();
+            // Create the WebClient instance using the builder
+            this.webClient = webClientBuilder
+                    .baseUrl("https://json.geoapi.pt")
+                    .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                    .build();
+            municipalitiesCache = new ArrayList<>();
     }
 
     /**
@@ -109,16 +113,15 @@ public class MunicipalityWebClient {
      */
     private List<String> fetchMunicipalities() {
         try {
-            WebClient client = webClientBuilder
-                    .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                    .build();
-
-            return List.of(Objects.requireNonNull(client.get()
+            // Using the WebClient instance to fetch municipalities from the API
+            return List.of(Objects.requireNonNull(webClient.get()
                     .uri("/municipios")
                     .retrieve()
                     .bodyToMono(String[].class)
                     .block()));
+
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException("Error accessing GEO API");
         }
     }
@@ -131,7 +134,7 @@ public class MunicipalityWebClient {
     private void saveMunicipalitiesToFile(List<String> municipalities) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            File municipalitiesFile = new File("municipalities.json");
+            File municipalitiesFile = new File(MUNICIPALITIES_FILE);
             objectMapper.writeValue(municipalitiesFile, municipalities);
         } catch (IOException e) {
             throw new RuntimeException("Error saving municipalities data to file", e);

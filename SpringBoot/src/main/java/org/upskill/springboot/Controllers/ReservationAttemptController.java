@@ -19,17 +19,6 @@ public class ReservationAttemptController extends BaseController {
     @Autowired
     private IReservationAttemptService reservationAttemptService;
 
-
-    @GetMapping("/reservationAttempts")
-    public ResponseEntity<List<ReservationAttemptResponseDTO>> getReservationAttempts(
-            @RequestParam(required = false) String reservationAttemptClientId,
-            @RequestParam(required = false)  String advertisementClientId,
-            @RequestParam(required = false)  String advertisementId
-    ) {
-        List<ReservationAttemptResponseDTO> reservationAttemptsDTO = reservationAttemptService.getReservationAttempts(reservationAttemptClientId, advertisementClientId, advertisementId);
-        return new ResponseEntity<>(reservationAttemptsDTO, HttpStatus.OK);
-    }
-
     /**
      * Retrieves a reservation attempt by its ID.
      *
@@ -40,6 +29,26 @@ public class ReservationAttemptController extends BaseController {
     public ResponseEntity<ReservationAttemptResponseDTO> getReservationAttemptById(@PathVariable String id) {
         ReservationAttemptResponseDTO responseDTO = reservationAttemptService.getReservationAttemptById(id);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+    }
+
+    /**
+     * Retrieves a list of reservation attempts based on the specified filtering parameters.
+     * If no parameters are provided, all reservation attempts will be returned.
+     *
+     * @param reservationAttemptClientId The client ID associated with the reservation attempt (optional).
+     * @param advertisementClientId The client ID associated with the advertisement (optional).
+     * @param advertisementId The unique identifier of the advertisement (optional).
+     * @return A ResponseEntity containing a list of reservation attempt response data transfer objects
+     *         and an HTTP status code of 200 (OK) if the request is successful.
+     */
+    @GetMapping("/reservationAttempts")
+    public ResponseEntity<List<ReservationAttemptResponseDTO>> getReservationAttempts(
+            @RequestParam(required = false) String reservationAttemptClientId,
+            @RequestParam(required = false)  String advertisementClientId,
+            @RequestParam(required = false)  String advertisementId
+    ) {
+        List<ReservationAttemptResponseDTO> reservationAttemptsDTO = reservationAttemptService.getReservationAttempts(reservationAttemptClientId, advertisementClientId, advertisementId);
+        return new ResponseEntity<>(reservationAttemptsDTO, HttpStatus.OK);
     }
 
     /**
@@ -69,6 +78,15 @@ public class ReservationAttemptController extends BaseController {
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
+    /**
+     * Updates the status of a reservation attempt.
+     *
+     * @param reservationId The unique identifier of the reservation attempt to be updated.
+     * @param authorization The authorization token required for authentication and access control.
+     * @param requestDTO The request body containing the new status of the reservation attempt.
+     * @return A ResponseEntity containing the updated reservation attempt DTO and an HTTP status code of 200 (OK)
+     * if successful.
+     */
     @PatchMapping("/reservationAttempts/{reservationId}/status")
     public ResponseEntity<ReservationAttemptResponseDTO> patchReservationAttemptStatus(
             @PathVariable String reservationId, @RequestHeader("Authorization")

@@ -8,8 +8,6 @@ import org.springframework.stereotype.Repository;
 import org.upskill.springboot.Models.ReservationAttempt;
 
 import java.util.List;
-import java.util.Optional;
-
 /**
  * Repository interface for performing CRUD operations on {@link ReservationAttempt} entities.
  * Extends {@link JpaRepository} to leverage built-in methods for data access.
@@ -37,17 +35,6 @@ public interface ReservationAttemptRepository extends JpaRepository<ReservationA
             @Param("advertisementClientId") String advertisementClientId,
             @Param("advertisementId") String advertisementId
     );
-
-    /**
-     * Finds a request by its ID and associated advertisement ID.
-     *
-     * @param id the unique identifier of the request
-     * @param advertisementId the unique identifier of the advertisement
-     * @return an {@link Optional} containing the found request, or empty if no request matches the criteria
-     */
-    Optional<ReservationAttempt> findByIdAndAdvertisementId(String id, String advertisementId);
-
-    List<ReservationAttempt> findByClientId(String clientId);
 
     /**
      * Checks if a request exists for a given advertisement and user.
@@ -84,13 +71,4 @@ public interface ReservationAttemptRepository extends JpaRepository<ReservationA
      * @return a list of {@link ReservationAttempt} entities matching the given advertisement ID and statuses
      */
     List<ReservationAttempt> findByAdvertisement_IdAndStatusIn(String advertisementId, List<ReservationAttempt.ReservationAttemptStatus> statuses);
-
-    /**
-     * Finds all reservation attempts for a specific advertisement and with statuses not included in a list.
-     *
-     * @param advertisementId the ID of the advertisement to query
-     * @param statuses a list of statuses to filter the reservation attempts
-     * @return a list of {@link ReservationAttempt} entities matching the given advertisement ID and statuses
-     */
-    List<ReservationAttempt> findByAdvertisement_IdAndStatusNotIn(String advertisementId, List<ReservationAttempt.ReservationAttemptStatus> statuses);
 }

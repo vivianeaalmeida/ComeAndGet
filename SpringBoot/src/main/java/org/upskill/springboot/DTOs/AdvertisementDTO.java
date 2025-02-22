@@ -1,6 +1,5 @@
 package org.upskill.springboot.DTOs;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.micrometer.common.lang.Nullable;
 import lombok.Getter;
 import lombok.Setter;

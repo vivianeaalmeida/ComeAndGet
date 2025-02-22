@@ -7,10 +7,20 @@ import org.springframework.web.filter.CorsFilter;
 
 import java.util.List;
 
-
+/**
+ * Configuration class for setting up CORS (Cross-Origin Resource Sharing) in the application.
+ * This allows the application to specify which origins, methods, and headers are allowed
+ * for cross-origin requests.
+ */
 @Configuration
 public class CorsConfig {
 
+    /**
+     * Bean for configuring CORS filtering.
+     * Sets up allowed origins, methods, headers, and credentials for cross-origin requests.
+     *
+     * @return A CorsFilter bean to apply CORS configuration across the application.
+     */
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();

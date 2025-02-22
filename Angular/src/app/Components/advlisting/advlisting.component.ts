@@ -47,6 +47,7 @@ export class AdvlistingComponent implements OnInit {
   }
 
   openModal(adv: Adv) {
+    console.log('Selected Advertisement:', adv);
     this.selectedAdv = adv;
     this.openedModal = true;
   }

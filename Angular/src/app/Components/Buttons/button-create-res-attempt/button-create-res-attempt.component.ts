@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ResAttemptService } from '../../../Services/res-attempt.service';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../../Services/auth.service';
@@ -6,6 +6,7 @@ import { map } from 'rxjs';
 import { Router } from '@angular/router';
 import { AdvService } from '../../../Services/adv.service';
 import { Advertisement } from '../../../Models/advertisement';
+import { ReservationAttempt } from '../../../Models/reservation-attempt';
 
 @Component({
   selector: 'app-button-create-res-attempt',
@@ -14,7 +15,7 @@ import { Advertisement } from '../../../Models/advertisement';
   templateUrl: './button-create-res-attempt.component.html',
   styleUrl: './button-create-res-attempt.component.css',
 })
-export class ButtonCreateResAttemptComponent {
+export class ButtonCreateResAttemptComponent implements OnInit {
   @Input() advertisementId!: string;
   isLogged: any;
   adv!: Advertisement;
@@ -49,6 +50,16 @@ export class ButtonCreateResAttemptComponent {
   }
 
   addResAttempt() {
+    if (!this.adv || !this.adv.id) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Advertisement data is missing.',
+        confirmButtonText: 'Ok',
+      });
+      return;
+    }
+
     Swal.fire({
       icon: 'question',
       title: 'Add reservation attempt',

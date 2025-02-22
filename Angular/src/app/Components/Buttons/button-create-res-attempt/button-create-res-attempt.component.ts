@@ -7,11 +7,12 @@ import { Router } from '@angular/router';
 import { AdvService } from '../../../Services/adv.service';
 import { Advertisement } from '../../../Models/advertisement';
 import { ReservationAttempt } from '../../../Models/reservation-attempt';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-button-create-res-attempt',
   standalone: true,
-  imports: [],
+  imports: [NgIf],
   templateUrl: './button-create-res-attempt.component.html',
   styleUrl: './button-create-res-attempt.component.css',
 })
@@ -57,6 +58,11 @@ export class ButtonCreateResAttemptComponent implements OnInit {
         text: 'Advertisement data is missing.',
         confirmButtonText: 'Ok',
       });
+      return;
+    }
+
+    if (!this.isLogged) {
+      this.router.navigate(['login']);
       return;
     }
 

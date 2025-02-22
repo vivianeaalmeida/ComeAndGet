@@ -12,9 +12,10 @@
           <ngx-datatable-column *ngFor="let col of columns" [name]="col.name" [width]="col.width"
             [prop]="col.prop"></ngx-datatable-column>
 
+          <!-- See details -->
           <ngx-datatable-column name="See details" [width]="20">
             <ng-template let-row="row" ngx-datatable-cell-template>
-              <button type="button">
+              <button type="button" (click)="openModal(row)">
                 <i class="fas fa-eye"></i>
               </button>
             </ng-template>
@@ -31,4 +32,8 @@
       </div>
     </div>
   </div>
+
+  <!-- Modal -->
+  <app-advertisement-modal *ngIf="isModalOpen" [selectedAdv]="selectedAdv" [isLogged]="isLogged" (modalClosed)="closeModal()">
+  </app-advertisement-modal>
 </div>

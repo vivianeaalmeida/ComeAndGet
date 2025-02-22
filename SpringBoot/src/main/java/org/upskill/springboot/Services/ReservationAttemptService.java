@@ -228,7 +228,7 @@ public class ReservationAttemptService implements IReservationAttemptService {
      */
     public void rejectReservationAttempts(String advertisementId) {
         // Get ReservationAttempts with pending and accepted status
-        List<ReservationAttempt> reservationAttempts = reservationAttemptRepository.findByAdvertisementIdAndStatusIn(
+        List<ReservationAttempt> reservationAttempts = reservationAttemptRepository.findByAdvertisement_IdAndStatusIn(
                 advertisementId, List.of(ReservationAttempt.ReservationAttemptStatus.PENDING, ReservationAttempt.ReservationAttemptStatus.ACCEPTED)
         );
 

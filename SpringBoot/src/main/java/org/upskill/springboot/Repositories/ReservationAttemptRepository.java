@@ -83,5 +83,14 @@ public interface ReservationAttemptRepository extends JpaRepository<ReservationA
      * @param statuses a list of statuses to filter the reservation attempts
      * @return a list of {@link ReservationAttempt} entities matching the given advertisement ID and statuses
      */
-    List<ReservationAttempt> findByAdvertisementIdAndStatusIn(String advertisementId, List<ReservationAttempt.ReservationAttemptStatus> statuses);
+    List<ReservationAttempt> findByAdvertisement_IdAndStatusIn(String advertisementId, List<ReservationAttempt.ReservationAttemptStatus> statuses);
+
+    /**
+     * Finds all reservation attempts for a specific advertisement and with statuses not included in a list.
+     *
+     * @param advertisementId the ID of the advertisement to query
+     * @param statuses a list of statuses to filter the reservation attempts
+     * @return a list of {@link ReservationAttempt} entities matching the given advertisement ID and statuses
+     */
+    List<ReservationAttempt> findByAdvertisement_IdAndStatusNotIn(String advertisementId, List<ReservationAttempt.ReservationAttemptStatus> statuses);
 }

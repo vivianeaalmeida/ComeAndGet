@@ -8,7 +8,7 @@ import { NgIf } from '@angular/common';
 @Component({
   selector: 'app-advertisement-modal',
   standalone: true,
-  imports: [ButtonCreateResAttemptComponent, MapComponent, NgIf],
+  imports: [ButtonCreateResAttemptComponent, MapComponent],
   templateUrl: './advertisement-modal.component.html',
   styleUrl: './advertisement-modal.component.css'
 })

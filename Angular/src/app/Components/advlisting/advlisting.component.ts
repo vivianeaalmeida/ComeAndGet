@@ -11,11 +11,12 @@ import { AdvertisementCardComponent } from '../advertisement-card/advertisement-
 import { CommonModule, NgIf } from '@angular/common';
 import { map } from 'rxjs';
 import { ButtonCreateResAttemptComponent } from '../Buttons/button-create-res-attempt/button-create-res-attempt.component';
+import { MapComponent } from '../map/map.component';
 
 @Component({
   selector: 'app-advlisting',
   standalone: true,
-  imports: [AdvertisementCardComponent, NgIf, CommonModule, ButtonCreateResAttemptComponent],
+  imports: [AdvertisementCardComponent, NgIf, CommonModule, ButtonCreateResAttemptComponent, MapComponent],
   templateUrl: './advlisting.component.html',
   styleUrl: './advlisting.component.css',
 })

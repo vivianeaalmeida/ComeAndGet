@@ -8,8 +8,8 @@ namespace DotNet.Mappers {
                 Id = tip.Id,
                 Title = tip.Title,
                 Content = tip.Content,
-                Like = tip.Like,
-                Favorite = tip.Favorite
+                LikeCount = tip.LikeCount,
+                FavoriteCount = tip.FavoriteCount
             };
         }
 
@@ -18,8 +18,8 @@ namespace DotNet.Mappers {
                 Id = tipDTO.Id,
                 Title = tipDTO.Title,
                 Content = tipDTO.Content,
-                Like = tipDTO.Like,
-                Favorite = tipDTO.Favorite
+                LikeCount = tipDTO.LikeCount,
+                FavoriteCount = tipDTO.FavoriteCount
             };
         }
     }

@@ -12,12 +12,8 @@
       <label for="selectCategory" class="text-lime-900 text-lg font-bold mr-3">
         Filter by Category:
       </label>
-      <select
-        id="selectCategory"
-        name="selectCategory"
-        (change)="filterByCategory($event.target)"
-        class="bg-white text-lime-800 font-semibold border border-lime-500 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-lime-500"
-      >
+      <select id="selectCategory" name="selectCategory" (change)="filterByCategory($event.target)"
+        class="bg-white text-lime-800 font-semibold border border-lime-500 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-lime-500">
         <option value="all" selected>All Categories</option>
         @for (category of allCategories; track $index) {
         <option [value]="category.designation" class="text-lime-900">
@@ -33,95 +29,84 @@
       <div class="grid grid-cols-4 gap-10">
         @for (adv of advCollection; track $index) { @if(this.selectedCategory ==
         adv.item.category.designation || this.selectedCategory == 'all'){
-        <div
-          class="cursor-pointer flex flex-col justify-between"
-          (click)="openModal(adv)"
-        >
-          <app-advertisement-card
-            [imageSrc]="getSafeImageUrl(adv.item.image)"
-            [title]="adv.title"
-            [description]="adv.description"
-          >
+        <div class="cursor-pointer flex flex-col justify-between" (click)="openModal(adv)">
+          <app-advertisement-card [imageSrc]="getSafeImageUrl(adv.item.image)" [title]="adv.title"
+            [description]="adv.description">
           </app-advertisement-card>
         </div>
         } }
       </div>
       } @else {
-      <h1
-        class="mt-20 flex justify-center font-semibold text-lime-900 text-3xl text-center"
-      >
+      <h1 class="mt-20 flex justify-center font-semibold text-lime-900 text-3xl text-center">
         Sorry! No Advertisments found.
       </h1>
       }
     </div>
 
-    <div
-      *ngIf="openedModal"
-      class="mt-20 fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
-      (click)="closeModalOut($event)"
-    >
+    <!-- Modal -->
+    <div *ngIf="openedModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 py-20"
+      (click)="closeModalOut($event)">
       <div
-        class="bg-white p-6 rounded-lg shadow-lg w-2/4"
-        (click)="$event.stopPropagation()"
-      >
+        class="bg-white p-8 rounded-xl shadow-2xl w-11/12 md:w-2/3 lg:w-1/2 max-h-[calc(100vh-10rem)] overflow-y-auto"
+        (click)="$event.stopPropagation()">
         <div class="flex justify-end">
-          <button
-            type="button"
-            (click)="closeModal()"
-            class="text-xl text-lime-600 font-bold"
-          >
+          <button type="button" (click)="closeModal()"
+            class="text-xl text-lime-600 font-bold hover:text-lime-800 transition-colors">
             X
           </button>
         </div>
 
-        <div class="grid grid-cols-2 gap-4">
-          <!-- Imagem -->
-          <div>
-            <img
-              [src]="getSafeImageUrl(selectedAdv.item.image)"
-              alt="AdImage"
-              class="w-full h-[54vh] object-contain rounded-lg"
-            />
-          </div>
+        <h3 class="text-3xl font-bold text-lime-900 mb-4 text-center">
+          {{ selectedAdv?.title }}
+        </h3>
+        <!-- Conteúdo do Modal -->
+        <div class="grid grid-cols-1 gap-6">
 
-          <!-- Texto + Botão -->
-          <div class="flex flex-col justify-between h-full">
-            <div>
-              <h3 class="ml-5 text-4xl font-bold text-left mb-4">
-                {{ selectedAdv?.title }}
-              </h3>
-              <p
-                class="ml-5 font-semibold text-left text-xl text-lime-800 mb-2"
-              >
-                {{ selectedAdv?.description }}
-              </p>
-              <div class="flex">
-                <p
-                  class="ml-5 font-semibold text-left text-xl text-lime-800 mb-2"
-                >
-                  Condition:
+          <!-- Imagem e Texto -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Imagem -->
+            <div class="flex items-center justify-center">
+              <img [src]="getSafeImageUrl(selectedAdv.item.image)" alt="AdImage"
+                class="w-full h-auto max-h-[50vh] object-cover rounded-lg shadow-md" />
+            </div>
+
+            <!-- Texto + Botão -->
+            <div class="flex flex-col justify-around">
+              <div>
+
+                <p class="text-lg text-lime-black mb-4 ">
+                  {{ selectedAdv?.description }}
                 </p>
-                <p
-                  class="capitalize ml-1 font-semibold text-left text-xl text-lime-800 mb-2"
-                >
-                  {{ selectedAdv?.item.condition }}
+                <div class="flex items-center mb-4">
+                  <p class="font-semibold text-lg text-black mr-2">
+                    Condition:
+                  </p>
+                  <p class="capitalize text-lg text-black">
+                    {{ selectedAdv?.item.condition | titlecase }}
+                  </p>
+                </div>
+                <p class="text-lg text-black mb-2">
+                  <span class="font-semibold">Localization:</span> {{ selectedAdv?.municipality }}
+                </p>
+                <p class="text-lg text-black mb-4">
+                  <span class="font-semibold">Date:</span> {{ selectedAdv?.date }}
                 </p>
               </div>
 
-              <p class="ml-5 text-left text-lg text-lime-800 mb-2">
-                Localization: {{ selectedAdv?.municipality }}
-              </p>
-              <p class="ml-5 text-left text-lg text-lime-800 mb-2">
-                Date: {{ selectedAdv?.date }}
-              </p>
+              <!-- Botão -->
+              <div class="mt-4">
+                <app-button-create-res-attempt [advertisementId]="selectedAdv.id"></app-button-create-res-attempt>
+              </div>
             </div>
+          </div>
 
-            <!-- Botão agora fica no final -->
-            <app-button-create-res-attempt
-              [advertisementId]="selectedAdv.id"></app-button-create-res-attempt>
+          <!-- Mapa -->
+          <div class="col-span-2 w-full h-96 md:h-[50vh] lg:h-[60vh] mt-6">
+            <app-map [municipality]="selectedAdv?.municipality"></app-map>
           </div>
         </div>
-      </div>a
+      </div>
     </div>
+
   </div>
 </div>

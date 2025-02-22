@@ -13,6 +13,8 @@ import { map } from 'rxjs';
 import { ButtonCreateResAttemptComponent } from '../Buttons/button-create-res-attempt/button-create-res-attempt.component';
 import { MapComponent } from '../map/map.component';
 import { AdvertisementModalComponent } from '../advertisement-modal/advertisement-modal.component';
+import { MunicipalityService } from '../../Services/municipality.service';
+import { SearchService } from '../../Services/search.service';
 
 @Component({
   selector: 'app-advlisting',
@@ -25,7 +27,10 @@ export class AdvlistingComponent implements OnInit {
   openedModal: boolean = false;
   selectedAdv: any | null = null;
   allCategories: Category[] | undefined;
+  allMunicipalities: string[] = [];
   selectedCategory: string = 'all';
+  selectedMunicipality: string = 'all'
+  searchKeyword: string = '';
   advCollection: any[] = [];
   isLogged: any;
   user?: User1;
@@ -36,8 +41,10 @@ export class AdvlistingComponent implements OnInit {
     private router: Router,
     private advServ: AdvService,
     private categServ: CategoryService,
-    private sanitizer: DomSanitizer
-  ) {}
+    private municipalitiesServ: MunicipalityService,
+    private sanitizer: DomSanitizer,
+    private searchService: SearchService
+  ) { }
 
   ngOnInit(): void {
     this.loginServ.user.pipe(map((user) => user)).subscribe((user) => {
@@ -46,6 +53,12 @@ export class AdvlistingComponent implements OnInit {
 
     this.getAwait();
     this.getAllCategories();
+    this.getAllMunicipalities();
+
+    this.searchService.search$.subscribe((keyword: string) => {
+      this.searchKeyword = keyword;  // updates the keyword
+      this.filterAdvertisements();  // Chama a função para filtrar os anúncios
+    });
   }
 
   openModal(adv: Adv) {
@@ -78,22 +91,58 @@ export class AdvlistingComponent implements OnInit {
   }
 
   getAllCategories() {
-    this.categServ.getCategories().subscribe((resp) => {
-      this.allCategories = resp;
+    this.categServ.getCategories().subscribe({
+      next: (resp) => {
+        this.allCategories = resp;
+      },
+      error: (err) => {
+        console.error('Error feching categories:', err);
+      },
     });
   }
+
+  getAllMunicipalities() {
+    this.municipalitiesServ.getMunicipalities().subscribe({
+      next: (resp) => {
+        this.allMunicipalities = resp;
+      },
+      error: (err) => {
+        console.error('Error feching municipalities:', err);
+      },
+    });
+  }
+  filterAdvertisements() {
+    //console.log('Filtering with keyword:', this.searchKeyword, 'category:', this.selectedCategory, 'municipality:', this.selectedMunicipality);
+
+    // Passa a searchKeyword para o serviço de search do advertisement
+    this.advServ.searchAdvertisement(
+      this.searchKeyword || undefined, // filtra pelo termo de procura de existir
+      this.selectedMunicipality === 'all' ? undefined : this.selectedMunicipality, // filtra por municipio se seleccionado
+      this.selectedCategory === 'all' ? undefined : this.selectedCategory // filtra por categoria se seleccionada
+    )
+      .subscribe((filteredAds) => {
+        this.advCollection = filteredAds;
+        this.existingAdv = this.advCollection.length;
+        console.log('Filtered Ads:', this.advCollection); // Verifique se a coleção foi atualizada
+        console.log('Existing Ads:', this.existingAdv); // Verifique o número de anúncios encontrados
+      });
+  }
+
 
   filterByCategory(category: any) {
     const selectElement = category as HTMLSelectElement;
     this.selectedCategory = selectElement.value;
-    this.existingAdv = 0;
-    for (let i = 0; i < this.advCollection.length; i++) {
-      if (
-        this.advCollection[i].item.category.designation == this.selectedCategory
-      ) {
-        this.existingAdv++;
-      }
-    }
+    //console.log('Selected Category:', this.selectedCategory);
+
+    this.filterAdvertisements();
+  }
+
+  filterByMunicipality(municipality: any) {
+    const selectElement = municipality as HTMLSelectElement;
+    this.selectedMunicipality = selectElement.value;
+    //console.log('Selected Municipality:', this.selectedMunicipality);
+
+    this.filterAdvertisements();
   }
 
   getSafeImageUrl(imagePath: string): SafeResourceUrl {

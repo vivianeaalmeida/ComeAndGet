@@ -1,13 +1,15 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
 import { CommonModule, NgIf } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../Services/auth.service';
 import { map } from 'rxjs';
+import { FormsModule, NgModel } from '@angular/forms';
+import { SearchService } from '../../Services/search.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [NgIf, RouterLink, CommonModule],
+  imports: [NgIf, RouterLink, CommonModule, FormsModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
@@ -18,7 +20,9 @@ export class HeaderComponent implements OnInit {
   isLoggedIn$!: any;
   checkRole: string | null = null;
 
-  constructor(private myrouter: Router, protected authService: AuthService) {}
+  searchKeyword: string = '';
+
+  constructor(private myrouter: Router, protected authService: AuthService, private searchService: SearchService) {}
 
   ngOnInit(): void {
     // Observa a autenticação do usuário
@@ -30,6 +34,10 @@ export class HeaderComponent implements OnInit {
         this.checkRole = user.roles; // Define o role do usuário
       }
     });
+  }
+
+  search() {
+    this.searchService.search(this.searchKeyword);  // Emite a palavra-chave para o serviço
   }
 
   // Função para controlar a exibição do dropdown

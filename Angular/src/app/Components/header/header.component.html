@@ -10,8 +10,10 @@
     <!-- Barra de Pesquisa -->
     <div class="relative w-full max-w-[550px] flex">
       <input
+        [(ngModel)]="searchKeyword"
+        (ngModelChange)="search()"
         type="search"
-        placeholder="Search items"
+        placeholder="Search advertisements"
         class="w-full py-2 pl-4 pr-12 border rounded-l-full rounded-r-none bg-white text-gray-800 shadow-md focus:outline-none focus:border-lime-500 text-lg"
       />
       <button

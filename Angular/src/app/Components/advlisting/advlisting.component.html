@@ -7,40 +7,51 @@
       </h1>
     </div>
 
-    <!--filter-->
+    <!-- Filtros: Categoria e Município -->
     <div class="w-full flex justify-end items-center mt-10">
+      <!-- Filtro por Categoria -->
       <label for="selectCategory" class="text-lime-900 text-lg font-bold mr-3">
         Filter by Category:
       </label>
       <select id="selectCategory" name="selectCategory" (change)="filterByCategory($event.target)"
         class="bg-white text-lime-800 font-semibold border border-lime-500 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-lime-500">
         <option value="all" selected>All Categories</option>
-        @for (category of allCategories; track $index) {
-        <option [value]="category.designation" class="text-lime-900">
+        <option *ngFor="let category of allCategories" [value]="category.designation" class="text-lime-900">
           {{ category.designation }}
         </option>
-        }
+      </select>
+
+      <!-- Filtro por Município -->
+      <label for="selectMunicipality" class="text-lime-900 text-lg font-bold mr-3 ml-10">
+        Filter by Municipality:
+      </label>
+      <select id="selectMunicipality" name="selectMunicipality" (change)="filterByMunicipality($event.target)"
+        class="bg-white text-lime-800 font-semibold border border-lime-500 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-lime-500">
+        <option value="all" selected>All Municipalities</option>
+        <option *ngFor="let municipality of allMunicipalities" [value]="municipality" class="text-lime-900">
+          {{ municipality }}
+        </option>
       </select>
     </div>
 
-    <!--grid adv-->
+    <!-- Grid de Anúncios -->
     <div class="w-full mt-14 pb-20 mb-60">
-      @if(this.selectedCategory == 'all' || existingAdv > 0) {
-      <div class="grid grid-cols-4 gap-10">
-        @for (adv of advCollection; track $index) { @if(this.selectedCategory ==
-        adv.item.category.designation || this.selectedCategory == 'all'){
-        <div class="cursor-pointer flex flex-col justify-between" (click)="openModal(adv)">
-          <app-advertisement-card [imageSrc]="getSafeImageUrl(adv.item.image)" [title]="adv.title"
-            [description]="adv.description">
-          </app-advertisement-card>
+      <div *ngIf="selectedCategory === 'all' || existingAdv > 0">
+        <div class="grid grid-cols-4 gap-10">
+          <div *ngFor="let adv of advCollection; track: trackIndex">
+            <div *ngIf="selectedCategory === 'all' || selectedCategory === adv.item.category.designation">
+              <div class="cursor-pointer flex flex-col justify-between" (click)="openModal(adv)">
+                <app-advertisement-card [imageSrc]="getSafeImageUrl(adv.item.image)" [title]="adv.title"
+                  [description]="adv.description">
+                </app-advertisement-card>
+              </div>
+            </div>
+          </div>
         </div>
-        } }
       </div>
-      } @else {
-      <h1 class="mt-20 flex justify-center font-semibold text-lime-900 text-3xl text-center">
-        Sorry! No Advertisments found.
+      <h1 *ngIf="existingAdv === 0"  class="mt-20 flex justify-center font-semibold text-lime-900 text-3xl text-center">
+        Sorry! No Advertisements found.
       </h1>
-      }
     </div>
 
     <!-- Modal -->

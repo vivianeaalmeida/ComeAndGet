@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Advertisement } from '../Models/advertisement';
@@ -41,5 +41,29 @@ export class AdvService {
       `${this.endpoint}advertisements/${id}/deactivate`,
       {}
     );
+  }
+
+  /**
+   * Retrieves a list of active advertisements based on search filters
+   * 
+   * @param keyword      A keyword to search advertisements whose title or description contain the specified text (optional).
+   * @param municipality The municipality to filter the advertisements (optional).
+   * @param category     The category to filter the advertisements (optional).
+   * @return An Observable containing a list of active advertisements matching the provided criteria
+   */
+  searchAdvertisement(keyword?: string, municipality?: string, category?: string): Observable<Advertisement[]> {
+    let params = new HttpParams();
+
+    if (keyword) {
+      params = params.append('keyword', keyword);
+    }
+    if (municipality) {
+      params = params.append('municipality', municipality);
+    }
+    if (category) {
+      params = params.append('category', category);
+    }
+
+    return this.myWeb.get<Advertisement[]>(`${this.endpoint}advertisements/active/search`, { params });
   }
 }

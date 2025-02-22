@@ -35,30 +35,18 @@
     <div
       class="grid grid-cols-4 max-w-[80vw] mx-auto gap-20 mt-10 place-items-center"
     >
-      <app-advertisement-card
-        imageSrc="https://i.ebayimg.com/thumbs/images/g/ifgAAOSwudtnYId8/s-l1200.jpg"
-        title="Help Give a Second Life!"
-        description="This item is looking for a new home. Grab it while you can!"
-        buttonText="Get It Now"
-      ></app-advertisement-card>
-      <app-advertisement-card
-        imageSrc="https://i.ebayimg.com/thumbs/images/g/ifgAAOSwudtnYId8/s-l1200.jpg"
-        title="Help Give a Second Life!"
-        description="This item is looking for a new home. Grab it while you can!"
-        buttonText="Get It Now"
-      ></app-advertisement-card>
-      <app-advertisement-card
-        imageSrc="https://i.ebayimg.com/thumbs/images/g/ifgAAOSwudtnYId8/s-l1200.jpg"
-        title="Help Give a Second Life!"
-        description="This item is looking for a new home. Grab it while you can!"
-        buttonText="Get It Now"
-      ></app-advertisement-card>
-      <app-advertisement-card
-        imageSrc="https://i.ebayimg.com/thumbs/images/g/ifgAAOSwudtnYId8/s-l1200.jpg"
-        title="Help Give a Second Life!"
-        description="This item is looking for a new home. Grab it while you can!"
-        buttonText="Get It Now"
-      ></app-advertisement-card>
+      <div
+        class="cursor-pointer flex flex-col justify-between"
+        *ngFor="let adv of advCollection"
+        (click)="openModal(adv)"
+      >
+        <app-advertisement-card
+          [imageSrc]="getSafeImageUrl(adv.item!.image)"
+          [title]="adv.title"
+          [description]="adv.description"
+        >
+        </app-advertisement-card>
+      </div>
       <h2
         class="text-2xl flex items-center justify-center col-span-4 font-semibold"
       >
@@ -67,6 +55,14 @@
       </h2>
     </div>
   </div>
+
+  <!-- Modal -->
+  <app-advertisement-modal
+    *ngIf="openedModal"
+    [selectedAdv]="selectedAdv"
+    (modalClosed)="closeModal()"
+  >
+  </app-advertisement-modal>
 
   <!-- Tip Section -->
   <div

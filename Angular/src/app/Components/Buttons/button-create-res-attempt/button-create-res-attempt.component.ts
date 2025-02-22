@@ -1,26 +1,27 @@
 import { Component, Input } from '@angular/core';
-import { ReservationAttempt } from '../../../Models/reservation-attempt';
 import { ResAttemptService } from '../../../Services/res-attempt.service';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../../Services/auth.service';
 import { map } from 'rxjs';
 import { Router } from '@angular/router';
+import { AdvService } from '../../../Services/adv.service';
+import { Advertisement } from '../../../Models/advertisement';
 
 @Component({
   selector: 'app-button-create-res-attempt',
   standalone: true,
   imports: [],
-
   templateUrl: './button-create-res-attempt.component.html',
   styleUrl: './button-create-res-attempt.component.css',
 })
 export class ButtonCreateResAttemptComponent {
-  @Input() id!: string;
-  resAttempt!: ReservationAttempt;
+  @Input() advertisementId!: string;
   isLogged: any;
+  adv!: Advertisement;
 
   constructor(
     private resAttemptService: ResAttemptService,
+    private advService: AdvService,
     private authService: AuthService,
     private router: Router
   ) {}
@@ -30,14 +31,16 @@ export class ButtonCreateResAttemptComponent {
       this.isLogged = user;
     });
 
-    if (this.id) {
-      this.resAttemptService.getResAttempt(this.id).subscribe({
+    // Fetch the advertisement by id
+    if (this.advertisementId) {
+      console.log('Advertisement ID:', this.advertisementId);
+      this.advService.getById(this.advertisementId).subscribe({
         next: (data) => {
-          this.resAttempt = data;
-          console.log('Fetched reservation attempt:', data);
+          this.adv = data;
+          console.log('Fetched advertisement:', data);
         },
         error: (error) => {
-          console.error('Error getting the reservation attempt:', error);
+          console.error('Error getting the advertisement:', error);
         },
       });
     } else {
@@ -55,15 +58,22 @@ export class ButtonCreateResAttemptComponent {
       cancelButtonText: 'No',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.resAttemptService.addResAttempt(this.resAttempt).subscribe({
+        const newResAttempt = {
+          status: 'PENDING',
+          advertisementId: this.adv.id!, 
+        };
+
+        console.log('Reservation attempt to be sent:', newResAttempt);
+
+        // Send the reservation attempt to the backend
+        this.resAttemptService.addResAttempt(newResAttempt).subscribe({
           next: () => {
             Swal.fire({
               icon: 'success',
               title: 'Reservation attempt added successfully.',
               confirmButtonText: 'Ok',
             });
-
-            console.log(this.resAttempt);
+            console.log('Reservation attempt created:', newResAttempt);
           },
           error: (err) => {
             console.error('Error adding reservation attempt:', err);

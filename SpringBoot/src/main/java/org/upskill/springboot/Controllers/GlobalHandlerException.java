@@ -228,6 +228,22 @@ public class GlobalHandlerException {
     }
 
     /**
+     * Handles UnauthorizedException
+     *
+     * @param e the UnauthorizedException
+     * @return a ResponseEntity containing an ErrorResponse and HTTP status FORBIDDEN
+     */
+    @ExceptionHandler(UserUnauthorizedException.class)
+    public ResponseEntity<ErrorResponse> handleUserUnauthorizedException(UserUnauthorizedException e) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                e.getMessage(),
+                HttpStatus.FORBIDDEN.value(),
+                HttpStatus.FORBIDDEN.getReasonPhrase()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
+    }
+
+    /**
      * Handles IllegalArgumentException.
      *
      * @param e the IllegalArgumentException

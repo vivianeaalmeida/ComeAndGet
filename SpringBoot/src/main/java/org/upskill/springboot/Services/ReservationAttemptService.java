@@ -8,6 +8,7 @@ import org.upskill.springboot.DTOs.ReservationAttemptResponseDTO;
 import org.upskill.springboot.DTOs.ReservationAttemptStatusDTO;
 import org.upskill.springboot.Exceptions.AdvertisementValidationException;
 import org.upskill.springboot.Exceptions.ReservationAttemptNotFoundException;
+import org.upskill.springboot.Exceptions.UserUnauthorizedException;
 import org.upskill.springboot.Mappers.AdvertisementMapper;
 import org.upskill.springboot.Mappers.ReservationAttemptMapper;
 import org.upskill.springboot.Models.Advertisement;
@@ -108,68 +109,141 @@ public class ReservationAttemptService implements IReservationAttemptService {
                                                                         ReservationAttemptStatusDTO reservationAttemptStatusDTO) {
         if (reservationAttemptStatusDTO.getStatus() != null) {
             Optional<ReservationAttempt> requestOpt = reservationAttemptRepository.findById(id);
+            // if reservation attempt exists
             if (requestOpt.isPresent()) {
                 ReservationAttempt reservationAttempt = requestOpt.get();
                 String clientId = userWebClient.getUserId(authorization);
+
                 ReservationAttempt.ReservationAttemptStatus newStatus = ReservationAttempt.ReservationAttemptStatus
                         .valueOf(reservationAttemptStatusDTO.getStatus().toUpperCase());
+
+                // Validate if the status update is allowed based on the current reservation attempt state
                 validateUpdateStatus(reservationAttempt, clientId, newStatus);
+
+                // Update the reservation attempt with the new status
                 reservationAttempt.setStatus(newStatus);
-                boolean isNewStatusAccepted = newStatus.equals(ReservationAttempt.ReservationAttemptStatus.ACCEPTED);
-                if(isNewStatusAccepted) {
+
+                // Check if the new status is DONATED
+                boolean isNewStatusDonated = newStatus.equals(ReservationAttempt.ReservationAttemptStatus.DONATED);
+
+                // Close the advertisement and reject other pending or accepted reservation attempts
+                if (isNewStatusDonated) {
                     closeAdvertisementAndRejectedOtherAttempts(id, reservationAttempt);
                 }
                 return ReservationAttemptMapper.toDTO(reservationAttemptRepository.save(reservationAttempt));
             } else {
-                throw new ReservationAttemptNotFoundException("Request not found with id: " + id);
+                throw new ReservationAttemptNotFoundException("Reservation attempt not found with id: " + id);
             }
         } else {
             throw new IllegalStateException("Status cannot be null.");
         }
     }
 
+    /**
+     * Closes the advertisement associated with the given reservation attempt and rejects
+     * all other pending or accepted reservation attempts for the same advertisement.
+     *
+     * @param id the ID of the reservation attempt that was marked as "DONATED"
+     * @param reservationAttempt the reservation attempt that triggered this process
+     */
     private void closeAdvertisementAndRejectedOtherAttempts(String id, ReservationAttempt reservationAttempt) {
-        advertisementService.closeAdvertisement(reservationAttempt.getAdvertisement().getId());
-        List<ReservationAttempt> allAttemptsByAdvertisement = reservationAttemptRepository.findByAdvertisement_Id(reservationAttempt.getAdvertisement().getId());
-        for (ReservationAttempt attempt : allAttemptsByAdvertisement) {
-            boolean isTheAcceptedRequest = attempt.getId().equals(id);
-            if (!isTheAcceptedRequest) {
+        String advertisementId = reservationAttempt.getAdvertisement().getId();
+
+        // Close the advertisement to prevent further reservations
+        advertisementService.closeAdvertisement(advertisementId);
+
+        // Find all reservation attempts related to this advertisement that are still PENDING or ACCEPTED
+        List<ReservationAttempt> reservationAttemptsToReject = reservationAttemptRepository
+                .findByAdvertisement_IdAndStatusIn(
+                advertisementId, List.of(ReservationAttempt.ReservationAttemptStatus.PENDING
+                                , ReservationAttempt.ReservationAttemptStatus.ACCEPTED)
+        );
+
+        // Reject all reservations in the list and save them in the DB
+        for (ReservationAttempt attempt : reservationAttemptsToReject) {
+            boolean isTheRequestDonated = attempt.getId().equals(id);
+            if (!isTheRequestDonated) {
                 attempt.setStatus(ReservationAttempt.ReservationAttemptStatus.REJECTED);
                 reservationAttemptRepository.save(attempt);
             }
         }
     }
 
+    /**
+     * Validates whether a user is authorized to update the status of a reservation attempt.
+     *
+     * The update is only allowed if the advertisement is active and the current status is modifiable.
+     * Only the advertisement owner or the reservation attempt owner can update the status.
+     * The advertisement owner can change it to ACCEPTED, REJECTED, or DONATED, while
+     * the reservation attempt owner can change it to PENDING or CANCELED.
+     *
+     * @param reservationAttempt The reservation attempt being updated.
+     * @param clientId The ID of the client attempting to update the status.
+     * @param newStatus The new status to be applied.
+     */
     private void validateUpdateStatus(ReservationAttempt reservationAttempt, String clientId, ReservationAttempt.ReservationAttemptStatus newStatus) {
-        boolean isAdvertisementClosed = reservationAttempt.getAdvertisement().getStatus().equals(Advertisement.AdvertisementStatus.CLOSED);
-        boolean isAdvertisementInactive = reservationAttempt.getAdvertisement().getStatus().equals(Advertisement.AdvertisementStatus.INACTIVE);
-        if(isAdvertisementClosed || isAdvertisementInactive) {
+        // Check if the advertisement is active
+        boolean isAdvertisementActive = reservationAttempt.getAdvertisement().getStatus().equals(Advertisement.AdvertisementStatus.ACTIVE);
+
+        // If advertisement not active the reservation attempt cannot be updated
+        if (!isAdvertisementActive) {
             throw new IllegalStateException("The advertisement is closed or inactive so the reservation attempt cannot be updated.");
         }
-        if(unmodifiableStatus.contains(reservationAttempt.getStatus())){
+
+        // If the current status is unmodifiable the reservation attempt cannot be updated
+        if (unmodifiableStatus.contains(reservationAttempt.getStatus())){
             throw new IllegalStateException("The newStatus of the reservation cannot be updated.");
         }
 
+        // Determine if the user is the reservation attempt owner or the advertisement owner
         boolean isReservationAttemptOwner = clientId.equals(reservationAttempt.getClientId());
         boolean isAdvertisementOwner = clientId.equals(reservationAttempt.getAdvertisement().getClientId());
-        if(isAdvertisementOwner){
-            boolean isNewStatusAccepted = newStatus.equals(ReservationAttempt.ReservationAttemptStatus.ACCEPTED);
-            boolean isNewStatusRejected = newStatus.equals(ReservationAttempt.ReservationAttemptStatus.REJECTED);
-            if (!isNewStatusAccepted && !isNewStatusRejected){
+
+        // The advertisement owner can only change the status to ACCEPTED, REJECTED, or DONATED
+        if (isAdvertisementOwner) {
+            boolean isValidStatusChange = List.of(
+                    ReservationAttempt.ReservationAttemptStatus.ACCEPTED,
+                    ReservationAttempt.ReservationAttemptStatus.REJECTED,
+                    ReservationAttempt.ReservationAttemptStatus.DONATED
+            ).contains(newStatus);
+
+            if (!isValidStatusChange) {
                 throw new IllegalStateException("Unauthorized change.");
             }
+
+        // The reservation attempt owner can only change the status to PENDING or CANCELED
         } else if (isReservationAttemptOwner) {
-            boolean isNewStatusPending = newStatus.equals(ReservationAttempt.ReservationAttemptStatus.PENDING);
-            boolean isNewStatusCanceled = newStatus.equals(ReservationAttempt.ReservationAttemptStatus.CANCELED);
-            if(!isNewStatusPending && !isNewStatusCanceled){
+            boolean isValidStatusChange = List.of(
+                    ReservationAttempt.ReservationAttemptStatus.PENDING,
+                    ReservationAttempt.ReservationAttemptStatus.CANCELED
+            ).contains(newStatus);
+
+            if (!isValidStatusChange) {
                 throw new IllegalStateException("Unauthorized change.");
             }
+
+        // If the user is neither the advertisement or the reservation attempt owner throws exception
         } else {
-            throw new IllegalStateException("Only the request owner or the advertisement owner can update the newStatus.");
+            throw new UserUnauthorizedException("Only the reservation attempt owner or the advertisement owner can update the newStatus.");
         }
     }
 
-    private boolean validateReservationAttempt(ReservationAttemptDTO reservationAttemptDTO, AdvertisementDTO advertisementDTO, String loggedClientId) {
+    /**
+     * Validates whether a reservation attempt can be created.
+     *
+     * A user cannot create a reservation attempt if they have already made a request
+     * for the same advertisement, if they are the owner of the advertisement,
+     * or if the advertisement is not active.
+     *
+     * @param reservationAttemptDTO The reservation attempt details.
+     * @param advertisementDTO The advertisement details.
+     * @param loggedClientId The ID of the logged-in client attempting to create the reservation.
+     * @return true if the reservation attempt is valid.
+     */
+    private boolean validateReservationAttempt(ReservationAttemptDTO reservationAttemptDTO,
+                                               AdvertisementDTO advertisementDTO,
+                                               String loggedClientId) {
+
         if (reservationAttemptRepository.existsByAdvertisement_IdAndClientId(advertisementDTO.getId(), loggedClientId)) {
             throw new IllegalStateException("The user has already made a request for this advertisement.");
         }
@@ -240,5 +314,4 @@ public class ReservationAttemptService implements IReservationAttemptService {
         // Save the updated reservations
         reservationAttemptRepository.saveAll(reservationAttempts);
     }
-
 }

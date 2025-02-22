@@ -63,16 +63,20 @@ public class ReservationAttemptController extends BaseController {
     @PostMapping("/reservationAttempts")
     public ResponseEntity<ReservationAttemptResponseDTO> postReservationAttempt(
             @RequestBody ReservationAttemptDTO reservationAttemptDTO,
-            @RequestHeader("Authorization") String authorization
-    ) {
-        ReservationAttemptResponseDTO responseDTO = reservationAttemptService.createReservationAttempt(reservationAttemptDTO, authorization);
+            @RequestHeader("Authorization") String authorization) {
+        ReservationAttemptResponseDTO responseDTO = reservationAttemptService.createReservationAttempt(
+                reservationAttemptDTO, authorization);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
     @PatchMapping("/reservationAttempts/{reservationId}/status")
-    public ResponseEntity<ReservationAttemptResponseDTO> patchReservationAttemptStatus(@PathVariable String reservationId, @RequestHeader("Authorization") String authorization, @RequestBody ReservationAttemptStatusDTO requestDTO) {
-        ReservationAttemptResponseDTO response = reservationAttemptService.updateReservationAttemptStatus( reservationId , authorization, requestDTO);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<ReservationAttemptResponseDTO> patchReservationAttemptStatus(
+            @PathVariable String reservationId, @RequestHeader("Authorization")
+            String authorization,
+            @RequestBody ReservationAttemptStatusDTO requestDTO) {
+        ReservationAttemptResponseDTO responseDTO = reservationAttemptService.updateReservationAttemptStatus(
+                reservationId, authorization, requestDTO);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
 }

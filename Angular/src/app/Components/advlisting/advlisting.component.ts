@@ -34,7 +34,7 @@ export class AdvlistingComponent implements OnInit {
   advCollection: any[] = [];
   isLogged: any;
   user?: User1;
-  existingAdv: number = 0;
+  hasAdvs: boolean = false;
 
   constructor(
     private loginServ: AuthService,
@@ -122,7 +122,8 @@ export class AdvlistingComponent implements OnInit {
     )
       .subscribe((filteredAds) => {
         this.advCollection = filteredAds;
-        this.existingAdv = this.advCollection.length;
+        this.hasAdvs = this.advCollection.length > 0 ? true : false;
+
         console.log('Filtered Ads:', this.advCollection); // Verifique se a coleção foi atualizada
         console.log('Existing Ads:', this.existingAdv); // Verifique o número de anúncios encontrados
       });

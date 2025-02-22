@@ -12,11 +12,12 @@ import { CommonModule, NgIf } from '@angular/common';
 import { map } from 'rxjs';
 import { ButtonCreateResAttemptComponent } from '../Buttons/button-create-res-attempt/button-create-res-attempt.component';
 import { MapComponent } from '../map/map.component';
+import { AdvertisementModalComponent } from '../advertisement-modal/advertisement-modal.component';
 
 @Component({
   selector: 'app-advlisting',
   standalone: true,
-  imports: [AdvertisementCardComponent, NgIf, CommonModule, ButtonCreateResAttemptComponent, MapComponent],
+  imports: [AdvertisementCardComponent, CommonModule, AdvertisementModalComponent],
   templateUrl: './advlisting.component.html',
   styleUrl: './advlisting.component.css',
 })
@@ -58,12 +59,6 @@ export class AdvlistingComponent implements OnInit {
     this.selectedAdv = null;
   }
 
-  closeModalOut(event: Event) {
-    if (event.target === event.currentTarget) {
-      this.closeModal();
-    }
-  }
-
   getAllAvAdv(): Promise<any> {
     return new Promise((resolve) => {
       this.advServ.get('advertisements/active').subscribe(
@@ -102,7 +97,6 @@ export class AdvlistingComponent implements OnInit {
   }
 
   getSafeImageUrl(imagePath: string): SafeResourceUrl {
-    //console.log(imagePath);
     return this.sanitizer.bypassSecurityTrustResourceUrl(
       'http://localhost:8080/' + imagePath
     );

@@ -4,11 +4,12 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { AdvService } from '../../Services/adv.service';
 import { Adv } from '../../Models/adv';
 import { ButtonDeactivateAdvertisementComponent } from "../Buttons/button-deactivate-advertisement/button-deactivate-advertisement.component";
+import { AdvertisementModalComponent } from '../advertisement-modal/advertisement-modal.component';
 
 @Component({
   selector: 'app-advertisements-dashboard',
   standalone: true,
-  imports: [CommonModule, NgxDatatableModule, ButtonDeactivateAdvertisementComponent],
+  imports: [CommonModule, NgxDatatableModule, ButtonDeactivateAdvertisementComponent, AdvertisementModalComponent],
   templateUrl: './advertisements-dashboard.component.html',
   styleUrl: './advertisements-dashboard.component.css'
 })
@@ -16,6 +17,7 @@ export class AdvertisementsDashboardComponent implements OnInit {
   advertisements: Adv[] = [];
   selectedAdv: any | null = null;
   isModalOpen: boolean = false;
+  isLogged: any;
 
   columns = [
     { name: 'Title', prop: 'title', width: 100 },

@@ -1,0 +1,63 @@
+<div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 py-20"
+    (click)="closeModalOut($event)">
+    <div class="bg-white p-8 rounded-xl shadow-2xl w-11/12 md:w-2/3 lg:w-1/2 max-h-[calc(100vh-10rem)] overflow-y-auto"
+        (click)="$event.stopPropagation()">
+        <div class="flex justify-end">
+            <button type="button" (click)="closeModal()"
+                class="text-xl text-lime-600 font-bold hover:text-lime-800 transition-colors">
+                X
+            </button>
+        </div>
+
+        <h3 class="text-3xl font-bold text-lime-900 mb-4 text-center">
+            {{ selectedAdv?.title }}
+        </h3>
+        <!-- Conteúdo do Modal -->
+        <div class="grid grid-cols-1 gap-6">
+
+            <!-- Imagem e Texto -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Imagem -->
+                <div class="flex items-center justify-center">
+                    <img [src]="getSafeImageUrl(selectedAdv?.item?.image || '')" alt="AdImage"
+                        class="w-full h-auto max-h-[50vh] object-cover rounded-lg shadow-md" />
+                </div>
+
+                <!-- Texto + Botão -->
+                <div class="flex flex-col justify-around">
+                    <div>
+
+                        <p class="text-lg text-lime-black mb-4 ">
+                            {{ selectedAdv?.description }}
+                        </p>
+                        <div class="flex items-center mb-4">
+                            <p class="font-semibold text-lg text-black mr-2">
+                                Condition:
+                            </p>
+                            <p class="capitalize text-lg text-black">
+                                {{ selectedAdv?.item?.condition }}
+                            </p>
+                        </div>
+                        <p class="text-lg text-black mb-2">
+                            <span class="font-semibold">Localization:</span> {{ selectedAdv?.municipality }}
+                        </p>
+                        <p class="text-lg text-black mb-4">
+                            <span class="font-semibold">Date:</span> {{ selectedAdv?.date }}
+                        </p>
+                    </div>
+
+                    <!-- Botão -->
+                    <div class="mt-4">
+                        <app-button-create-res-attempt [advertisementId]="selectedAdv?.id || ''">
+                        </app-button-create-res-attempt>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mapa -->
+            <div class="col-span-2 w-full h-96 md:h-[50vh] lg:h-[60vh] mt-6">
+                <app-map [municipality]="selectedAdv?.municipality || ''"></app-map>
+            </div>
+        </div>
+    </div>
+</div>

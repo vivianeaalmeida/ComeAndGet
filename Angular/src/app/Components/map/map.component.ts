@@ -49,7 +49,7 @@ export class MapComponent implements OnChanges {
       // Creates the map and defines its zoom to 14
       this.map = L.map('map').setView([lat, lon], 14);
 
-      // Defines the mpa layer
+      // Defines the map layer
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
       }).addTo(this.map);

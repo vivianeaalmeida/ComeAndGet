@@ -72,7 +72,7 @@ export class UserAreaComponent implements OnInit {
 
   getMyAdvs(): Promise<any> {
     return new Promise((resolve) => {
-      this.advServ.get('users/' + this.userId + '/advertisements').subscribe(
+      this.advServ.get('/advertisements/users/' + this.userId).subscribe(
         (resp) => {
           this.advCollection = resp;
           resolve(true);
@@ -90,7 +90,7 @@ export class UserAreaComponent implements OnInit {
 
   getMyRequests(): Promise<any> {
     return new Promise((resolve) => {
-      this.advServ.get('users/' + this.userId + '/advertisements').subscribe(
+      this.advServ.get('/advertisements/users/' + this.userId).subscribe(
         (resp) => {
           this.advCollection = resp;
           resolve(true);

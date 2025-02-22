@@ -77,7 +77,7 @@ public class AdvertisementController extends BaseController {
      * @param clientId the ID of the client
      * @return A ResponseEntity containing a list of a AdvertisementDTO of the client
      */
-    @GetMapping("users/{clientId}/advertisements")
+    @GetMapping("/advertisements/users/{clientId}")
     public ResponseEntity<List<AdvertisementDTO>> getAdvertisementsByClientId(
             @PathVariable String clientId) {
 

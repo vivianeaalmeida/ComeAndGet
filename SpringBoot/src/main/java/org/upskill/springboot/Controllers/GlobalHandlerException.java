@@ -212,22 +212,6 @@ public class GlobalHandlerException {
     }
 
     /**
-     * Handles ClientNotFoundException.
-     *
-     * @param e the ClientNotFoundException
-     * @return a ResponseEntity containing an ErrorResponse and HTTP status BAD_REQUEST
-     */
-    @ExceptionHandler(ClientNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleClientNotFoundException(ClientNotFoundException e) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                e.getMessage(),
-                HttpStatus.BAD_REQUEST.value(),
-                HttpStatus.BAD_REQUEST.getReasonPhrase()
-        );
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-    }
-
-    /**
      * Handles InvalidFileExtensionException
      *
      * @param e the InvalidFileExtensionException

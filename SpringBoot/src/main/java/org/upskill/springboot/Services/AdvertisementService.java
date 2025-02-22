@@ -309,7 +309,10 @@ public class AdvertisementService implements IAdvertisementService {
         return advertisementsDTO;
     }
 
-
+    /**
+     * Closes the advertisement by setting the status to closed
+     * @param id the id of the advertisement
+     */
     public void closeAdvertisement(String id) {
         Advertisement advertisement = advertisementRepository.findById(id)
                 .orElseThrow(() -> new AdvertisementNotFoundException("Advertisement not found"));
@@ -346,16 +349,8 @@ public class AdvertisementService implements IAdvertisementService {
         if (advertisementDTO.getDate() != null && !advertisementDTO.getDate().equals(LocalDate.now())) {
             throw new AdvertisementValidationException("Advertisement date must be the current date");
         }
-
-        // Check if the client associated with the advertisement is valid
-//        String userId = webClient.getUserId(advertisementDTO.getClientId());
-//        if (userId == null) {
-//            throw new ClientNotFoundException("Client not found");
-//        }
-
         return true;
     }
-
 
     /**
      * Validates the update of an advertisement by its ID.
@@ -386,7 +381,8 @@ public class AdvertisementService implements IAdvertisementService {
 
         // Validates status
         try {
-            Advertisement.AdvertisementStatus status = Advertisement.AdvertisementStatus.valueOf(advertisementUpdateDTO.getStatus().toUpperCase());
+            Advertisement.AdvertisementStatus status = Advertisement.AdvertisementStatus.valueOf(advertisementUpdateDTO.
+                    getStatus().toUpperCase());
             if (status == Advertisement.AdvertisementStatus.INACTIVE) {
                 throw new AdvertisementValidationException("Status INACTIVE is not allowed.");
             }
@@ -394,10 +390,15 @@ public class AdvertisementService implements IAdvertisementService {
             throw new AdvertisementValidationException("Invalid status. Only ACTIVE or CLOSED status are allowed.");
         }
 
-
         return true;
     }
 
+    /**
+     * Validates the title and the description of the advertisement
+     * @param title the title of the advertisement
+     * @param description the description of the advertisement
+     * @return true if the title and description are valid
+     */
     private boolean validateTitleAndDescription(String title, String description) {
         // Check if the title is less than 5 or more than 50 characters
         if (title.length() < 5 || title.length() > 50) {

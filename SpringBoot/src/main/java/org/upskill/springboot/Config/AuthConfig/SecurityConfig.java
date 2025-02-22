@@ -1,4 +1,4 @@
-package org.upskill.springboot.AuthConfig;
+package org.upskill.springboot.Config.AuthConfig;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -69,17 +69,13 @@ public class SecurityConfig {
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
         JwtGrantedAuthoritiesConverter authoritiesConverter = new JwtGrantedAuthoritiesConverter();
 
-        // Defines the prefix to be added to the roles
+        // Define o prefixo para as roles
         authoritiesConverter.setAuthorityPrefix("ROLE_");
 
-        // Defines the claim name where the roles are stored
-        authoritiesConverter.setAuthoritiesClaimName("roles");
+        // Define o claim onde as roles estão armazenadas
+        authoritiesConverter.setAuthoritiesClaimName("http://schemas.microsoft.com/ws/2008/06/identity/claims/role");
 
-        converter.setJwtGrantedAuthoritiesConverter(jwt -> {
-            Collection<GrantedAuthority> authorities = authoritiesConverter.convert(jwt);
-            System.out.println("Roles extraídas do token: " + authorities);
-            return authorities;
-        });
+        converter.setJwtGrantedAuthoritiesConverter(authoritiesConverter);
 
         return converter;
     }

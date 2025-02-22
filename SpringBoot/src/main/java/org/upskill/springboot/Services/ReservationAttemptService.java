@@ -77,8 +77,8 @@ public class ReservationAttemptService implements IReservationAttemptService {
      * Creates a new request with the provided RequestDTO data.
      *
      * @param reservationAttemptDTO the RequestDTO object containing the details of the new request
+     * @param authorization the authorization of the client creating the reservation attempt
      * @return the created RequestDTO object
-     * @throws AdvertisementValidationException if the advertisement associated with the request is not active
      */
     @Override
     public ReservationAttemptResponseDTO createReservationAttempt(ReservationAttemptDTO reservationAttemptDTO, String authorization) {
@@ -93,21 +93,31 @@ public class ReservationAttemptService implements IReservationAttemptService {
         return ReservationAttemptMapper.toDTO(reservationAttemptRepository.save(reservationAttempt));
     }
 
-
+    /**
+     * Updates the status of an existing reservation attempt with the provided status.
+     * The method performs validations before changing the status and handles the logic for closing the advertisement
+     * and rejecting other reservation attempts
+     *
+     * @param id the ID of the reservation attempt to be updated
+     * @param authorization the authorization of the client making the update
+     * @param reservationAttemptStatusDTO the DTO object containing the new status for the reservation attempt
+     * @return the ReservationAttemptResponseDTO object with the details of the reservation attempt after the update
+     */
     @Override
-    public ReservationAttemptResponseDTO updateReservationAttemptStatus(String id, String authorization, ReservationAttemptStatusDTO reservationAttemptStatusDTO) {
+    public ReservationAttemptResponseDTO updateReservationAttemptStatus(String id, String authorization,
+                                                                        ReservationAttemptStatusDTO reservationAttemptStatusDTO) {
         if (reservationAttemptStatusDTO.getStatus() != null) {
             Optional<ReservationAttempt> requestOpt = reservationAttemptRepository.findById(id);
             if (requestOpt.isPresent()) {
                 ReservationAttempt reservationAttempt = requestOpt.get();
                 String clientId = userWebClient.getUserId(authorization);
-                ReservationAttempt.ReservationAttemptStatus newStatus = ReservationAttempt.ReservationAttemptStatus.valueOf(reservationAttemptStatusDTO.getStatus().toUpperCase());
+                ReservationAttempt.ReservationAttemptStatus newStatus = ReservationAttempt.ReservationAttemptStatus
+                        .valueOf(reservationAttemptStatusDTO.getStatus().toUpperCase());
                 validateUpdateStatus(reservationAttempt, clientId, newStatus);
                 reservationAttempt.setStatus(newStatus);
                 boolean isNewStatusAccepted = newStatus.equals(ReservationAttempt.ReservationAttemptStatus.ACCEPTED);
                 if(isNewStatusAccepted) {
                     closeAdvertisementAndRejectedOtherAttempts(id, reservationAttempt);
-
                 }
                 return ReservationAttemptMapper.toDTO(reservationAttemptRepository.save(reservationAttempt));
             } else {
@@ -165,7 +175,6 @@ public class ReservationAttemptService implements IReservationAttemptService {
         }
         if (advertisementDTO.getClientId()!=null && advertisementDTO.getClientId().equals(loggedClientId)){
             throw new IllegalArgumentException("The user cannot create requests for their own advertisement.");
-
         }
 
         if (!advertisementDTO.getStatus().equals(Advertisement.AdvertisementStatus.ACTIVE.toString())) {

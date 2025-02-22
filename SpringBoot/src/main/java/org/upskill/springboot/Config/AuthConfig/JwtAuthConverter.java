@@ -1,4 +1,4 @@
-package org.upskill.springboot.AuthConfig;
+package org.upskill.springboot.Config.AuthConfig;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;

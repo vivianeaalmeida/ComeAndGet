@@ -2,12 +2,23 @@
   <div class="min-w-[80vw] max-w-[80vw] mb-40">
     <!-- Título -->
     <div class="mt-20 px-4 text-center mb-10">
-      <h1 class="font-bold text-white text-4xl md:text-6xl">
+      <h1 class="font-bold text-white text-4xl md:text-6xl mb-10">
         Advertisements Dashboard
       </h1>
 
+      <!-- Filtro de status -->
+      <div class="mb-10">
+        <label for="statusFilter" class="text-white text-lg font-bold mr-3">Filter by Status:</label>
+        <select id="statusFilter" class="bg-white text-lime-800 font-semibold border border-lime-500 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-lime-500"
+                (change)="filterAdvertisements($event)">
+          <option value="ALL">All</option>
+          <option value="ACTIVE">Active</option>
+          <option value="CLOSED">Closed</option>
+        </select>
+      </div>
+
       <div class="w-[40vw] mx-auto">
-        <ngx-datatable class="bootstrap table bg-white fixed-header mb-20" [rows]="advertisements"
+        <ngx-datatable class="bootstrap table bg-white fixed-header mb-20" [rows]="filteredAdvertisements"
           [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'">
           <ngx-datatable-column *ngFor="let col of columns" [name]="col.name" [width]="col.width"
             [prop]="col.prop"></ngx-datatable-column>
@@ -21,10 +32,11 @@
             </ng-template>
           </ngx-datatable-column>
 
-          <ngx-datatable-column name="Delete" [width]="20">
+          <!-- Delete -->
+          <ngx-datatable-column name="Cancel" [width]="20">
             <ng-template let-row="row" ngx-datatable-cell-template>
-              <button type="button">
-                <i class="fa-solid fa-trash-can fa-lg"></i>
+              <button (click)="deactivateAdv(row.id)">
+                <i class="fas fa-x"></i>
               </button>
             </ng-template>
           </ngx-datatable-column>
@@ -34,6 +46,7 @@
   </div>
 
   <!-- Modal -->
-  <app-advertisement-modal *ngIf="isModalOpen" [selectedAdv]="selectedAdv" [isLogged]="isLogged" (modalClosed)="closeModal()">
+  <app-advertisement-modal *ngIf="isModalOpen" [selectedAdv]="selectedAdv" [isLogged]="isLogged"
+    (modalClosed)="closeModal()">
   </app-advertisement-modal>
 </div>

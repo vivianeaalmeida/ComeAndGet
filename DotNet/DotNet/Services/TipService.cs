@@ -76,10 +76,7 @@ namespace DotNet.Services {
         public TipDTO RemoveTip(int Id) {
             ValidateContext();
 
-            var tip = context.Tips.SingleOrDefault(t => t.Id == Id);
-            if (tip == null) {
-                throw new TipNotFoundException("Tip not found");
-            }
+            var tip = GetTip(Id);
 
             this.context.Tips.Remove(tip);
             this.context.SaveChanges();

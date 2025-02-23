@@ -2,8 +2,8 @@
 
 namespace DotNet.Services.Interfaces {
     public interface IInteractionService {
-        void CreateInteraction(InteractionDTO interactionDTO);
+        InteractionDTO CreateInteraction(InteractionDTO interactionDTO);
 
-        void UpdateInteraction(int interactionId, InteractionDTO interactionDTO);
+        InteractionDTO UpdateInteraction(int interactionId, InteractionDTO interactionDTO);
     }
 }

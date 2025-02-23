@@ -1,6 +1,7 @@
 ﻿using DotNet.Data;
 using DotNet.DTOs;
 using DotNet.Exceptions;
+using DotNet.Mappers;
 using DotNet.Models;
 using DotNet.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +14,7 @@ namespace DotNet.Services {
             this.context = context;
         }
 
-        public void CreateInteraction(InteractionDTO interactionDTO) {
+        public InteractionDTO CreateInteraction(InteractionDTO interactionDTO) {
             ValidateContext();
 
             if (interactionDTO == null)
@@ -22,12 +23,13 @@ namespace DotNet.Services {
             var tip = context.Tips.SingleOrDefault(t => t.Id == interactionDTO.TipId)
                       ?? throw new TipNotFoundException("Tip not found.");
 
-            var interaction = new Interaction {
-                TipId = interactionDTO.TipId,
-                UserId = interactionDTO.UserId,
-                Like = interactionDTO.Like,
-                Favorite = interactionDTO.Favorite
-            };
+            var interaction = InteractionMapper.ToEntity(interactionDTO);
+            //var interaction = new Interaction {
+            //    TipId = interactionDTO.TipId,
+            //    UserId = interactionDTO.UserId,
+            //    Like = interactionDTO.Like,
+            //    Favorite = interactionDTO.Favorite
+            //};
 
             if (interactionDTO.Like == true) {
                 tip.LikeCount = (tip.LikeCount ?? 0) + 1;
@@ -39,9 +41,11 @@ namespace DotNet.Services {
 
             context.Interactions.Add(interaction);
             context.SaveChanges();
+
+            return InteractionMapper.ToDTO(interaction);
         }
 
-        public void UpdateInteraction(int interactionId, InteractionDTO interactionDTO) {
+        public InteractionDTO UpdateInteraction(int interactionId, InteractionDTO interactionDTO) {
             ValidateContext();
 
             if (interactionDTO == null) {
@@ -73,6 +77,7 @@ namespace DotNet.Services {
             }
 
             context.SaveChanges();
+            return InteractionMapper.ToDTO(interaction);
         }
 
         private Boolean ValidateContext() {

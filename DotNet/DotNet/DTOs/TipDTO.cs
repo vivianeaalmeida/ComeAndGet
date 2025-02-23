@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace DotNet.DTOs {
     public class TipDTO {
@@ -8,8 +9,10 @@ namespace DotNet.DTOs {
 
         public string Content { get; set; }
 
+        [JsonIgnore]
         public int? LikeCount { get; set; }
 
+        [JsonIgnore]
         public int? FavoriteCount { get; set; }
     }
 }

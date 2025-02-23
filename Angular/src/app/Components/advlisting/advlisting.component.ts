@@ -35,6 +35,7 @@ export class AdvlistingComponent implements OnInit {
   isLogged: any;
   user?: User1;
   existingAdv: number = 0;
+  hasAdvs: boolean = true;
 
   constructor(
     private loginServ: AuthService,
@@ -111,23 +112,20 @@ export class AdvlistingComponent implements OnInit {
       },
     });
   }
+
   filterAdvertisements() {
-    //console.log('Filtering with keyword:', this.searchKeyword, 'category:', this.selectedCategory, 'municipality:', this.selectedMunicipality);
-
-    // Passa a searchKeyword para o serviço de search do advertisement
+    // Aplica o filtro de pesquisa por keyword, municipio e categoria
     this.advServ.searchAdvertisement(
-      this.searchKeyword || undefined, // filtra pelo termo de procura de existir
-      this.selectedMunicipality === 'all' ? undefined : this.selectedMunicipality, // filtra por municipio se seleccionado
-      this.selectedCategory === 'all' ? undefined : this.selectedCategory // filtra por categoria se seleccionada
-    )
-      .subscribe((filteredAds) => {
-        this.advCollection = filteredAds;
-        this.existingAdv = this.advCollection.length;
-        console.log('Filtered Ads:', this.advCollection); // Verifique se a coleção foi atualizada
-        console.log('Existing Ads:', this.existingAdv); // Verifique o número de anúncios encontrados
-      });
+      this.searchKeyword || undefined, // Filtra pelo termo de procura se existir
+      this.selectedMunicipality === 'all' ? undefined : this.selectedMunicipality, // Filtra por município se selecionado
+      this.selectedCategory === 'all' ? undefined : this.selectedCategory // Filtra por categoria se selecionada
+    ).subscribe((filteredAds) => {
+      this.advCollection = filteredAds;
+      this.hasAdvs = this.advCollection.length > 0; 
+      this.existingAdv = this.advCollection.length;
+    });
   }
-
+  
 
   filterByCategory(category: any) {
     const selectElement = category as HTMLSelectElement;

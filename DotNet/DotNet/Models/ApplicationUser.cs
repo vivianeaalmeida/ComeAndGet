@@ -25,7 +25,7 @@ namespace DotNet.Models {
         /// The phone number must be exactly 9 characters in length.
         /// </remarks>
         [MinLength(9)]
-        [MaxLength(9)]
+        [MaxLength(15)]
         public string PhoneNumber { get; set; }
     }
 }

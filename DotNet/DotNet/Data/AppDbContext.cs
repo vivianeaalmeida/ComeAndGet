@@ -7,13 +7,16 @@ namespace DotNet.Data {
     /// <summary>
     /// Represents the database context for user-related data.
     /// </summary>
-    public class UserContext : IdentityDbContext<ApplicationUser> {
+    public class AppDbContext : IdentityDbContext<ApplicationUser> {
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UserContext"/> class.
+        /// Initializes a new instance of the <see cref="AppDbContext"/> class.
         /// </summary>
         /// <param name="options">The options for the database context.</param>
-        public UserContext(DbContextOptions<UserContext> options) : base(options) { }
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
+        public DbSet<Tip> Tips { get; set; }
+        public DbSet<Interaction> Interactions { get; set; }
 
 
         //protected override void OnModelCreating(ModelBuilder modelBuilder) {

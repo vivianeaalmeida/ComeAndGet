@@ -1,7 +1,7 @@
 ﻿using DotNet.DTOs;
 
 namespace DotNet.Services.Interfaces {
-    public interface ITipsService {
+    public interface ITipService {
         IEnumerable<TipDTO> GetTips();
 
         Task<IEnumerable<TipDTO>> GetFavoritedTipsAsync(string userId);

@@ -1,6 +1,7 @@
 using DotNet.Data;
 using DotNet.Models;
 using DotNet.Services;
+using DotNet.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -12,12 +13,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<AccountService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AdminService>();
+builder.Services.AddScoped<ITipService, TipService>();
+builder.Services.AddScoped<IInteractionService, InteractionService>();
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<UserContext>(options =>
+builder.Services.AddDbContext<DotNet.Data.AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("UserDB")));
 
 
@@ -28,7 +32,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => {
     options.Password.RequireUppercase = true;
     options.Password.RequireNonAlphanumeric = true;
 })
-    .AddEntityFrameworkStores<UserContext>()
+    .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
 

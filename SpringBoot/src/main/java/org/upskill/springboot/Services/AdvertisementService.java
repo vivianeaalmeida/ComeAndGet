@@ -92,10 +92,7 @@ public class AdvertisementService implements IAdvertisementService {
                     advertisementDTO.setMunicipality(advertisement.getMunicipality());
 
                     // Verifica se há um item e define a imagem corretamente
-                    if (advertisement.getItem() != null && advertisement.getItem().getImage() != null) {
-                        String imagePath = advertisement.getItem().getImage();
-                        advertisementDTO.getItem().setImage(imagePath);
-                    }
+                    setItemImage(advertisement, advertisementDTO);
 
                     return advertisementDTO;
                 })
@@ -115,16 +112,12 @@ public class AdvertisementService implements IAdvertisementService {
                 .map(advertisement -> {
                     AdvertisementDTO advertisementDTO = AdvertisementMapper.toDTO(advertisement);
                     advertisementDTO.setMunicipality(advertisement.getMunicipality());
-
-                    if (advertisement.getItem() != null && advertisement.getItem().getImage() != null) {
-                        advertisementDTO.getItem().setImage(advertisement.getItem().getImage());
-                    }
+                    setItemImage(advertisement, advertisementDTO);
 
                     return advertisementDTO;
                 })
                 .toList();
     }
-
 
     /**
      * Retrieves all closed advertisements.
@@ -139,16 +132,12 @@ public class AdvertisementService implements IAdvertisementService {
                 .map(advertisement -> {
                     AdvertisementDTO advertisementDTO = AdvertisementMapper.toDTO(advertisement);
                     advertisementDTO.setMunicipality(advertisement.getMunicipality());
-
-                    if (advertisement.getItem() != null && advertisement.getItem().getImage() != null) {
-                        advertisementDTO.getItem().setImage(advertisement.getItem().getImage());
-                    }
+                    setItemImage(advertisement, advertisementDTO);
 
                     return advertisementDTO;
                 })
                 .toList();
     }
-
     /**
      * Retrieves all advertisements (except inactives) by client ID
      *
@@ -162,10 +151,7 @@ public class AdvertisementService implements IAdvertisementService {
                 .map(advertisement -> {
                     AdvertisementDTO advertisementDTO = AdvertisementMapper.toDTO(advertisement);
                     advertisementDTO.setMunicipality(advertisement.getMunicipality());
-
-                    if (advertisement.getItem() != null && advertisement.getItem().getImage() != null) {
-                        advertisementDTO.getItem().setImage(advertisement.getItem().getImage());
-                    }
+                    setItemImage(advertisement, advertisementDTO);
 
                     return advertisementDTO;
                 })
@@ -455,6 +441,17 @@ public class AdvertisementService implements IAdvertisementService {
             throw new AdvertisementValidationException("Municipality not found");
         }
         return true;
+    }
+
+    /**
+     * Checks if the item exists and set the item image
+     * @param advertisement The advertisement object that may contain an item with an image.
+     * @param advertisementDTO The AdvertisementDTO where the item image will be set, if present.
+     */
+    private void setItemImage(Advertisement advertisement, AdvertisementDTO advertisementDTO) {
+        if (advertisement.getItem() != null) {
+            advertisementDTO.getItem().setImage(advertisement.getItem().getImage());
+        }
     }
 
     /**

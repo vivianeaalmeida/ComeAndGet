@@ -71,7 +71,7 @@ public class MunicipalityWebClient {
         if (municipalitiesCache.isEmpty()) {
             municipalitiesCache = loadMunicipalitiesFromFile();
 
-            // if municipalitiesCache is null or cache has expired (more than 30 days)
+            // if municipalitiesCache is null or cache has expired (more than 6 months)
             if (municipalitiesCache == null || isCacheExpired()) {
                 municipalitiesCache = fetchMunicipalities(); // fetch municipalities in external api
                 saveMunicipalitiesToFile(municipalitiesCache); // save results into file
@@ -81,7 +81,8 @@ public class MunicipalityWebClient {
     }
 
     /**
-     * Checks if the cache has expired. The cache is considered expired if the file last modified time is older than 30 days.
+     * Checks if the cache has expired. The cache is considered expired if the file last modified time is older
+     * than 6 months
      *
      * @return true if the cache is expired, false otherwise.
      */

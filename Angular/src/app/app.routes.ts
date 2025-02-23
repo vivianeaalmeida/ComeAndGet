@@ -12,6 +12,7 @@ import { CategoriesDashboardComponent } from './Components/categories-dashboard/
 import { AdvertisementsDashboardComponent } from './Components/advertisements-dashboard/advertisements-dashboard.component';
 import { TipsDashboardComponent } from './Components/tips-dashboard/tips-dashboard.component';
 import { ReservationAttemptListComponent } from './Components/reservation-attempt-list/reservation-attempt-list.component';
+import { TipsListingComponent } from './Components/tips-listing/tips-listing.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -38,5 +39,6 @@ export const routes: Routes = [
   { path: 'tipsDash', component: TipsDashboardComponent },
   { path: 'advertisements', component: AdvlistingComponent },
   { path: 'reservation-attempts', component: ReservationAttemptListComponent},
+  { path: 'blog-tips', component: TipsListingComponent},
   { path: '**', component: NotFoundComponent },
 ];

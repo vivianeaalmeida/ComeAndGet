@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class TipService {
 
-  endpoint = 'http://localhost:8080/api/v1/tips';
+  endpoint = 'http://localhost:5016/api/v1/Tips';
 
   constructor(private http: HttpClient) {}
 

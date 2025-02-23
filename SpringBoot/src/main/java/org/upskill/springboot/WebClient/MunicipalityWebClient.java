@@ -94,11 +94,11 @@ public class MunicipalityWebClient {
                 LocalDate lastModifiedDate = fileTime.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
                 LocalDate currentDate = LocalDate.now();
 
-                // Check if the last modified date is before 30 days ago
-                LocalDate thirtyDaysAgo = currentDate.minusDays(30);
+                // Check if the last modified date is before 6 months ago
+                LocalDate sixMonthsAgo = currentDate.minusMonths(6);
 
-                // If the last modified date is before 30 days ago, the cache is expired
-                return lastModifiedDate.isBefore(thirtyDaysAgo);
+                // If the last modified date is before 6 months ago, the cache is expired
+                return lastModifiedDate.isBefore(sixMonthsAgo);
             } catch (IOException e) {
                 throw new RuntimeException("Error checking file last modified time", e);
             }

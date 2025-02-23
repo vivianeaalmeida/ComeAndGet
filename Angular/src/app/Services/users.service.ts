@@ -9,11 +9,16 @@ import { User1 } from '../Models/user1';
 })
 export class UsersService {
   theEndpoint = 'http://localhost:5016/api/v1/account/register';
-  constructor(private myWebApiClient: HttpClient) {}
+  private userUrl = 'http://localhost:5016/api/v1/user/';
+  constructor(private http: HttpClient) {}
 
   registerUser(newUser: User1): Observable<any> {
-    return this.myWebApiClient.post<any>(this.theEndpoint, newUser);
+    return this.http.post<any>(this.theEndpoint, newUser);
   }
+
+    getUserById(userId:string): Observable<User1> {
+      return this.http.get<User1>(`${this.userUrl}/${userId}`);
+    }
 
   
 

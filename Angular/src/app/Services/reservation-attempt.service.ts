@@ -21,8 +21,12 @@ export class ReservationAttemptService {
     return this.http.get<ReservationAttemptResponse[]>(`${this.endpoint}?reservationAttemptClientId=${loggedUserId}`)
   }
 
-  createReservationAttempt(reservation:ReservationAttempt):Observable<ReservationAttempt>{
-    return this.http.post<ReservationAttempt>(this.endpoint, reservation)
+  getReservationAttemptsByAdvertisementId(advertisementId:string):Observable<ReservationAttemptResponse[]>{
+    return this.http.get<ReservationAttemptResponse[]>(`${this.endpoint}?advertisementId=${advertisementId}`)
+  }
+
+  addResAttempt(resAttempt: ReservationAttempt): Observable<ReservationAttempt> {
+    return this.http.post<ReservationAttempt>(this.endpoint, resAttempt);
   }
 
   updateReservationAttemptStatus(id:string, status:string):Observable<ReservationAttempt>{

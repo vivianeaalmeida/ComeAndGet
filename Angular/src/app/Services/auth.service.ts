@@ -66,10 +66,8 @@ export class AuthService {
   }
 
   getUser(): Observable<User1> {
-    console.log('Fetching user data...');
     return this.http.get<User1>(this.userUrl).pipe(
       map((user) => {
-        console.log('User data received:', user);
         return {
           userId: user.userId,
           username: user.username,

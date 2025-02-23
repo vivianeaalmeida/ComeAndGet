@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ResAttemptService } from '../../../Services/res-attempt.service';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../../Services/auth.service';
 import { map } from 'rxjs';
@@ -9,6 +8,7 @@ import { Advertisement } from '../../../Models/advertisement';
 import { ReservationAttempt } from '../../../Models/reservation-attempt';
 import { NgIf } from '@angular/common';
 import { User1 } from '../../../Models/user1';
+import { ReservationAttemptService } from '../../../Services/reservation-attempt.service';
 
 @Component({
   selector: 'app-button-create-res-attempt',
@@ -23,7 +23,7 @@ export class ButtonCreateResAttemptComponent implements OnInit {
   adv!: Advertisement;
 
   constructor(
-    private resAttemptService: ResAttemptService,
+    private resAttemptService: ReservationAttemptService,
     private advService: AdvService,
     private authService: AuthService,
     private router: Router

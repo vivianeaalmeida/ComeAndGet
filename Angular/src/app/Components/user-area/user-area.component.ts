@@ -9,16 +9,23 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ReservationAttemptListComponent } from '../reservation-attempt-list/reservation-attempt-list.component';
 import { ButtonUpdateAdvComponent } from '../Buttons/button-update-adv/button-update-adv.component';
 import { ButtonDeactivateAdvertisementComponent } from '../Buttons/button-deactivate-advertisement/button-deactivate-advertisement.component';
+import { Adv } from '../../Models/adv';
+import { Advertisement } from '../../Models/advertisement';
+import { AdvertisementModalComponent } from '../advertisement-modal/advertisement-modal.component';
 
 @Component({
   selector: 'app-user-area',
   standalone: true,
-  imports: [NgIf, ButtonComponent, CommonModule, ButtonUpdateAdvComponent, ReservationAttemptListComponent, ButtonDeactivateAdvertisementComponent],
+  imports: [NgIf, 
+    ButtonComponent, CommonModule, ButtonUpdateAdvComponent, 
+    ReservationAttemptListComponent, ButtonDeactivateAdvertisementComponent,
+    AdvertisementModalComponent
+  ],
   templateUrl: './user-area.component.html',
   styleUrl: './user-area.component.css',
 })
 export class UserAreaComponent implements OnInit {
-  advCollection: any[] = [];
+  advCollection: Advertisement[] = [];
 
   menus: any = {
     profile: true,
@@ -31,6 +38,7 @@ export class UserAreaComponent implements OnInit {
   userId?: string;
   isLogged: any;
   selectedAdv: any | null = null;
+  openedModal:boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -112,5 +120,16 @@ export class UserAreaComponent implements OnInit {
   selectAdv(adv: any) {
     this.selectedAdv = adv;
     console.log('Selected adv:' + this.selectAdv);
+  }
+
+  openModal(adv: Advertisement) {
+      console.log('Selected Advertisement:', adv);
+      this.selectedAdv = adv;
+      this.openedModal = true;
+  }
+  
+  closeModal() {
+    this.openedModal = false;
+    this.selectedAdv = null;
   }
 }

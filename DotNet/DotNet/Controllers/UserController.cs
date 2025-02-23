@@ -31,6 +31,26 @@ namespace DotNet.Controllers {
             return Ok(userInfo);
         }
 
+        /// <summary>
+        /// Retrieves user information by id.
+        /// </summary>
+        /// <param name="id">User ID</param>
+        /// <returns>A JSON response containing the user information.</returns>
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetUserById(string id)
+        {
+            var userInfo = await _userService.GetUserById(id);
+
+            if (userInfo == null)
+            {
+                return NotFound(new { message = $"User with ID {id} not found." });
+            }
+
+            return Ok(userInfo);
+        }
+
+
+
 
         /// <summary>
         /// Retrieves user ID.

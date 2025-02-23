@@ -2,11 +2,9 @@
   class="cursor-pointer group relative flex flex-col bg-white shadow-md rounded-lg h-[50vh] min-h-[410px] w-[19vw] max-w-[19vw] hover:shadow-lg transition-shadow duration-300 justify-evenly"
 >
   <!-- Imagem -->
-  <div
-    class="relative h-48 min-h-48 max-h-48 m-2.5 overflow-hidden text-white rounded-md"
-  >
+  <div class="relative h-48 min-h-48 max-h-48 m-2.5 overflow-hidden text-white rounded-md w-full flex items-center justify-center">
     <img
-      class="absolute top-0 left-0 w-full h-full object-cover transform transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-105"
+      class="object-scale-down max-h-full w-auto m-auto transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-105"
       [src]="imageSrc"
       [alt]="title"
     />

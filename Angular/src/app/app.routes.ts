@@ -10,6 +10,7 @@ import { AdvlistingComponent } from './Components/advlisting/advlisting.componen
 import { DashboardComponent } from './Components/dashboard/dashboard.component';
 import { CategoriesDashboardComponent } from './Components/categories-dashboard/categories-dashboard.component';
 import { AdvertisementsDashboardComponent } from './Components/advertisements-dashboard/advertisements-dashboard.component';
+import { TipsDashboardComponent } from './Components/tips-dashboard/tips-dashboard.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -33,6 +34,7 @@ export const routes: Routes = [
   { path: 'categoriesDash', component: CategoriesDashboardComponent },
   { path: 'advertisementsDash', component: AdvertisementsDashboardComponent },
   { path: 'categoriesDash', component: CategoriesDashboardComponent },
+  { path: 'tipsDash', component: TipsDashboardComponent },
   { path: 'advertisements', component: AdvlistingComponent },
   { path: '**', component: NotFoundComponent },
 ];

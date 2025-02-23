@@ -19,7 +19,7 @@ import { NgIf } from '@angular/common';
   templateUrl: './categories-dashboard.component.html',
   styleUrl: './categories-dashboard.component.css',
 })
-export class CategoriesDashboardComponent {
+export class CategoriesDashboardComponent implements OnInit {
   categories: Category[] = [];
   categoryForm!: FormGroup;
   isEditingOrCreating: string = '';

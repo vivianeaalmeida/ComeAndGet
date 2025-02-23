@@ -20,8 +20,11 @@
       <div class="w-[40vw] mx-auto">
         <ngx-datatable class="bootstrap table bg-white fixed-header mb-20" [rows]="filteredAdvertisements"
           [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'">
-          <ngx-datatable-column *ngFor="let col of columns" [name]="col.name" [width]="col.width"
-            [prop]="col.prop"></ngx-datatable-column>
+          <ngx-datatable-column *ngFor="let col of columns" 
+            [name]="col.name"
+            [width]="col.width"
+            [prop]="col.prop">
+          </ngx-datatable-column>
 
           <!-- See details -->
           <ngx-datatable-column name="See details" [width]="20">

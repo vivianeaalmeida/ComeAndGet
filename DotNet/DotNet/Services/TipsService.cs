@@ -47,7 +47,11 @@ namespace DotNet.Services {
         }
 
         public IEnumerable<TipDTO> GetTips() {
-            return context.Tips.Select(tip => TipMapper.ToDTO(tip)).ToList();
+            return context.Tips
+                .OrderByDescending(tip => tip.LikeCount)
+                .ThenByDescending(tip => tip.FavoriteCount)
+                .Select(tip => TipMapper.ToDTO(tip))
+                .ToList();
         }
 
         public TipDTO RemoveTip(int Id) {

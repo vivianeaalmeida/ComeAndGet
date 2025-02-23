@@ -1,6 +1,9 @@
 ﻿using DotNet.Data;
 using DotNet.DTOs;
+using DotNet.Mappers;
+using DotNet.Models;
 using DotNet.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace DotNet.Services
 {
@@ -13,24 +16,45 @@ namespace DotNet.Services
            
         }
 
-        public InteractionDTO AddInteraction(InteractionDTO interactionDTO) {
-            throw new NotImplementedException();
-        }
+        public void UpdateOrCreateInteraction(InteractionDTO interactionDTO) {
+            var interaction = context.Interactions.SingleOrDefault(i => i.TipId == interactionDTO.TipId && i.UserId == interactionDTO.UserId );
+            var interactionTemp = interaction;
+            var tip = context.Tips.SingleOrDefault(t => t.Id == interactionDTO.TipId);
 
-        public InteractionDTO GetInteraction(int Id) {
-            throw new NotImplementedException();
-        }
+            if (interaction == null) {
+      
+                interaction = new Interaction {
+                    TipId = interactionDTO.TipId,
+                    UserId = interactionDTO.UserId,
+                    Like = interactionDTO.Like,
+                    Favorite = interactionDTO.Favorite
+                };
+                this.context.Interactions.Add(interaction);
+                                
+            }else {
+                interaction.Like = interactionDTO.Like;
+                interaction.Favorite = interaction.Favorite;
+                this.context.Entry(interaction).State = EntityState.Modified;
+            }
 
-        public IEnumerable<InteractionDTO> GetInteractions() {
-            throw new NotImplementedException();
-        }
+            if((interactionTemp != null && interactionDTO.Like != interactionTemp.Like) || interactionTemp == null) {
+                if(interactionTemp != null && interactionDTO.Like == false) {
+                    tip.LikeCount--;
+                }else if (interactionDTO.Like == true ){
+                    tip.LikeCount++;
+                }
+            }
 
-        public void UpdateFavorite(bool favorite) {
-            throw new NotImplementedException();
-        }
+            if ((interactionTemp != null && interactionDTO.Favorite != interactionTemp.Favorite) || interactionTemp == null) {
+                if (interactionTemp != null && interactionDTO.Favorite == false) {
+                    tip.FavoriteCount--;
+                }
+                else if (interactionDTO.Like == true) {
+                    tip.FavoriteCount++;
+                }
+            }
 
-        public void UpdateLike(bool like) {
-            throw new NotImplementedException();
+            this.context.SaveChanges();
         }
     }
 }

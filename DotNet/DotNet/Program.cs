@@ -21,8 +21,11 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<DotNet.Data.AppDbContext>(options =>
+builder.Services.AddDbContext<BlogContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("UserDB")));
+builder.Services.AddDbContext<UserContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("UserDB")));
+
 
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => {
@@ -32,7 +35,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => {
     options.Password.RequireUppercase = true;
     options.Password.RequireNonAlphanumeric = true;
 })
-    .AddEntityFrameworkStores<AppDbContext>()
+    .AddEntityFrameworkStores<UserContext>()
     .AddDefaultTokenProviders();
 
 
@@ -54,7 +57,7 @@ builder.Services.AddAuthentication(options => {
 
 builder.Services.AddAuthorization(Options => {
     Options.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin"));
-    Options.AddPolicy("UserPolicy", policy => policy.RequireRole("ApplicationUser"));
+    Options.AddPolicy("UserPolicy", policy => policy.RequireRole("User"));
 });
 
 builder.Services.AddCors(options => {

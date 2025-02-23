@@ -9,18 +9,18 @@ using DotNet.Exceptions;
 namespace DotNet.Services {
     public class TipService : ITipService
     {
-        private readonly AppDbContext context;
+        private readonly BlogContext context;
         private readonly IInteractionService interactionService;
 
-        public TipService(AppDbContext context, IInteractionService interactionService)
+        public TipService(BlogContext context, IInteractionService interactionService)
         {
             this.context = context;
             this.interactionService = interactionService;
         }
 
         public TipDTO AddTip(TipDTO tipDTO) {
-            validateContext();
-            validateTip(tipDTO);
+            ValidateContext();
+            ValidateTip(tipDTO);
 
             Tip tip = TipMapper.ToEntity(tipDTO);
             this.context.Tips.Add(tip);
@@ -30,7 +30,7 @@ namespace DotNet.Services {
         }
 
         public async Task<IEnumerable<TipDTO>> GetFavoritedTipsAsync(string userId) {
-            validateContext();
+            ValidateContext();
 
             var favoriteTipIds = await context.Interactions
                 .Where(i => i.UserId == userId && i.Favorite == true)
@@ -46,31 +46,35 @@ namespace DotNet.Services {
         }
 
         public TipDTO GetTipById(int Id) {
-            validateContext();
+            ValidateContext();
 
-            var tip = getTipById(Id);
+            var tip = GetTip(Id);
 
             return TipMapper.ToDTO(tip);
         }
 
         public IEnumerable<TipDTO> GetTips() {
-            validateContext();
+            ValidateContext();
 
-            return context.Tips.Select(tip => TipMapper.ToDTO(tip)).ToList();
+            return context.Tips
+                        .OrderByDescending(tip => tip.LikeCount)     
+                        .ThenByDescending(tip => tip.FavoriteCount) 
+                        .Select(tip => TipMapper.ToDTO(tip))
+                        .ToList();
         }
 
         public TipDTO UpdateTip(int Id, TipDTO tipDTO)
         {
-            validateContext();
+            ValidateContext();
 
-            var tip = getTipById(Id);
-            validateTip(tipDTO);
+            var tip = GetTip(Id);
+            ValidateTip(tipDTO);
 
             return TipMapper.ToDTO(tip);
         }
 
         public TipDTO RemoveTip(int Id) {
-            validateContext();
+            ValidateContext();
 
             var tip = context.Tips.SingleOrDefault(t => t.Id == Id);
             if (tip == null) {
@@ -82,7 +86,7 @@ namespace DotNet.Services {
             return TipMapper.ToDTO(tip);
         }
 
-        private Boolean validateTip(TipDTO tipDTO)
+        private Boolean ValidateTip(TipDTO tipDTO)
         {
             if (tipDTO == null)
             {
@@ -103,7 +107,8 @@ namespace DotNet.Services {
             return true;
         }
 
-        private Tip getTipById(int id)
+        
+        private Tip GetTip(int id)
         {
             var tip = this.context.Tips.FirstOrDefault(t => t.Id == id);
             //var tip = this.context.Tips.Find(id);
@@ -115,7 +120,7 @@ namespace DotNet.Services {
             return tip;
         }
 
-        private Boolean validateContext()
+        private Boolean ValidateContext()
         {
             if (context == null)
             {

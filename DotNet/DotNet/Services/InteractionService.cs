@@ -4,18 +4,17 @@ using DotNet.Models;
 using DotNet.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace DotNet.Services
-{
+namespace DotNet.Services {
     public class InteractionService : IInteractionService {
-        private readonly AppDbContext context;
+        private readonly BlogContext context;
 
-        public InteractionService(AppDbContext context, UserService userService) {
+        public InteractionService(BlogContext context, UserService userService) {
             this.context = context;
         }
 
         public void UpdateOrCreateInteraction(InteractionDTO interactionDTO)
         {
-            validateContext();
+            ValidateContext();
             var interaction = context.Interactions.SingleOrDefault(i => i.TipId == interactionDTO.TipId && i.UserId == interactionDTO.UserId);
             var interactionTemp = interaction;
             var tip = context.Tips.SingleOrDefault(t => t.Id == interactionDTO.TipId);
@@ -67,7 +66,7 @@ namespace DotNet.Services
             this.context.SaveChanges();
         }
 
-        private Boolean validateContext()
+        private Boolean ValidateContext()
         {
             if (context == null)
             {

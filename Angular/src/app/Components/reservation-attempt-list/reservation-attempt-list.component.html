@@ -32,11 +32,15 @@
             [ngClass]="{
               'text-green-600': item.status === 'APPROVED',
               'text-yellow-600': item.status === 'PENDING',
-              'text-red-600': item.status === 'REJECTED'
+              'text-red-600': item.status === 'REJECTED' || item.status === 'CANCELED'
             }">
             <span class="font-semibold">Status:</span> {{ item.status }}
           </p>
         </div>
+        <div class="btn">
+          <button *ngIf="item.status == 'PENDING'" class="bg-red-600 text-white px-4 py-2 rounded-lg shadow hover:bg-red-800 transition-colors" (click)="onChangeStatus(item.id || '','CANCELED')">Cancel</button>
+        </div>
+
       </div>
     </div>
   </div>

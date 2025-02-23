@@ -162,7 +162,7 @@ public class ReservationAttemptService implements IReservationAttemptService {
         // Reject all reservations in the list and save them in the DB
         for (ReservationAttempt attempt : reservationAttemptsToReject) {
             boolean isTheRequestDonated = attempt.getId().equals(id);
-            if (!isTheRequestDonated) {
+            if (!isTheRequestDonated ) {
                 attempt.setStatus(ReservationAttempt.ReservationAttemptStatus.REJECTED);
                 reservationAttemptRepository.save(attempt);
             }
@@ -192,7 +192,7 @@ public class ReservationAttemptService implements IReservationAttemptService {
 
         // If the current status is unmodifiable the reservation attempt cannot be updated
         if (unmodifiableStatus.contains(reservationAttempt.getStatus())){
-            throw new IllegalStateException("The newStatus of the reservation cannot be updated.");
+            throw new IllegalStateException("The status of the reservation cannot be updated.");
         }
 
         // Determine if the user is the reservation attempt owner or the advertisement owner

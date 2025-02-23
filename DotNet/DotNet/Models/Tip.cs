@@ -7,16 +7,16 @@ namespace DotNet.Models {
 
         [Required]
         [MinLength(5)]
-        [MaxLength(100)]
+        [MaxLength(150)]
         public string Title { get; set; }
 
         [Required]
         [MinLength(5)]
-        [MaxLength(250)]
+        [MaxLength(400)]
         public string Content { get; set; }
 
-        public int? LikeCount { get; set; }
+        public int? LikeCount { get; set; } = 0;
 
-        public int? FavoriteCount { get; set; }
+        public int? FavoriteCount { get; set; } = 0;
     }
 }

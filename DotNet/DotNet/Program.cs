@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -92,4 +94,8 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+using (var scope = app.Services.CreateScope()) {
+    var dbContext = scope.ServiceProvider.GetRequiredService<BlogContext>();
+    await dbContext.SeedDataAsync();
+}
 app.Run();

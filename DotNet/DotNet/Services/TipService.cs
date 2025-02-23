@@ -93,15 +93,15 @@ namespace DotNet.Services {
                 throw new ArgumentNullException("Tip cannot be null");
             }
 
-            if (tipDTO.Title.Length < 5 || tipDTO.Title.Length > 100)
+            if (tipDTO.Title.Length < 5 || tipDTO.Title.Length > 150)
             {
                 throw new TipValidationException("Title must be between 5 and 100 characters");
             }
 
 
-            if (tipDTO.Content.Length < 5 || tipDTO.Content.Length > 200)
+            if (tipDTO.Content.Length < 5 || tipDTO.Content.Length > 400)
             {
-                throw new TipValidationException("Content must be between 5 and 250 characters");
+                throw new TipValidationException("Content must be between 5 and 400 characters");
             }
 
             return true;

@@ -6,6 +6,9 @@ import { MapComponent } from '../map/map.component';
 import { NgFor, NgIf } from '@angular/common';
 import { ReservationAttemptService } from '../../Services/reservation-attempt.service';
 import { ReservationAttemptResponse } from '../../Models/reservation-attempt-response';
+import { forkJoin, map, switchMap } from 'rxjs';
+import { UsersService } from '../../Services/users.service';
+import { ReservationAttemptWithUser } from '../../Models/reservation-attempt-with-user';
 
 @Component({
   selector: 'app-advertisement-modal',
@@ -20,15 +23,27 @@ export class AdvertisementModalComponent implements OnInit {
   @Input() isLogged: any;
   @Input() showReservationAttempts:boolean = false;
   @Input() showReservationButton:boolean = true;
-  reservations:ReservationAttemptResponse[] = []
+  reservations:ReservationAttemptWithUser[] = []
 
-  constructor(private sanitizer: DomSanitizer, private resAttemptService:ReservationAttemptService) {}
-
+  constructor(private sanitizer: DomSanitizer, private resAttemptService:ReservationAttemptService, private userService:UsersService) {}
+  
   ngOnInit(): void {
-    if(this.showReservationAttempts){
-      this.resAttemptService.
-      getReservationAttemptsByAdvertisementId(this.selectedAdv?.id || '')
-      .subscribe(res => this.reservations = res)
+    if (this.showReservationAttempts) {
+      this.resAttemptService
+        .getReservationAttemptsByAdvertisementId(this.selectedAdv?.id || '')
+        .pipe(
+          switchMap(attempts => {
+            const requests = attempts.map(attempt =>
+              this.userService.getUserById(attempt.clientId || '').pipe(
+                map(user => ({ reservation: attempt , user }))
+              )
+            );
+            return forkJoin(requests); 
+          })
+        )
+        .subscribe(res => {
+          this.reservations = res;
+        });
     }
   }
 

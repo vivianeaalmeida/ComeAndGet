@@ -55,16 +55,30 @@
             </div>
 
             <!-- Mapa -->
-            <div class="col-span-2 w-full h-96 md:h-[50vh] lg:h-[60vh] mt-6">
+            <div >
                 <app-map [municipality]="selectedAdv?.municipality || ''"></app-map>
             </div>
         </div>
-        <ul *ngIf="showReservationAttempts">
-            <li *ngFor="let reservation of reservations">
-                <p>Status: {{reservation.status}}</p>
-                <p>Requested At: {{reservation.date}}</p>
+        <ul *ngIf="showReservationAttempts" class="mt-6 space-y-4">
+            <li *ngFor="let item of reservations" class="bg-gray-100 p-4 rounded-lg shadow-md flex justify-between items-center">
+                <div>
+                    <p class="text-lg font-semibold text-lime-900">Name: <span class="font-normal text-black">{{ item.user.name }}</span></p>
+                    <p class="text-lg font-semibold text-lime-900">E-mail: <span class="font-normal text-black">{{ item.user.email }}</span></p>
+                    <p class="text-lg font-semibold text-lime-900">Phone Number: <span class="font-normal text-black">{{ item.user.phoneNumber }}</span></p>
+                    <p class="text-lg font-semibold text-lime-900">Status: <span class="font-normal text-black">{{ item.reservation.status }}</span></p>
+                    <p class="text-lg font-semibold text-lime-900">Requested At: <span class="font-normal text-black">{{ item.reservation.date }}</span></p>
+                </div>
+                <div class="flex space-x-4">
+                    <button class="bg-lime-600 text-white px-4 py-2 rounded-lg shadow hover:bg-lime-800 transition-colors">
+                        Accept
+                    </button>              
+                    <button class="bg-red-600 text-white px-4 py-2 rounded-lg shadow hover:bg-red-800 transition-colors">
+                        Reject
+                    </button> 
+                </div>
             </li>
-            
         </ul>
+        
+        
     </div>
 </div>

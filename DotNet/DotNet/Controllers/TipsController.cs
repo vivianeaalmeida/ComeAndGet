@@ -5,41 +5,32 @@ using DotNet.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace DotNet.Controllers
-{
+namespace DotNet.Controllers {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class TipsController : Controller
-    {
+    public class TipsController : Controller {
         private readonly ITipService tipService;
 
-        public TipsController(ITipService tipService)
-        {
+        public TipsController(ITipService tipService) {
             this.tipService = tipService;
         }
 
         [HttpPut("{id}")]
-        public ActionResult Update(int id, [FromBody] TipDTO tipDTO)
-        {
-            if (id != tipDTO.Id)
-            {
+        public ActionResult Update(int id, [FromBody] TipDTO tipDTO) {
+            if (id != tipDTO.Id) {
                 return BadRequest();
             }
-            try
-            {
+            try {
                 tipService.UpdateTip(id, tipDTO);
                 return Ok();
             }
-            catch (TipNotFoundException e)
-            {
+            catch (TipNotFoundException e) {
                 return NotFound(new { message = e.Message });
             }
-            catch (TipValidationException e)
-            {
+            catch (TipValidationException e) {
                 return BadRequest(new { message = e.Message });
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 return BadRequest(new { message = "An unexpected error occurred.", detail = e.Message });
             }
         }

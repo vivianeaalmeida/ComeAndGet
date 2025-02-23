@@ -1,5 +1,6 @@
 ﻿using DotNet.Data;
 using DotNet.DTOs;
+using DotNet.Exceptions;
 using DotNet.Models;
 using DotNet.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -12,64 +13,70 @@ namespace DotNet.Services {
             this.context = context;
         }
 
-        public void UpdateOrCreateInteraction(InteractionDTO interactionDTO)
-        {
+        public void CreateInteraction(InteractionDTO interactionDTO) {
             ValidateContext();
-            var interaction = context.Interactions.SingleOrDefault(i => i.TipId == interactionDTO.TipId && i.UserId == interactionDTO.UserId);
-            var interactionTemp = interaction;
-            var tip = context.Tips.SingleOrDefault(t => t.Id == interactionDTO.TipId);
 
-            if (interaction == null)
-            {
+            if (interactionDTO == null)
+                throw new ArgumentNullException(nameof(interactionDTO));
 
-                interaction = new Interaction
-                {
-                    TipId = interactionDTO.TipId,
-                    UserId = interactionDTO.UserId,
-                    Like = interactionDTO.Like,
-                    Favorite = interactionDTO.Favorite
-                };
-                this.context.Interactions.Add(interaction);
+            var tip = context.Tips.SingleOrDefault(t => t.Id == interactionDTO.TipId)
+                      ?? throw new TipNotFoundException("Tip not found.");
 
-            }
-            else
-            {
-                interaction.Like = interactionDTO.Like;
-                interaction.Favorite = interaction.Favorite;
-                this.context.Entry(interaction).State = EntityState.Modified;
+            var interaction = new Interaction {
+                TipId = interactionDTO.TipId,
+                UserId = interactionDTO.UserId,
+                Like = interactionDTO.Like,
+                Favorite = interactionDTO.Favorite
+            };
+
+            if (interactionDTO.Like == true) {
+                tip.LikeCount = (tip.LikeCount ?? 0) + 1;
             }
 
-            if ((interactionTemp != null && interactionDTO.Like != interactionTemp.Like) || interactionTemp == null)
-            {
-                if (interactionTemp != null && interactionDTO.Like == false)
-                {
-                    tip.LikeCount--;
-                }
-                else if (interactionDTO.Like == true)
-                {
-                    tip.LikeCount++;
-                }
+            if (interactionDTO.Favorite == true) {
+                tip.FavoriteCount = (tip.FavoriteCount ?? 0) + 1;
             }
 
-            if ((interactionTemp != null && interactionDTO.Favorite != interactionTemp.Favorite) || interactionTemp == null)
-            {
-                if (interactionTemp != null && interactionDTO.Favorite == false)
-                {
-                    tip.FavoriteCount--;
-                }
-                else if (interactionDTO.Like == true)
-                {
-                    tip.FavoriteCount++;
-                }
-            }
-
-            this.context.SaveChanges();
+            context.Interactions.Add(interaction);
+            context.SaveChanges();
         }
 
-        private Boolean ValidateContext()
-        {
-            if (context == null)
-            {
+        public void UpdateInteraction(int interactionId, InteractionDTO interactionDTO) {
+            ValidateContext();
+
+            if (interactionDTO == null) {
+                throw new ArgumentNullException("The json body cannot be null.");
+            }
+
+            var interaction = context.Interactions
+                .Include(i => i.Tip)
+                .SingleOrDefault(i => i.Id == interactionId)
+                ?? throw new InteractionNotFoundException("Interaction not found.");
+
+            var tip = interaction.Tip ?? throw new TipNotFoundException("Tip not found.");
+
+            // Track changes to Like and Favorite
+            bool likeChanged = interaction.Like != interactionDTO.Like;
+            bool favoriteChanged = interaction.Favorite != interactionDTO.Favorite;
+
+            // Update interaction properties
+            interaction.Like = interactionDTO.Like;
+            interaction.Favorite = interactionDTO.Favorite;
+
+            // Update Tip counters if necessary
+            if (likeChanged) {
+                tip.LikeCount = (tip.LikeCount ?? 0) + (interactionDTO.Like ?? false ? 1 : -1);
+            }
+
+            if (favoriteChanged) {
+                tip.FavoriteCount = (tip.FavoriteCount ?? 0) + (interactionDTO.Favorite ?? false ? 1 : -1);
+            }
+
+            context.SaveChanges();
+        }
+
+        private Boolean ValidateContext() {
+            if (context == null) {
                 throw new ArgumentNullException(nameof(context));
             }
             return true;

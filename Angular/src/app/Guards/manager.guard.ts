@@ -8,7 +8,7 @@ export const managerGuard: CanActivateFn = (route, state) => {
   if (inject(AuthService).hasToken()) {
     let teste: any;
     inject(AuthService)
-      .user.pipe(map((user) => user))
+      .loggedSession.pipe(map((user) => user))
       .subscribe((user) => {
         teste = user;
       });

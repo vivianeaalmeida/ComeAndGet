@@ -20,7 +20,7 @@ export const clientGuard: CanActivateFn = (route, state) => {
   }
 
   // If the user doesn't have the 'User' role, they can't access the page
-  return authService.user.pipe(
+  return authService.loggedSession.pipe(
     take(1),
     map((user) => {
       console.log('Authenticated user:', user);

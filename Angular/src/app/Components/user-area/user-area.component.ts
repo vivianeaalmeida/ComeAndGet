@@ -6,13 +6,14 @@ import { ButtonComponent } from '../button/button.component';
 import { AdvService } from '../../Services/adv.service';
 import { map } from 'rxjs';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { ReservationAttemptListComponent } from '../reservation-attempt-list/reservation-attempt-list.component';
 import { ButtonUpdateAdvComponent } from '../Buttons/button-update-adv/button-update-adv.component';
 import { ButtonDeactivateAdvertisementComponent } from '../Buttons/button-deactivate-advertisement/button-deactivate-advertisement.component';
 
 @Component({
   selector: 'app-user-area',
   standalone: true,
-  imports: [NgIf, ButtonComponent, CommonModule, ButtonUpdateAdvComponent, ButtonDeactivateAdvertisementComponent],
+  imports: [NgIf, ButtonComponent, CommonModule, ButtonUpdateAdvComponent, ReservationAttemptListComponent, ButtonDeactivateAdvertisementComponent],
   templateUrl: './user-area.component.html',
   styleUrl: './user-area.component.css',
 })
@@ -40,7 +41,7 @@ export class UserAreaComponent implements OnInit {
   ngOnInit(): void {
     console.log(this.menus);
     this.profileInfo();
-    this.authService.user.pipe(map((user) => user)).subscribe((user) => {
+    this.authService.loggedSession.pipe(map((user) => user)).subscribe((user) => {
       this.isLogged = user;
     });
   }

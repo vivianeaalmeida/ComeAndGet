@@ -27,4 +27,8 @@ public class ReservationAttemptResponseDTO {
     private String advertisementId;
     /** The date of the reservation attempt. */
     private LocalDate date;
+
+    private AdvertisementSummaryDTO advertisement;
+
+
 }

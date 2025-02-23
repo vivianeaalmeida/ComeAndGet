@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ReservationAttempt } from '../Models/reservation-attempt';
+import { ReservationAttemptResponse } from '../Models/reservation-attempt-response';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +17,8 @@ export class ReservationAttemptService {
     return this.http.get<ReservationAttempt>(`${this.endpoint}/${id}`)
   }
 
-  getReservationAttemptsByAdvertisement(advertisementId:string):Observable<ReservationAttempt[]>{
-    return this.http.get<ReservationAttempt[]>(`${this.endpoint}?advertisementClientId=${advertisementId}`)
+  getUserRequestAttempts(loggedUserId:string):Observable<ReservationAttemptResponse[]>{
+    return this.http.get<ReservationAttemptResponse[]>(`${this.endpoint}?reservationAttemptClientId=${loggedUserId}`)
   }
 
   createReservationAttempt(reservation:ReservationAttempt):Observable<ReservationAttempt>{

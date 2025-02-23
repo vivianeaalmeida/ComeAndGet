@@ -8,6 +8,7 @@ import { AdvService } from '../../../Services/adv.service';
 import { Advertisement } from '../../../Models/advertisement';
 import { ReservationAttempt } from '../../../Models/reservation-attempt';
 import { NgIf } from '@angular/common';
+import { User1 } from '../../../Models/user1';
 
 @Component({
   selector: 'app-button-create-res-attempt',
@@ -29,7 +30,7 @@ export class ButtonCreateResAttemptComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.authService.user.pipe(map((user) => user)).subscribe((user) => {
+    this.authService.loggedSession.pipe(map((user) => user)).subscribe((user) => {
       this.isLogged = user;
     });
 

@@ -26,10 +26,10 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     // Observa a autenticação do usuário
-    this.isLoggedIn$ = this.authService.user.pipe(map((user) => !!user));
+    this.isLoggedIn$ = this.authService.loggedSession.pipe(map((user) => !!user));
 
     // Obtém o role do usuário quando estiver logado
-    this.authService.user.pipe(map((user) => user)).subscribe((user) => {
+    this.authService.loggedSession.pipe(map((user) => user)).subscribe((user) => {
       if (user) {
         this.checkRole = user.roles; // Define o role do usuário
       }

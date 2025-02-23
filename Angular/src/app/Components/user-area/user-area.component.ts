@@ -41,7 +41,7 @@ export class UserAreaComponent implements OnInit {
   ngOnInit(): void {
     console.log(this.menus);
     this.profileInfo();
-    this.authService.user.pipe(map((user) => user)).subscribe((user) => {
+    this.authService.loggedSession.pipe(map((user) => user)).subscribe((user) => {
       this.isLogged = user;
     });
   }

@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit {
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
 
-    this.loginServ.user.pipe(map((user) => user)).subscribe((user) => {
+    this.loginServ.loggedSession.pipe(map((user) => user)).subscribe((user) => {
       this.isLogged = user;
     });
   }

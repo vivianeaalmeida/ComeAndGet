@@ -33,7 +33,6 @@ export class AdvlistingComponent implements OnInit {
   searchKeyword: string = '';
   advCollection: any[] = [];
   isLogged: any;
-  user?: User1;
   existingAdv: number = 0;
   hasAdvs: boolean = true;
 
@@ -48,7 +47,7 @@ export class AdvlistingComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.loginServ.user.pipe(map((user) => user)).subscribe((user) => {
+    this.loginServ.loggedSession.pipe(map((user) => user)).subscribe((user) => {
       this.isLogged = user;
     });
 
@@ -76,14 +75,13 @@ export class AdvlistingComponent implements OnInit {
   getAllAvAdv(): Promise<any> {
     return new Promise((resolve) => {
       this.advServ.get('advertisements/active').subscribe(
-        (resp) => {
-          this.advCollection = resp;
-          resolve(true);
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
+        {
+          next: res => {
+            this.advCollection = res;
+            resolve(true);
+          },
+          error: error => console.error(error)
+      });
     });
   }
 

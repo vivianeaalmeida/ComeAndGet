@@ -26,7 +26,7 @@ namespace DotNet.Services {
             this.context.Tips.Add(tip);
             this.context.SaveChanges();
 
-            return TipMapper.ToDTO(tip);            
+            return TipMapper.ToDTO(tip);
         }
 
         public async Task<IEnumerable<TipDTO>> GetFavoritedTipsAsync(string userId) {

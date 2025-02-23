@@ -1,41 +1,70 @@
 ﻿using DotNet.Data;
 using DotNet.DTOs;
+using DotNet.Models;
 using DotNet.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace DotNet.Services
 {
     public class InteractionService : IInteractionService {
         private readonly AppDbContext context;
-        
 
         public InteractionService(AppDbContext context, UserService userService) {
             this.context = context;
-           
         }
 
-        public InteractionDTO AddInteraction(InteractionDTO interactionDTO) {
+        public void UpdateOrCreateInteraction(InteractionDTO interactionDTO)
+        {
             validateContext();
-            throw new NotImplementedException();
-        }
+            var interaction = context.Interactions.SingleOrDefault(i => i.TipId == interactionDTO.TipId && i.UserId == interactionDTO.UserId);
+            var interactionTemp = interaction;
+            var tip = context.Tips.SingleOrDefault(t => t.Id == interactionDTO.TipId);
 
-        public InteractionDTO GetInteraction(int Id) {
-            validateContext();
-            throw new NotImplementedException();
-        }
+            if (interaction == null)
+            {
 
-        public IEnumerable<InteractionDTO> GetInteractions() {
-            validateContext();
-            throw new NotImplementedException();
-        }
+                interaction = new Interaction
+                {
+                    TipId = interactionDTO.TipId,
+                    UserId = interactionDTO.UserId,
+                    Like = interactionDTO.Like,
+                    Favorite = interactionDTO.Favorite
+                };
+                this.context.Interactions.Add(interaction);
 
-        public void UpdateFavorite(bool favorite) {
-            validateContext();
-            throw new NotImplementedException();
-        }
+            }
+            else
+            {
+                interaction.Like = interactionDTO.Like;
+                interaction.Favorite = interaction.Favorite;
+                this.context.Entry(interaction).State = EntityState.Modified;
+            }
 
-        public void UpdateLike(bool like) {
-            validateContext();
-            throw new NotImplementedException();
+            if ((interactionTemp != null && interactionDTO.Like != interactionTemp.Like) || interactionTemp == null)
+            {
+                if (interactionTemp != null && interactionDTO.Like == false)
+                {
+                    tip.LikeCount--;
+                }
+                else if (interactionDTO.Like == true)
+                {
+                    tip.LikeCount++;
+                }
+            }
+
+            if ((interactionTemp != null && interactionDTO.Favorite != interactionTemp.Favorite) || interactionTemp == null)
+            {
+                if (interactionTemp != null && interactionDTO.Favorite == false)
+                {
+                    tip.FavoriteCount--;
+                }
+                else if (interactionDTO.Like == true)
+                {
+                    tip.FavoriteCount++;
+                }
+            }
+
+            this.context.SaveChanges();
         }
 
         private Boolean validateContext()

@@ -2,15 +2,6 @@
 
 namespace DotNet.Services.Interfaces {
     public interface IInteractionService {
-
-        IEnumerable<InteractionDTO> GetInteractions();
-
-        InteractionDTO GetInteraction(int id);
-
-        InteractionDTO AddInteraction(InteractionDTO interactionDTO);
-
-        void UpdateLike(Boolean like);
-
-        void UpdateFavorite(Boolean favorite);
+        void UpdateOrCreateInteraction(InteractionDTO interactionDTO);
     }
 }

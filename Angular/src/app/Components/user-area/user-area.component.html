@@ -126,7 +126,7 @@
       <div>
         <div class="items-left mt-2">
           <img
-            [src]="getSafeImageUrl(adv.item.image)"
+            [src]="getSafeImageUrl(adv.item?.image || '')"
             alt="AdImage"
             class="w-full h-[24vh] object-contain rounded-lg"
           />
@@ -143,13 +143,13 @@
           {{ adv.date | date : "mediumDate" }}
         </p>
         <div class="mt-2 flex text-white space-x-4 pt-4">
-          <button class="bg-lime-600 py-1 px-6 rounded-md hover:bg-lime-800">
+          <button class="bg-lime-600 py-1 px-6 rounded-md hover:bg-lime-800" (click)="openModal(adv)">
             See details
           </button>
 
-          <app-button-update-adv [id]="adv.id"></app-button-update-adv>
+          <app-button-update-adv [id]="adv.id || ''"></app-button-update-adv>
 
-          <app-button-deactivate-advertisement [id]="adv.id"></app-button-deactivate-advertisement>
+          <app-button-deactivate-advertisement [id]="adv.id || ''"></app-button-deactivate-advertisement>
           
         </div>
       </div>
@@ -159,3 +159,8 @@
      }
   </div>
 </div>
+
+    <!-- Modal -->
+    <app-advertisement-modal *ngIf="openedModal && selectedAdv" [selectedAdv]="selectedAdv" (modalClosed)="closeModal()" [isLogged]="isLogged" 
+    [showReservationButton]="false" [showReservationAttempts]="true">
+    </app-advertisement-modal>

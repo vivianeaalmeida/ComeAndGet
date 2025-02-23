@@ -30,7 +30,7 @@ export class ReservationAttemptService {
   }
 
   updateReservationAttemptStatus(id:string, status:string):Observable<ReservationAttempt>{
-    return this.http.post<ReservationAttempt>(`${this.endpoint}/${id}/status`, status)
+    return this.http.patch<ReservationAttempt>(`${this.endpoint}/${id}/status`, {status})
   }
 
 }

@@ -27,14 +27,12 @@ namespace DotNet.DTOs
         /// Gets or sets the number of likes the tip has received.
         /// This property will be ignored during JSON serialization.
         /// </summary>
-        [JsonIgnore]
-        public int? LikeCount { get; set; }
+        public int? LikeCount { get; set; } = 0;
 
         /// <summary>
         /// Gets or sets the number of times the tip has been marked as favorite.
         /// This property will be ignored during JSON serialization.
         /// </summary>
-        [JsonIgnore]
-        public int? FavoriteCount { get; set; }
+        public int? FavoriteCount { get; set; } = 0;
     }
 }

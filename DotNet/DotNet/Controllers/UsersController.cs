@@ -10,15 +10,15 @@ namespace DotNet.Controllers {
     [Authorize(Roles = "User")]
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase {
-        private readonly UserService _userService;
+    public class UsersController : ControllerBase {
+        private readonly UserService userService;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UserController"/> class.
+        /// Initializes a new instance of the <see cref="UsersController"/> class.
         /// </summary>
         /// <param name="userService">The instance of UserService.</param>
-        public UserController(UserService userService) {
-            _userService = userService;
+        public UsersController(UserService userService) {
+            this.userService = userService;
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace DotNet.Controllers {
         /// <returns>A JSON response containing the user information.</returns>
         [HttpGet]
         public IActionResult Get() {
-            var userInfo = _userService.GetUserInfo();
+            var userInfo = userService.GetUserInfo();
             return Ok(userInfo);
         }
 
@@ -39,7 +39,7 @@ namespace DotNet.Controllers {
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserById(string id)
         {
-            var userInfo = await _userService.GetUserById(id);
+            var userInfo = await userService.GetUserById(id);
 
             if (userInfo == null)
             {
@@ -49,16 +49,13 @@ namespace DotNet.Controllers {
             return Ok(userInfo);
         }
 
-
-
-
         /// <summary>
         /// Retrieves user ID.
         /// </summary>
         /// <returns></returns>
         [HttpGet("id")]
         public IActionResult GetUserId() {
-            var id = _userService.GetUserId();
+            var id = userService.GetUserId();
             return Ok(id);
         }
     }

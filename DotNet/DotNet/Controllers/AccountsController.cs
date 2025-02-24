@@ -7,14 +7,14 @@ using Microsoft.AspNetCore.Mvc;
 /// </summary>
 [Route("api/v1/[controller]")]
 [ApiController]
-public class AccountController : ControllerBase {
+public class AccountsController : ControllerBase {
     private readonly AccountService accountService;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="AccountController"/> class.
+    /// Initializes a new instance of the <see cref="AccountsController"/> class.
     /// </summary>
     /// <param name="accountService">The account service instance.</param>
-    public AccountController(AccountService accountService) {
+    public AccountsController(AccountService accountService) {
         this.accountService = accountService;
     }
 
@@ -26,40 +26,12 @@ public class AccountController : ControllerBase {
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] Register model) {
         var result = await accountService.RegisterUserAsync(model);
-        if (!result.Succeeded) {
+        if (!result.Succeeded) 
+        {
             return BadRequest(result.Errors);
         }
         return Ok(new { message = "User registered successfully." });
     }
-
-    /// <summary>
-    /// Adds a new role to the system.
-    /// </summary>
-    /// <param name="role">The name of the role to add.</param>
-    /// <returns>A JSON response indicating whether the role was added successfully.</returns>
-    //[HttpPost("add-role")]
-    //public async Task<IActionResult> AddRole([FromBody] string role) {
-    //    var result = await accountService.AddRoleAsync(role);
-    //    if (result.Succeeded) {
-    //        return Ok(new { message = "Roles added successfully" });
-    //    }
-    //    return BadRequest(result.Errors);
-    //}
-
-    /// <summary>
-    /// Assigns a role to a user.
-    /// </summary>
-    /// <param name="model">The user-role assignment model.</param>
-    /// <returns>A JSON response indicating whether the role was assigned successfully.</returns>
-    //[HttpPost("assign-role")]
-    //public async Task<IActionResult> AssignRole([FromBody] UserRoleDTO model) {
-    //    var result = await accountService.AssignRoleAsync(model);
-    //    if (result.Succeeded) {
-    //        return Ok(new { message = "Roles assigned successfully" });
-    //    }
-    //    return BadRequest(result.Errors);
-    //}
-
 
     /// <summary>
     /// Logs in a user.
@@ -69,7 +41,8 @@ public class AccountController : ControllerBase {
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] Login model) {
         var loginResponse = await accountService.LoginAsync(model);
-        if (loginResponse == null) {
+        if (loginResponse == null) 
+        {
             return Unauthorized();
         }
         return Ok(loginResponse);

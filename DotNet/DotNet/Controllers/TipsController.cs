@@ -15,33 +15,17 @@ namespace DotNet.Controllers {
             this.tipService = tipService;
         }
 
-
-        [HttpPost]
-        public ActionResult<TipDTO> Add([FromBody] TipDTO tipDTO) {
-            try {
-                var createdTip = tipService.AddTip(tipDTO);
-                return CreatedAtAction(nameof(Add), new { id = createdTip.Id }, createdTip);
-            }
-            catch (TipValidationException e) {
-                return BadRequest(new { message = e.Message });
-            }
-            catch (Exception e) {
-                return BadRequest(new { message = "An unexpected error occurred.", detail = e.Message });
-            }
-        }
-
-
         [HttpGet]
         public ActionResult<IEnumerable<TipDTO>> GetAll() {
             try {
                 var tips = tipService.GetTips();
                 return Ok(tips);
             }
-            catch (Exception e) {
-                return BadRequest(new { message = "An unexpected error occurred." });
+            catch (Exception e)
+            {
+                return BadRequest(new { message = $"An unexpected error occurred - {e.Message}." });
             }
         }
-
 
         [HttpGet("{id}")]
         public ActionResult<TipDTO> GetById(int id) {
@@ -49,61 +33,94 @@ namespace DotNet.Controllers {
                 var tip = tipService.GetTipById(id);
                 return Ok(tip);
             }
-            catch (TipNotFoundException e) {
+            catch (TipNotFoundException e) 
+            {
                 return NotFound(new { message = e.Message });
             }
-            catch (Exception e) {
-                return BadRequest(new { message = "An unexpected error occurred." });
+            catch (Exception e)
+            {
+                return BadRequest(new { message = $"An unexpected error occurred - {e.Message}." });
             }
         }
 
-        [HttpGet("favorites/{userId}")]
+        [HttpGet("favorites/users/{userId}")]
         public async Task<ActionResult<IEnumerable<TipDTO>>> GetFavoritedTips(string userId) {
-            try {
+            try 
+            {
                 var favoriteTips = await tipService.GetFavoritedTipsAsync(userId);
                 return Ok(favoriteTips);
             }
-            catch (Exception e) {
-                return BadRequest(new { message = "An unexpected error occurred." });
+            catch (Exception e)
+            {
+                return BadRequest(new { message = $"An unexpected error occurred - {e.Message}." });
             }
         }
 
+        [HttpPost]
+        public ActionResult<TipDTO> Add([FromBody] TipDTO tipDTO)
+        {
+            try
+            {
+                var createdTip = tipService.AddTip(tipDTO);
+                return CreatedAtAction(nameof(Add), new { id = createdTip.Id }, createdTip);
+            }
+            catch (TipValidationException e)
+            {
+                return BadRequest(new { message = e.Message });
+            }
+            catch (ArgumentNullException e)
+            {
+                return BadRequest(new { message = e.Message });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = $"An unexpected error occurred - {e.Message}." });
+            }
+        }
 
         [HttpPut("{id}")]
         public ActionResult Update(int id, [FromBody] TipDTO tipDTO) {
-            if (tipDTO == null) return BadRequest("Tip data is required.");
-            if (id != tipDTO.Id) return BadRequest("The provided ids do not match.");
-
-            if (id != tipDTO.Id) {
-                return BadRequest();
+            if (id != tipDTO.Id)
+            {
+                return BadRequest("The provided ids do not match.");
             }
-            try {
+
+            try 
+            {
                 tipService.UpdateTip(id, tipDTO);
                 return Ok(tipDTO);
             }
-            catch (TipNotFoundException e) {
+            catch (TipNotFoundException e) 
+            {
                 return NotFound(new { message = e.Message });
             }
-            catch (TipValidationException e) {
+            catch (TipValidationException e) 
+            {
+                return BadRequest(new { message = e.Message });
+            }
+            catch (ArgumentNullException e)
+            {
                 return BadRequest(new { message = e.Message });
             }
             catch (Exception e) {
-                return BadRequest(new { message = "An unexpected error occurred.", detail = e.Message });
+                return BadRequest(new { message = $"An unexpected error occurred - {e.Message}." });
             }
         }
 
-
         [HttpDelete("{id}")]
         public ActionResult Remove(int id) {
-            try {
+            try 
+            {
                 var removedTip = tipService.RemoveTip(id);
                 return Ok(removedTip);
             }
-            catch (TipNotFoundException e) {
+            catch (TipNotFoundException e) 
+            {
                 return NotFound(new { message = e.Message });
             }
-            catch (Exception e) {
-                return BadRequest(new { message = "An unexpected error occurred." });
+            catch (Exception e) 
+            {
+                return BadRequest(new { message = $"An unexpected error occurred - {e.Message}." });
             }
         }
     }

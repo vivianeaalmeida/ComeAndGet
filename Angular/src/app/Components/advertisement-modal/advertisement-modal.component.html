@@ -72,7 +72,7 @@
                   <button *ngIf="item.reservation.status == 'PENDING'" class="bg-lime-600 text-white px-4 py-2 rounded-lg shadow hover:bg-lime-800 transition-colors" (click)="onAccepted(item.reservation.id || '')">
                     Accept
                   </button>              
-                  <button *ngIf="item.reservation.status == 'PENDING'" class="bg-red-600 text-white px-4 py-2 rounded-lg shadow hover:bg-red-800 transition-colors" (click)="onRejected(item.reservation.id || '')">
+                  <button *ngIf="item.reservation.status == 'REJECTED'" class="bg-red-600 text-white px-4 py-2 rounded-lg shadow hover:bg-red-800 transition-colors" (click)="onRejected(item.reservation.id || '')">
                     Reject
                   </button> 
                   <button  *ngIf="item.reservation.status == 'ACCEPTED'" class="bg-lime-600 text-white px-4 py-2 rounded-lg shadow hover:bg-lime-800 transition-colors" (click)="onChangeStatus(item.reservation.id || '', 'DONATED')">

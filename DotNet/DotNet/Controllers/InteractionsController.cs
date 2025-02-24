@@ -17,8 +17,6 @@ namespace DotNet.Controllers {
 
         [HttpPost]
         public IActionResult CreateInteraction([FromBody] InteractionDTO interactionDTO) {
-            if (interactionDTO == null) return BadRequest("Interaction data is required.");
-
             try {
                 var createdInteraction = interactionService.CreateInteraction(interactionDTO);
                 return CreatedAtAction(nameof(CreateInteraction), new { id = createdInteraction.Id }, createdInteraction);
@@ -29,16 +27,18 @@ namespace DotNet.Controllers {
             catch (ArgumentNullException ex) {
                 return BadRequest(new { message = ex.Message });
             }
-            catch (Exception ex) {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while creating the interaction." });
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = $"An unexpected error occurred - {ex.Message}." });
             }
         }
 
         [HttpPut("{id}")]
         public IActionResult UpdateInteraction(int id, [FromBody] InteractionDTO interactionDTO) {
-            if (interactionDTO == null) return BadRequest("Interaction data is required.");
-            if (id != interactionDTO.Id) return BadRequest("The provided ids do not match.");
-
+            if (id != interactionDTO.Id)
+            {
+                return BadRequest("The provided ids do not match.");
+            }
             try {
                 interactionService.UpdateInteraction(id, interactionDTO);
                 return Ok(interactionDTO);
@@ -49,8 +49,12 @@ namespace DotNet.Controllers {
             catch (InteractionNotFoundException ex) {
                 return NotFound(new { message = ex.Message });
             }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
             catch (Exception ex) {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while updating the interaction." });
+                return BadRequest(new { message = $"An unexpected error occurred - {ex.Message}." });
             }
         }
     }

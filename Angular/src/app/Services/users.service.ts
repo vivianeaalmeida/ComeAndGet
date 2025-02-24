@@ -8,8 +8,8 @@ import { User1 } from '../Models/user1';
   providedIn: 'root',
 })
 export class UsersService {
-  theEndpoint = 'http://localhost:5016/api/v1/account/register';
-  private userUrl = 'http://localhost:5016/api/v1/user/';
+  theEndpoint = 'http://localhost:5016/api/v1/accounts/register';
+  private userUrl = 'http://localhost:5016/api/v1/users/';
   constructor(private http: HttpClient) {}
 
   registerUser(newUser: User1): Observable<any> {

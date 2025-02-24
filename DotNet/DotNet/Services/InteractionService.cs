@@ -18,7 +18,9 @@ namespace DotNet.Services {
             ValidateContext();
 
             if (interactionDTO == null)
+            {
                 throw new ArgumentNullException(nameof(interactionDTO));
+            }
 
             var tip = context.Tips.SingleOrDefault(t => t.Id == interactionDTO.TipId)
                       ?? throw new TipNotFoundException("Tip not found.");

@@ -21,6 +21,26 @@ public class ReservationAttemptController extends BaseController {
     private IReservationAttemptService reservationAttemptService;
 
     /**
+     * Fetches a list of reservation attempts based on the provided filter criteria.
+     * If no filters are specified, all reservation attempts are returned.
+     *
+     * @param reservationAttemptClientId (Optional) The client ID linked to the reservation attempt.
+     * @param advertisementClientId (Optional) The client ID linked to the advertisement.
+     * @param advertisementId (Optional) The unique identifier of the advertisement.
+     * @return A ResponseEntity containing a list of reservation attempt DTOs and an HTTP 200 (OK) status if successful.
+     */
+
+    @GetMapping("/reservationAttempts")
+    public ResponseEntity<List<ReservationAttemptResponseDTO>> getReservationAttempts(
+            @RequestParam(required = false) String reservationAttemptClientId,
+            @RequestParam(required = false) String advertisementClientId,
+            @RequestParam(required = false) String advertisementId
+    ) {
+        List<ReservationAttemptResponseDTO> reservationAttemptsDTO = reservationAttemptService.getReservationAttempts(reservationAttemptClientId, advertisementClientId, advertisementId);
+        return new ResponseEntity<>(reservationAttemptsDTO, HttpStatus.OK);
+    }
+
+    /**
      * Retrieves a reservation attempt by its ID.
      *
      * @param id the ID of the reservation attempt
@@ -30,26 +50,6 @@ public class ReservationAttemptController extends BaseController {
     public ResponseEntity<ReservationAttemptResponseDTO> getReservationAttemptById(@PathVariable String id) {
         ReservationAttemptResponseDTO responseDTO = reservationAttemptService.getReservationAttemptById(id);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
-    }
-
-    /**
-     * Retrieves a list of reservation attempts based on the specified filtering parameters.
-     * If no parameters are provided, all reservation attempts will be returned.
-     *
-     * @param reservationAttemptClientId The client ID associated with the reservation attempt (optional).
-     * @param advertisementClientId The client ID associated with the advertisement (optional).
-     * @param advertisementId The unique identifier of the advertisement (optional).
-     * @return A ResponseEntity containing a list of reservation attempt response data transfer objects
-     *         and an HTTP status code of 200 (OK) if the request is successful.
-     */
-    @GetMapping("/reservationAttempts")
-    public ResponseEntity<List<ReservationAttemptResponseDTO>> getReservationAttempts(
-            @RequestParam(required = false) String reservationAttemptClientId,
-            @RequestParam(required = false) String advertisementClientId,
-            @RequestParam(required = false) String advertisementId
-    ) {
-        List<ReservationAttemptResponseDTO> reservationAttemptsDTO = reservationAttemptService.getReservationAttempts(reservationAttemptClientId, advertisementClientId, advertisementId);
-        return new ResponseEntity<>(reservationAttemptsDTO, HttpStatus.OK);
     }
 
     /**

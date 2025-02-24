@@ -21,6 +21,18 @@ public class ReservationAttemptController extends BaseController {
     private IReservationAttemptService reservationAttemptService;
 
     /**
+     * Retrieves a reservation attempt by its ID.
+     *
+     * @param id the ID of the reservation attempt
+     * @return a ResponseEntity containing the ReservationAttemptResponseDTO and HTTP status OK if retrieval is successful
+     */
+    @GetMapping("/reservationAttempts/{id}")
+    public ResponseEntity<ReservationAttemptResponseDTO> getReservationAttemptById(@PathVariable String id) {
+        ReservationAttemptResponseDTO responseDTO = reservationAttemptService.getReservationAttemptById(id);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+    }
+
+    /**
      * Retrieves a list of reservation attempts based on the specified filtering parameters.
      * If no parameters are provided, all reservation attempts will be returned.
      *
@@ -38,18 +50,6 @@ public class ReservationAttemptController extends BaseController {
     ) {
         List<ReservationAttemptResponseDTO> reservationAttemptsDTO = reservationAttemptService.getReservationAttempts(reservationAttemptClientId, advertisementClientId, advertisementId);
         return new ResponseEntity<>(reservationAttemptsDTO, HttpStatus.OK);
-    }
-
-    /**
-     * Retrieves a reservation attempt by its ID.
-     *
-     * @param id the ID of the reservation attempt
-     * @return a ResponseEntity containing the ReservationAttemptResponseDTO and HTTP status OK if retrieval is successful
-     */
-    @GetMapping("/reservationAttempts/{id}")
-    public ResponseEntity<ReservationAttemptResponseDTO> getReservationAttemptById(@PathVariable String id) {
-        ReservationAttemptResponseDTO responseDTO = reservationAttemptService.getReservationAttemptById(id);
-        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
     /**

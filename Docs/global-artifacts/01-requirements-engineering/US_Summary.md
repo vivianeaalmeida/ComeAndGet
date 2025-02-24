@@ -31,6 +31,7 @@
 | US27 - Create interaction (like or favorite a tip)                 | 8            |
 | US28 - Update interaction (like, unlike, favorite, unfavorite tip) | 8            |
 
+
 ## US01 - Register new user
 - **Endpoint**: `POST /signup`
 - **Description**: As an unregistered user, I want to register in the application to access restricted features.
@@ -56,7 +57,7 @@
 
 ## US03 - Create category
 - **Endpoint**: `POST /categories`
-- **Description**: As an admin, I want to create new categories so that users can classify their advertisements properly.
+- **Description**: As an Admin, I want to create new categories so that users can classify their advertisements properly.
 - **Permissions/Role**: admin
 - **Acceptance Criteria**:
   - The category name must be unique and not empty
@@ -76,7 +77,7 @@
 ## US05 - Update category
 - **Endpoint**: `PUT /categories/{id}`
 - **Description**: As an admin, I want to update an existing category name so that it remains relevant and accurate.
-- **Permissions/Role**: admin
+- **Permissions/Role**: Admin
 - **Acceptance Criteria**:
   - The category designation must be unique and not empty.
   - The category designation must be between 5 and 50 characters
@@ -86,7 +87,7 @@
 ## US06 - Delete category
 - **Endpoint**: `DELETE /categories/{id}`
 - **Description**: As an admin, I want to delete a category so that outdated or irrelevant categories are removed.
-- **Permissions/Role**: admin
+- **Permissions/Role**: Admin
 - **Acceptance Criteria**:
   - A category can only be deleted if there are no items associated with it.
   - The system should request confirmation
@@ -110,7 +111,7 @@
 ## US08 - View advertisements list
 - **Endpoint**: `GET /advertisements`
 - **Description**: As an admin, I want to list the advertisements so that I can easily manage and oversee the advertisements in the system.
-- **Permissions/Role**: admin
+- **Permissions/Role**: Admin
 - **Acceptance Criteria**:
     - The list displays key details for each advertisement.
     - The list is paginated or scrollable if it contains a large number of items (optional).
@@ -130,7 +131,7 @@
 ## US10 - View closed advertisement list
 - **Endpoint**: `GET /advertisements/closed`
 - **Description**: As an admin, I want to list the closed advertisements so that I can easily manage and oversee the items in the system.
-- **Permissions/Role**: admin
+- **Permissions/Role**: Admin
 - **Acceptance Criteria**:
     - The list displays key details for each advertisement.
     - The list is paginated or scrollable if it contains a large number of items (optional).
@@ -170,10 +171,8 @@
 
 ## US14 - Deactivate an advertisement
 - **Endpoint**: `PATCH /advertisements/{id}/deactivate`
-- **Description**: 
-  - As an admin I want to deactivate an advertisement so that inappropriate advertisements can be removed from visibility.
-  - As a client (advertisement owner), I want to deactivate my advertisement when I no longer need it, so that it is no longer visible to others.
-- **Permissions/Role**: admin and client (advertisement owner)
+- **Description**: As an admin I want to deactivate an advertisement so that inappropriate advertisements can be removed from visibility.
+- **Permissions/Role**: Admin
 - **Acceptance Criteria**:
     - Advertisement that have a ReservationAttempt with status donated cannot be deactivated. 
     - The system must ask for confirmation before deactivating an advertisement. 

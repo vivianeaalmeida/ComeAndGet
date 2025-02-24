@@ -46,7 +46,7 @@ public interface IAdvertisementService {
      * @param id the ID of the user
      * @return a list of advertisements associated with the given user ID
      */
-    List<AdvertisementDTO> getAdvertisementsByClientId(String id);
+    List<AdvertisementDTO> getAdvertisementsByClientId(String id, String authorization);
 
     /**
      * Creates a new advertisement.
@@ -54,7 +54,8 @@ public interface IAdvertisementService {
      * @param advertisementDTO the advertisement data transfer object containing the details of the advertisement
      * @return the created advertisement data transfer object
      */
-    AdvertisementDTO createAdvertisement(AdvertisementDTO advertisementDTO, MultipartFile imageFile, String authorization) throws IOException;
+    AdvertisementDTO createAdvertisement(AdvertisementDTO advertisementDTO, MultipartFile imageFile, String authorization)
+            throws IOException;
 
 
     /**
@@ -64,7 +65,7 @@ public interface IAdvertisementService {
      * @param advertisementUpdateDTO   the advertisement data transfer object containing the updated details
      * @return the updated advertisement data transfer object
      */
-    AdvertisementDTO updateAdvertisement(String id, AdvertisementUpdateDTO advertisementUpdateDTO);
+    AdvertisementDTO updateAdvertisement(String id, AdvertisementUpdateDTO advertisementUpdateDTO, String authorization);
 
     /**
      * Changes the status of an advertisement to inactive.

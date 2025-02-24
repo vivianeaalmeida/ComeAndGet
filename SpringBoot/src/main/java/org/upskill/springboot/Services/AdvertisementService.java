@@ -23,6 +23,7 @@ import org.upskill.springboot.WebClient.MunicipalityWebClient;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Service class for managing advertisements.
@@ -32,7 +33,7 @@ public class AdvertisementService implements IAdvertisementService {
 
     @Autowired
     private AdvertisementRepository advertisementRepository;
-  
+
     @Autowired
     private ItemService itemService;
 
@@ -144,7 +145,13 @@ public class AdvertisementService implements IAdvertisementService {
      * @param clientId the ID of the client
      * @return a list of advertisements associated with the given client ID
      */
-    public List<AdvertisementDTO> getAdvertisementsByClientId(String clientId) {
+    public List<AdvertisementDTO> getAdvertisementsByClientId(String clientId, String authorization) {
+        String authenticatedUserId = webClient.getUserId(authorization);
+
+        if (!authenticatedUserId.equals(clientId)) {
+            throw new UserUnauthorizedException("You don't have permission to access this resource.");
+        }
+
         return advertisementRepository
                 .findByClientIdAndStatusNot(clientId, Advertisement.AdvertisementStatus.INACTIVE)
                 .stream()
@@ -168,7 +175,6 @@ public class AdvertisementService implements IAdvertisementService {
     public AdvertisementDTO createAdvertisement(AdvertisementDTO advertisementDTO, MultipartFile imageFile, String authorization) throws IOException, java.io.IOException {
         // Obtém o ID do usuário autenticado usando o token JWT
         String clientId = webClient.getUserId(authorization);
-        System.out.println("Client ID: " + clientId); // Verifique se o clientId está sendo retornado corretamente
 
         // Valida os dados do anúncio
         validateAdvertisementCreation(advertisementDTO);
@@ -212,7 +218,9 @@ public class AdvertisementService implements IAdvertisementService {
      */
     @Override
     @Transactional
-    public AdvertisementDTO updateAdvertisement(String id, AdvertisementUpdateDTO advertisementUpdateDTO) {
+    public AdvertisementDTO updateAdvertisement(String id, AdvertisementUpdateDTO advertisementUpdateDTO, String authorization) {
+        // Verifies if the user owns the resource
+        verifyUserOwnership(authorization, id);
         // Validates AdvertisementUpdateDTO
         validateAdvertisementUpdate(id, advertisementUpdateDTO);
 
@@ -472,6 +480,32 @@ public class AdvertisementService implements IAdvertisementService {
                 // Reject reservation attemps associated with the advertisement
                 reservationAttemptService.rejectReservationAttempts(advertisement.getId());
             }
+        }
+    }
+
+
+    /**
+     * Verifies if the authenticated user is the owner of the specified advertisement.
+     * This method checks if the `authorization` token corresponds to a valid authenticated user
+     * and ensures that the user owns the advertisement identified by `advId`.
+     * If the user is not authenticated or does not own the advertisement, an exception is thrown.
+     *
+     * @param authorization The authorization token used to authenticate the user.
+     * @param advId The unique identifier of the advertisement to verify ownership.
+     * @throws UserUnauthorizedException If the user is not authenticated or does not
+     *                                    have permission to access the specified resource.
+     */
+    public void verifyUserOwnership(String authorization, String advId) {
+        // Verify if the user is authenticated
+        String authenticatedUserId = webClient.getUserId(authorization);
+        if (authenticatedUserId == null) {
+            throw new UserUnauthorizedException("User not authenticated.");
+        }
+
+        // Verifies if the authenticated user is the one who created the resource
+        AdvertisementDTO advertisementDTO = getAdvertisementById(advId);
+        if (!Objects.equals(advertisementDTO.getClientId(), authenticatedUserId)) {
+            throw new UserUnauthorizedException("You don't have permission to access this resource.");
         }
     }
 }

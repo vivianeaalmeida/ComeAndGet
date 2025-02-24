@@ -9,15 +9,8 @@ import { User1 } from '../../../Models/user1';
 @Component({
   selector: 'app-button-favorite-tip',
   standalone: true,
-  template: `
-    <button (click)="toggleFavorite()">
-      <i
-        [class.fa-solid]="tip?.hasFavorited"
-        [class.fa-regular]="!tip?.hasFavorited"
-        class="fa-bookmark fa-lg text-black text-md"
-      ></i>
-    </button>
-  `,
+  templateUrl: './button-favorite-tip.component.html',
+  styleUrl: './button-favorite-tip.component.css',
 })
 export class ButtonFavoriteTipComponent {
   user?: User1;
@@ -31,6 +24,7 @@ export class ButtonFavoriteTipComponent {
     private userServ: AuthService
   ) {}
   ngOnInit(): void {
+    console.log(this.tip);
     this.profileInfo();
   }
 
@@ -38,25 +32,54 @@ export class ButtonFavoriteTipComponent {
     this.userServ.getUser().subscribe((user) => {
       this.user = user;
       this.userId = user.userId;
+      this.toggleFavorite(this.tip);
     });
   }
 
-  toggleFavorite(): void {
-    if (!this.tip) return;
+  toggleFavorite(tip: Tip): void {
+    this.updateInteraction(tip, {
+      like: tip.hasLiked,
+      favorite: !tip.hasFavorited,
+    });
+  }
+
+  updateInteraction(tip: Tip, interaction: Partial<Interaction>): void {
+    if (!tip.interactionId) return;
+
+    const wasLiked = tip.hasLiked;
+    const wasFavorited = tip.hasFavorited;
+
     const updatedInteraction: Interaction = {
-      tipId: this.tip.id,
+      tipId: tip.id,
       userId: this.userId!,
-      like: this.tip.hasLiked,
-      favorite: !this.tip.hasFavorited,
+      ...interaction,
     };
 
     this.interactServ
-      .updateInteraction(this.tip.interactionId!, updatedInteraction)
-      .subscribe(() => {
-        this.tip.hasFavorited = !this.tip.hasFavorited;
-        this.tip.favoriteCount =
-          (this.tip.favoriteCount || 0) + (this.tip.hasFavorited ? 1 : -1);
-        this.interactionChanged.emit();
-      });
+      .updateInteraction(tip.interactionId, updatedInteraction)
+      .subscribe(
+        (updated) => {
+          // Atualizar estado do like e favorito
+          tip.hasLiked = updated.like;
+          tip.hasFavorited = updated.favorite;
+
+          // Atualizar contador de likes corretamente
+          if (wasLiked !== updated.like) {
+            tip.likeCount = updated.like
+              ? (tip.likeCount || 0) + 1
+              : Math.max(0, (tip.likeCount || 0) - 1);
+          }
+
+          // Atualizar contador de favoritos corretamente
+          if (wasFavorited !== updated.favorite) {
+            tip.favoriteCount = updated.favorite
+              ? (tip.favoriteCount || 0) + 1
+              : Math.max(0, (tip.favoriteCount || 0) - 1);
+          }
+        },
+        (error) => {
+          console.error(' Error updating interaction:', error);
+        }
+      );
   }
 }

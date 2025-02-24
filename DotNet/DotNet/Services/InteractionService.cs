@@ -7,13 +7,26 @@ using DotNet.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace DotNet.Services {
+    /// <summary>
+    /// Service responsible for handling user interactions with tips.
+    /// </summary>
     public class InteractionService : IInteractionService {
         private readonly BlogContext context;
 
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InteractionService"/> class.
+        /// </summary>
+        /// <param name="context">The database context.</param>
         public InteractionService(BlogContext context, UserService userService) {
             this.context = context;
         }
 
+        /// <summary>
+        /// Creates a new interaction (like or favorite) for a given tip.
+        /// </summary>
+        /// <param name="interactionDTO">The interaction details.</param>
+        /// <returns>The created interaction.</returns>
         public InteractionDTO CreateInteraction(InteractionDTO interactionDTO) {
             ValidateContext();
 
@@ -47,6 +60,12 @@ namespace DotNet.Services {
             return InteractionMapper.ToDTO(interaction);
         }
 
+        /// <summary>
+        /// Updates an existing interaction (like or favorite).
+        /// </summary>
+        /// <param name="interactionId">The interaction ID.</param>
+        /// <param name="interactionDTO">The updated interaction details.</param>
+        /// <returns>The updated interaction.</returns>
         public InteractionDTO UpdateInteraction(int interactionId, InteractionDTO interactionDTO) {
             ValidateContext();
 
@@ -82,6 +101,10 @@ namespace DotNet.Services {
             return InteractionMapper.ToDTO(interaction);
         }
 
+        /// <summary>
+        /// Validates that the database context is not null.
+        /// </summary>
+        /// <returns>True if the context is valid, otherwise throws an exception.</returns>
         private Boolean ValidateContext() {
             if (context == null) {
                 throw new ArgumentNullException(nameof(context));

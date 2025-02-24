@@ -18,7 +18,6 @@ namespace DotNet.Services {
             _httpContextAccessor = httpContextAccessor;
         }
 
-
         /// <summary>
         /// Retrieves information about the current admin user.
         /// </summary>
@@ -40,6 +39,7 @@ namespace DotNet.Services {
                 Role = role
             };
         }
+
         /// <summary>
         /// Retrieves the ID of the current admin user.
         /// </summary>

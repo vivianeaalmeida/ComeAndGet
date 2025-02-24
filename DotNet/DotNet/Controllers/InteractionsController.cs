@@ -11,14 +11,14 @@ namespace DotNet.Controllers {
     /// <summary>
     /// Handles interactions-related operations.
     /// </summary>
-    public class InteractionController : ControllerBase {
+    public class InteractionsController : ControllerBase {
         private readonly IInteractionService interactionService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InteractionController"/> class.
         /// </summary>
         /// <param name="interactionService">The service for handling interaction operations.</param>
-        public InteractionController(IInteractionService interactionService) {
+        public InteractionsController(IInteractionService interactionService) {
             this.interactionService = interactionService;
         }
 
@@ -34,7 +34,7 @@ namespace DotNet.Controllers {
                 return CreatedAtAction(nameof(CreateInteraction), new { id = createdInteraction.Id }, createdInteraction);
             }
             catch (TipNotFoundException ex) {
-                return NotFound(new { message = ex.Message });
+                return BadRequest(new { message = ex.Message });
             }
             catch (ArgumentNullException ex) {
                 return BadRequest(new { message = ex.Message });
@@ -55,17 +55,20 @@ namespace DotNet.Controllers {
         public IActionResult UpdateInteraction(int id, [FromBody] InteractionDTO interactionDTO) {
             if (id != interactionDTO.Id)
             {
-                return BadRequest("The provided ids do not match.");
+                return BadRequest(new { message = "The provided ids do not match." });
             }
-            try {
+
+            try 
+            {
                 interactionService.UpdateInteraction(id, interactionDTO);
                 return Ok(interactionDTO);
             }
-            catch (TipNotFoundException ex) {
-                return NotFound(new { message = ex.Message });
-            }
             catch (InteractionNotFoundException ex) {
                 return NotFound(new { message = ex.Message });
+            }
+            catch (TipNotFoundException ex)
+            {
+                return BadRequest(new { message = ex.Message });
             }
             catch (ArgumentNullException ex)
             {

@@ -103,8 +103,10 @@ namespace DotNet.Services {
         {
             ValidateContext();
 
-            var tip = GetTip(Id);
-            ValidateTip(tipDTO);
+            Tip tip = TipMapper.ToEntity(tipDTO);
+
+            this.context.Update(tip);
+            this.context.SaveChanges();
 
             return TipMapper.ToDTO(tip);
         }

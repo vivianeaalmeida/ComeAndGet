@@ -114,10 +114,10 @@ namespace DotNet.Controllers {
         public ActionResult Update(int id, [FromBody] TipDTO tipDTO) {
             if (id != tipDTO.Id)
             {
-                return BadRequest("The provided ids do not match.");
+                return BadRequest(new { message = "The provided ids do not match." });
             }
 
-            try 
+            try
             {
                 tipService.UpdateTip(id, tipDTO);
                 return Ok(tipDTO);

@@ -16,7 +16,7 @@ import Swal from 'sweetalert2';
 export class TipsDashboardComponent implements OnInit {
   tips: Tip[] = [];
   selectedTip: any | null = null;
-  tipId!: number;
+  tipId?: number;
   tipForm!: FormGroup;
   isEditingOrCreating: string = '';
 
@@ -60,6 +60,7 @@ export class TipsDashboardComponent implements OnInit {
           title: 'Tip added successfully!.',
         });
         this.closeModal();
+        this.getTips();
       },
       error: (error) => {
         Swal.fire({
@@ -77,7 +78,9 @@ export class TipsDashboardComponent implements OnInit {
       id: this.tipId,
     };
 
-    this.tipServ.updateTip(this.tipId, tipData).subscribe({
+    console.log(tipData);
+
+    this.tipServ.updateTip(this.tipId!, tipData).subscribe({
       next: (response) => {
         Swal.fire({
           icon: 'success',
@@ -143,6 +146,7 @@ export class TipsDashboardComponent implements OnInit {
   openModal(isEditingOrCreating: string, tip?: Tip) {
     this.isEditingOrCreating = isEditingOrCreating;
     this.selectedTip = tip;
+    this.tipId = tip?.id;
     this.isModalOpen = true;
     this.fillTipForm(this.selectedTip);
   }

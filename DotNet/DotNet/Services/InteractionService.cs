@@ -111,5 +111,23 @@ namespace DotNet.Services {
             }
             return true;
         }
+
+        /// <summary>
+        /// Retrieves all interactions for a specific user.
+        /// </summary>
+        /// <param name="userId">The ID of the user whose interactions are to be retrieved.</param>
+        /// <returns>A collection of InteractionDTO objects representing the user's interactions.</returns>
+        public IEnumerable<InteractionDTO> GetUserInteractions(string userId) {
+            var interactions = context.Interactions
+             .Where(i => i.UserId == userId)
+             .Select(interaction => InteractionMapper.ToDTO(interaction))
+             .ToList();
+
+            if (!interactions.Any()) {
+                return new List<InteractionDTO>(); // Retorna lista vazia ao invés de 404
+            }
+
+            return interactions;
+        }
     }
 }

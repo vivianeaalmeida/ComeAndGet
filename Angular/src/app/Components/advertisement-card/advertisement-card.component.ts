@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ButtonComponent } from '../button/button.component';
+import { ButtonComponent } from '../Buttons/button/button.component';
 import { SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({

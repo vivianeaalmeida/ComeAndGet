@@ -54,10 +54,7 @@ namespace DotNet.Controllers {
         /// <returns>The updated interaction or an error message if the update fails.</returns>
         [HttpPut("{id}")]
         public IActionResult UpdateInteraction(int id, [FromBody] InteractionDTO interactionDTO) {
-            if (id != interactionDTO.Id)
-            {
-                return BadRequest(new { message = "The provided ids do not match." });
-            }
+          
             try 
             {
                 interactionService.UpdateInteraction(id, interactionDTO);
@@ -78,5 +75,16 @@ namespace DotNet.Controllers {
                 return BadRequest(new { message = $"An unexpected error occurred - {ex.Message}." });
             }
         }
+
+        /// <summary>
+        /// Retrieves all interactions for a specific user.
+        /// </summary>
+        /// <param name="userId">The ID of the user whose interactions are to be retrieved.</param>
+        /// <returns>A list of interactions associated with the specified user.</returns>
+        [HttpGet("users/{userId}")]
+        public ActionResult<IEnumerable<InteractionDTO>> GetUserInteractions(string userId) {
+            return Ok(interactionService.GetUserInteractions(userId));
+        }
+
     }
 }

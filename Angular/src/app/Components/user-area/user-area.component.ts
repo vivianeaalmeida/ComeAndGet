@@ -2,7 +2,7 @@ import { Component, OnInit, Pipe } from '@angular/core';
 import { AuthService } from '../../Services/auth.service';
 import { User1 } from '../../Models/user1';
 import { CommonModule, NgIf } from '@angular/common';
-import { ButtonComponent } from '../button/button.component';
+import { ButtonComponent } from '../Buttons/button/button.component';
 import { AdvService } from '../../Services/adv.service';
 import { map } from 'rxjs';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -19,11 +19,15 @@ import { FavoriteTipDetailComponent } from '../favorite-tip-detail/favorite-tip-
 @Component({
   selector: 'app-user-area',
   standalone: true,
-  imports: [NgIf,
-    ButtonComponent, CommonModule, ButtonUpdateAdvComponent,
-    ReservationAttemptListComponent, ButtonDeactivateAdvertisementComponent,
+  imports: [
+    NgIf,
+    ButtonComponent,
+    CommonModule,
+    ButtonUpdateAdvComponent,
+    ReservationAttemptListComponent,
+    ButtonDeactivateAdvertisementComponent,
     AdvertisementModalComponent,
-    FavoriteTipDetailComponent
+    FavoriteTipDetailComponent,
   ],
   templateUrl: './user-area.component.html',
   styleUrl: './user-area.component.css',
@@ -50,14 +54,16 @@ export class UserAreaComponent implements OnInit {
     private advServ: AdvService,
     private tipService: TipService,
     private sanitizer: DomSanitizer
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     console.log(this.menus);
     this.profileInfo();
-    this.authService.loggedSession.pipe(map((user) => user)).subscribe((user) => {
-      this.isLogged = user;
-    });
+    this.authService.loggedSession
+      .pipe(map((user) => user))
+      .subscribe((user) => {
+        this.isLogged = user;
+      });
   }
 
   changeView(menu: string) {
@@ -118,7 +124,6 @@ export class UserAreaComponent implements OnInit {
       );
     });
   }
-
 
   getMyFavoriteTips(): Promise<any> {
     return new Promise((resolve) => {

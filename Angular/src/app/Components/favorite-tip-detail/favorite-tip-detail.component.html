@@ -1,30 +1,17 @@
 <div *ngFor="let tip of tips" class="mb-4 w-1/2 mx-auto">
-    <div class="bg-lime-200 rounded-lg shadow-lg hover:shadow-xl bg-gradient-to-r from-lime-100 to-lime-200">
-        <!-- Título do Card -->
-        <div class="w-full text-left p-4 focus:outline-none transition-all duration-300 rounded-t-lg">
-            <span class="font-semibold text-black text-xl">{{ tip.title }}</span>
-        </div>
-
-        <!-- Conteúdo do Card -->
-        <div class="p-4 bg-lime-50">
-            <p class="text-neutral-900 font-medium text-lg">{{ tip.content }}</p>
-        </div>
-
-        <hr class="border-t border-gray-300">
-
-        <!-- Contagem de Curtidas, Favoritos e Botões -->
-        <div class="flex justify-end items-center py-2 px-4 rounded-b-lg space-x-4 bg-white">
-            <!-- Curtidas -->
-            <app-button-like-tip></app-button-like-tip>
-            <div class="flex items-center space-x-2 text-black font-medium">
-                <span>{{ tip.likeCount || 0 }}</span>
-            </div>
-
-            <!-- Favoritos -->
-            <app-button-favorite-tip></app-button-favorite-tip>
-            <div class="flex items-center space-x-2 text-black font-medium">
-                <span>{{ tip.favoriteCount || 0 }}</span>
-            </div>
-        </div>
+  <div
+    class="bg-lime-200 rounded-lg shadow-lg hover:shadow-xl bg-gradient-to-r from-lime-100 to-lime-200"
+  >
+    <!-- Título do Card -->
+    <div
+      class="w-full text-left p-4 focus:outline-none transition-all duration-300 rounded-t-lg"
+    >
+      <span class="font-semibold text-black text-xl">{{ tip.title }}</span>
     </div>
+
+    <!-- Conteúdo do Card -->
+    <div class="p-4 bg-lime-50">
+      <p class="text-neutral-900 font-medium text-lg">{{ tip.content }}</p>
+    </div>
+  </div>
 </div>

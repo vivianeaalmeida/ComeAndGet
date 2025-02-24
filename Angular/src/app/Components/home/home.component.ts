@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AdvertisementCardComponent } from '../advertisement-card/advertisement-card.component';
-import { ButtonComponent } from '../button/button.component';
+import { ButtonComponent } from '../Buttons/button/button.component';
 import { AdvService } from '../../Services/adv.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Advertisement } from '../../Models/advertisement';
@@ -11,7 +11,13 @@ import { AdvertisementModalComponent } from '../advertisement-modal/advertisemen
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [AdvertisementCardComponent, NgFor, AdvertisementModalComponent, NgIf, ButtonComponent],
+  imports: [
+    AdvertisementCardComponent,
+    NgFor,
+    AdvertisementModalComponent,
+    NgIf,
+    ButtonComponent,
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
@@ -20,7 +26,7 @@ export class HomeComponent implements OnInit {
   selectedAdv: any | null = null;
   openedModal: boolean = false;
 
-  constructor(private advServ: AdvService, private sanitizer: DomSanitizer) { }
+  constructor(private advServ: AdvService, private sanitizer: DomSanitizer) {}
 
   ngOnInit(): void {
     this.loadAdvertisements();
@@ -36,10 +42,13 @@ export class HomeComponent implements OnInit {
       }
     );
   }
-  
-  getRandomAdvertisements(ads: Advertisement[], count: number): Advertisement[] {
+
+  getRandomAdvertisements(
+    ads: Advertisement[],
+    count: number
+  ): Advertisement[] {
     return ads
-      .map(ad => ({ ad, sort: Math.random() }))
+      .map((ad) => ({ ad, sort: Math.random() }))
       .sort((a, b) => a.sort - b.sort)
       .map(({ ad }) => ad)
       .slice(0, count);
@@ -57,7 +66,6 @@ export class HomeComponent implements OnInit {
     this.openedModal = true;
     console.log('Opened Modal:', this.openedModal);
   }
-  
 
   closeModal() {
     console.log('Modal Fechado');

@@ -21,5 +21,8 @@ namespace DotNet.Services.Interfaces
         /// <param name="interactionDTO">The InteractionDTO object containing the updated data of the interaction.</param>
         /// <returns>The updated InteractionDTO object.</returns>
         InteractionDTO UpdateInteraction(int interactionId, InteractionDTO interactionDTO);
+
+
+        IEnumerable<InteractionDTO> GetUserInteractions(string userId);
     }
 }

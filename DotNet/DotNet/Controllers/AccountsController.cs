@@ -1,4 +1,5 @@
 ﻿using DotNet.DTOs;
+using DotNet.Exceptions;
 using DotNet.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,13 +26,23 @@ public class AccountsController : ControllerBase {
     /// <returns>A JSON response indicating whether the registration was successful.</returns>
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] Register model) {
-        var result = await accountService.RegisterUserAsync(model);
-        if (!result.Succeeded) 
-        {
-            return BadRequest(result.Errors);
+        try {
+            var result = await accountService.RegisterUserAsync(model);
+            if (!result.Succeeded) {
+                return BadRequest(result.Errors);
+            }
+            return Ok(new { message = "User registered successfully." });
         }
-        return Ok(new { message = "User registered successfully." });
+        catch (EmailInUseException ex) {
+            return Conflict(new { message = ex.Message });
+        }
+        catch (UsernameInUseException ex) {
+            return Conflict(new { message = ex.Message });
+        } catch (Exception ex) {
+            return Conflict(new { message = "An unexpected error occurred." });
+        }
     }
+
 
     /// <summary>
     /// Logs in a user.
@@ -40,11 +51,14 @@ public class AccountsController : ControllerBase {
     /// <returns>A JSON response containing the login result, or an unauthorized response if the login fails.</returns>
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] Login model) {
-        var loginResponse = await accountService.LoginAsync(model);
-        if (loginResponse == null) 
-        {
-            return Unauthorized();
+        try {
+            var loginResponse = await accountService.LoginAsync(model);
+            return Ok(loginResponse);
         }
-        return Ok(loginResponse);
+        catch (InvalidLoginException ex) {
+            return Unauthorized(new { message = ex.Message });
+        } catch (Exception ex) {
+            return Conflict(new { message = "An unexpected error occurred." });
+        }
     }
 }

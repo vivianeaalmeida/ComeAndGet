@@ -31,6 +31,7 @@ builder.Services.AddDbContext<UserContext>(options =>
 
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => {
+    options.User.RequireUniqueEmail = true;
     options.Password.RequiredLength = 8;
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;

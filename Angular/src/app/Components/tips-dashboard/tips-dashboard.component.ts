@@ -5,22 +5,24 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { Tip } from '../../Models/tip';
 import { TipService } from '../../Services/tip.service';
 import Swal from 'sweetalert2';
+import { TipModalComponent } from "../tip-modal/tip-modal.component";
 
 @Component({
   selector: 'app-tips-dashboard',
   standalone: true,
-  imports: [NgxDatatableModule, ReactiveFormsModule, CommonModule],
+  imports: [NgxDatatableModule, ReactiveFormsModule, CommonModule, TipModalComponent],
   templateUrl: './tips-dashboard.component.html',
   styleUrl: './tips-dashboard.component.css'
 })
 export class TipsDashboardComponent implements OnInit {
   tips: Tip[] = [];
   selectedTip: any | null = null;
-  tipId!: number;
+  tipId?: number;
   tipForm!: FormGroup;
   isEditingOrCreating: string = '';
 
   isModalOpen: boolean = false;
+  isDetailModalOpen: boolean = false;
   isLogged: any;
 
   columns = [
@@ -60,6 +62,7 @@ export class TipsDashboardComponent implements OnInit {
           title: 'Tip added successfully!.',
         });
         this.closeModal();
+        this.getTips();
       },
       error: (error) => {
         Swal.fire({
@@ -77,7 +80,9 @@ export class TipsDashboardComponent implements OnInit {
       id: this.tipId,
     };
 
-    this.tipServ.updateTip(this.tipId, tipData).subscribe({
+    console.log(tipData);
+
+    this.tipServ.updateTip(this.tipId!, tipData).subscribe({
       next: (response) => {
         Swal.fire({
           icon: 'success',
@@ -143,6 +148,7 @@ export class TipsDashboardComponent implements OnInit {
   openModal(isEditingOrCreating: string, tip?: Tip) {
     this.isEditingOrCreating = isEditingOrCreating;
     this.selectedTip = tip;
+    this.tipId = tip?.id;
     this.isModalOpen = true;
     this.fillTipForm(this.selectedTip);
   }
@@ -159,15 +165,13 @@ export class TipsDashboardComponent implements OnInit {
     }
   }
 
-  /*
   openDetailModal(tip: Tip) {
     this.selectedTip = tip;
-    this.isModalOpen = true;
+    this.isDetailModalOpen = true;
   }
 
   closeDetailModal() {
-    this.isModalOpen = false;
+    this.isDetailModalOpen = false;
     this.selectedTip = null;
   }
-    */
 }

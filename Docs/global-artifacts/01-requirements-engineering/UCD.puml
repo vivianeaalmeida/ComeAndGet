@@ -6,26 +6,40 @@ left to right direction
 skinparam actorStyle hollow
   actor "Unregistered\nUser"
   actor "Client"
-  actor "Manager"
+  actor Admin
 
 
 rectangle " " as usecase1 {
 
     rectangle "All Users Area " as usecase2 #Lightpink{
 
+            usecase "US04 - View categories list" as US04
             usecase "US09 - View active advertisements" as US09
             usecase "US11 - View advertisement" as US11
             usecase "US12 - Search advertisements" as US12
+            usecase "US22 - View tips" as US22
+            usecase "US23 - View tips" as US23
 
-            "Client" --> US09
-            "Client" --> US11
-            "Client" --> US12
+            "Unregistered\nUser" --> US04
             "Unregistered\nUser" --> US09
             "Unregistered\nUser" --> US11
             "Unregistered\nUser" --> US12
-            "Manager" --> US09
-            "Manager" --> US11
-            "Manager" --> US12
+            "Unregistered\nUser" --> US22
+            "Unregistered\nUser" --> US23
+
+            Client --> US04
+            Client --> US09
+            Client --> US11
+            Client --> US12
+            Client --> US22
+            Client --> US23
+
+            Admin --> US04
+            Admin --> US09
+            Admin --> US11
+            Admin --> US12
+            Admin --> US22
+            Admin --> US23
          }
 
     rectangle "Unregistered User Area " as usecase3 #Lightgreen{
@@ -35,14 +49,6 @@ rectangle " " as usecase1 {
 
             "Unregistered\nUser" --> US01
             "Unregistered\nUser" --> US02
-         }
-
-    rectangle "Registered Users (Client/Manager) Area " as usecase4 #Lightcyan{
-
-            usecase "US04 - View categories list" as US04
-
-            "Client" --> US04
-            "Manager" --> US04
          }
 
      rectangle "Client Area " as usecase5 #Lightyellow{
@@ -56,29 +62,39 @@ rectangle " " as usecase1 {
             usecase "US18 - View my request details" as US18
             usecase "US19 - View requests on my advertisements" as US19
             usecase "US20 - Update request" as US20
+            usecase "US24 - View my favorite tips" as US24
+            usecase "US27 - Create interaction (like or favorite a tip)" as US27
+            usecase "US28 - Update interaction (like, unlike, favorite, unfavorite tip)" as US28
 
-            "Client" --> US15
-            "Client" --> US20
-            "Client" --> US18
-            "Client" --> US17
-            "Client" --> US16
-            "Client" --> US15
-            "Client" --> US13
-            "Client" --> US07
-
+            Client --> US07
+            Client --> US13
+            Client --> US15
+            Client --> US16
+            Client --> US17
+            Client --> US18
+            Client --> US20
+            Client --> US24
+            Client --> US27
+            Client --> US28
         }
 
-    rectangle "Manager Area " as usecase6 #Lightblue{
+    rectangle "Admin Area " as usecase6 #Lightblue{
 
             usecase "US03 - Create category" as US03
             usecase "US05 - Update category" as US05
             usecase "US06 - Delete category" as US06
             usecase "US14 - Deactivate advertisement" as US14
+            usecase "US21 - Create tip" as US21
+            usecase "US25 - Update tip" as US25
+            usecase "US26 - Delete tip" as US26
 
-            "Manager" --> US03
-            "Manager" --> US05
-            "Manager" --> US06
-            "Manager" --> US14
-        }
-}
+            Admin --> US03
+            Admin --> US04
+            Admin --> US05
+            Admin --> US06
+            Admin --> US14
+            Admin --> US21
+            Admin --> US25
+            Admin --> US26
+    }
 @enduml

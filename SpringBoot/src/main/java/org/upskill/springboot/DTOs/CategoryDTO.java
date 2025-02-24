@@ -10,7 +10,6 @@ import org.springframework.hateoas.RepresentationModel;
  * Data Transfer Object (DTO) for Category.
  * This class is used to transfer category data between layers.
  * It contains the necessary fields to represent a Category in a simplified form.
- * It also extends {@link RepresentationModel} to support HATEOAS.
  */
 @AllArgsConstructor
 @NoArgsConstructor

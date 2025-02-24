@@ -17,8 +17,8 @@ import { LoggedUserSession } from '../Models/logged-user-session';
   providedIn: 'root',
 })
 export class AuthService {
-  private accountUrl = 'http://localhost:5016/api/v1/account/';
-  private userUrl = 'http://localhost:5016/api/v1/user/';
+  private accountUrl = 'http://localhost:5016/api/v1/accounts/';
+  private userUrl = 'http://localhost:5016/api/v1/users/';
   private userSubject = new BehaviorSubject<LoggedUserSession | null>(null);
   public loggedSession: Observable<LoggedUserSession | null>;
 

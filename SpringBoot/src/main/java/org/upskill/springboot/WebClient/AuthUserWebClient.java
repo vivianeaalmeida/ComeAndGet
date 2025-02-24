@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-
 /**
  * This service class is responsible for making HTTP requests to the .Net API using WebClient.
  * It provides methods to interact with user-related data via a REST API.
@@ -51,7 +50,7 @@ public class AuthUserWebClient {
      */
     public Mono<String> getUserData(String authorization) {
         return webClient.get()
-                .uri("/user")
+                .uri("/users")
                 .header("Authorization", authorization)
                 .retrieve()
                 .bodyToMono(String.class);
@@ -66,7 +65,7 @@ public class AuthUserWebClient {
      */
     public String getUserId(String authorization) { // @RequestHeader
         return webClient.get()
-                .uri("/user/id")
+                .uri("/users/id")
                 .header("Authorization", authorization)
                 .retrieve()
                 .bodyToMono(String.class)

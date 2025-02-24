@@ -3,7 +3,6 @@ package org.upskill.springboot.DTOs;
 import io.micrometer.common.lang.Nullable;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.hateoas.RepresentationModel;
 import org.upskill.springboot.Models.Advertisement;
 
 import java.time.LocalDate;
@@ -12,11 +11,10 @@ import java.time.LocalDate;
  * Data Transfer Object (DTO) for Advertisement.
  * This class is used to transfer advertisement data between layers.
  * It contains the necessary fields to represent an Advertisement in a simplified form.
- * It also extends {@link RepresentationModel} to support HATEOAS.
  */
 @Getter
 @Setter
-public class AdvertisementDTO extends RepresentationModel<AdvertisementDTO> {
+public class AdvertisementDTO {
 
     /**
      * The unique identifier for the advertisement.

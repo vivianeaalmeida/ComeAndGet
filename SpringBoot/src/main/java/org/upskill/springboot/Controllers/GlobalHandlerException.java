@@ -8,6 +8,7 @@ import org.upskill.springboot.DTOs.ErrorResponse;
 import org.upskill.springboot.Exceptions.*;
 
 import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 
 /**
  * Global exception handler for the application.
@@ -24,12 +25,7 @@ public class GlobalHandlerException {
      */
     @ExceptionHandler(AdvertisementNotFoundException.class)
     public ResponseEntity<ErrorResponse> AdvertisementNotFoundException(AdvertisementNotFoundException e) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                e.getMessage(),
-                HttpStatus.NOT_FOUND.value(),
-                HttpStatus.NOT_FOUND.getReasonPhrase()
-        );
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
 
@@ -134,16 +130,11 @@ public class GlobalHandlerException {
      * Handles CategoryNotFoundException.
      *
      * @param e the CategoryNotFoundException
-     * @return a ResponseEntity containing an ErrorResponse and HTTP status NOT_FOUND
+     * @return a ResponseEntity WITH HTTP status NOT_FOUND
      */
     @ExceptionHandler(CategoryNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleCategoryNotFoundException(CategoryNotFoundException e) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                e.getMessage(),
-                HttpStatus.NOT_FOUND.value(),
-                HttpStatus.NOT_FOUND.getReasonPhrase()
-        );
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
 
@@ -151,16 +142,11 @@ public class GlobalHandlerException {
      * Handles RequestNotFoundException.
      *
      * @param e the RequestNotFoundException
-     * @return a ResponseEntity containing an ErrorResponse and HTTP status NOT_FOUND
+     * @return a ResponseEntity with HTTP status NOT_FOUND
      */
     @ExceptionHandler(ReservationAttemptNotFoundException.class)
     public ResponseEntity<ErrorResponse> RequestNotFoundExceptions(ReservationAttemptNotFoundException e) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                e.getMessage(),
-                HttpStatus.NOT_FOUND.value(),
-                HttpStatus.NOT_FOUND.getReasonPhrase()
-        );
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     /**
@@ -177,22 +163,6 @@ public class GlobalHandlerException {
                 HttpStatus.BAD_REQUEST.getReasonPhrase()
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-    }
-
-    /**
-     * Handles ItemNotFoundException.
-     *
-     * @param e the ItemNotFoundException
-     * @return a ResponseEntity containing an ErrorResponse and HTTP status NOT_FOUND
-     */
-    @ExceptionHandler(ItemNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleItemValidationException(ItemNotFoundException e) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                e.getMessage(),
-                HttpStatus.NOT_FOUND.value(),
-                HttpStatus.NOT_FOUND.getReasonPhrase()
-        );
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     /**
@@ -228,9 +198,9 @@ public class GlobalHandlerException {
     }
 
     /**
-     * Handles UnauthorizedException
+     * Handles UserUnauthorizedException
      *
-     * @param e the UnauthorizedException
+     * @param e the UserUnauthorizedException
      * @return a ResponseEntity containing an ErrorResponse and HTTP status FORBIDDEN
      */
     @ExceptionHandler(UserUnauthorizedException.class)
@@ -283,6 +253,22 @@ public class GlobalHandlerException {
                 HttpStatus.BAD_REQUEST.getReasonPhrase()
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Handles Access Denied exception
+     *
+     * @param e the Access Denied Exception
+     * @return a ResponseEntity containing an ErrorResponse and HTTP status FORBIDDEN
+     */
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Object> handleAccessDenied(AccessDeniedException e) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                e.getMessage(),
+                HttpStatus.FORBIDDEN.value(),
+                HttpStatus.FORBIDDEN.getReasonPhrase()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
     }
 
     /**

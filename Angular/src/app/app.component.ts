@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './Components/header/header.component';
-import { ButtonComponent } from './Components/button/button.component';
+import { ButtonComponent } from './Components/Buttons/button/button.component';
 import { AdvertisementCardComponent } from './Components/advertisement-card/advertisement-card.component';
 import { FooterComponent } from './Components/footer/footer.component';
 import { CommonModule } from '@angular/common';

@@ -1,0 +1,7 @@
+<button (click)="toggleFavorite(tip)">
+  <i
+    [class.fa-solid]="tip?.hasFavorited"
+    [class.fa-regular]="!tip?.hasFavorited"
+    class="fa-bookmark fa-lg text-black text-md"
+  ></i>
+</button>

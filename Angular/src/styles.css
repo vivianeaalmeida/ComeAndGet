@@ -138,22 +138,10 @@ h6 {
 .validation-error {
   color: red;
   text-align: left;
-  font-size: 1rem;
-  font-weight: 500;
-}
-
-.validation-error {
-  color: red;
-  text-align: left;
-  font-size: 1rem;
+  font-size: .9rem;
   font-weight: 500;
   display: flex;
   align-items: center;
-}
-
-.validation-error::before {
-  content: "❗";
-  margin-right: 0.3rem;
 }
 
 .file-input-container {

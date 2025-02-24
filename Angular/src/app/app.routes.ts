@@ -12,6 +12,7 @@ import { CategoriesDashboardComponent } from './Components/categories-dashboard/
 import { AdvertisementsDashboardComponent } from './Components/advertisements-dashboard/advertisements-dashboard.component';
 import { TipsDashboardComponent } from './Components/tips-dashboard/tips-dashboard.component';
 import { ReservationAttemptListComponent } from './Components/reservation-attempt-list/reservation-attempt-list.component';
+import { TipsListingComponent } from './Components/tips-listing/tips-listing.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -32,11 +33,11 @@ export const routes: Routes = [
   { path: 'view-active', component: AdvlistingComponent }, // Lista dos users
   // CRIAR: path> 'view-all' ---> Lista dos admins
   { path: 'dashboard', component: DashboardComponent },
-  { path: 'categoriesDash', component: CategoriesDashboardComponent },
-  { path: 'advertisementsDash', component: AdvertisementsDashboardComponent },
-  { path: 'categoriesDash', component: CategoriesDashboardComponent },
-  { path: 'tipsDash', component: TipsDashboardComponent },
+  { path: 'dashboard/advertisements', component: AdvertisementsDashboardComponent },
+  { path: 'dashboard/categories', component: CategoriesDashboardComponent },
+  { path: 'dashboard/tips', component: TipsDashboardComponent },
   { path: 'advertisements', component: AdvlistingComponent },
   { path: 'reservation-attempts', component: ReservationAttemptListComponent},
+  { path: 'blog-tips', component: TipsListingComponent},
   { path: '**', component: NotFoundComponent },
 ];

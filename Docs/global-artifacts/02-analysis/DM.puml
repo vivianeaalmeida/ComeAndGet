@@ -1,5 +1,3 @@
-
-
 @startuml
 skinparam monochrome true
 skinparam packageStyle rectangle
@@ -47,10 +45,14 @@ class ReservationAttempt {
 
 class Tip {
     title
-    description
+    content
+    likeCount
+    favoriteCount
 }
 
-class Like {
+class Interaction {
+    like
+    favorite
 }
 
 note bottom of ReservationAttempt
@@ -67,7 +69,7 @@ Advertisement "1" -- "1" Item : contains an \t >
 User "1" -- "0..*" Advertisement : create >
 User "1" -- "0..*" ReservationAttempt : references <
 ReservationAttempt "0..*" -- "1" Advertisement : receives <
-User "1" -- "0..*" Like : makes >
-Like "0..*" -left- "1" Tip : references >
+User "1" -- "0..*" Interaction : makes >
+Interaction "0..*" -left- "1" Tip : references >
 User "0..*" - "1" Role : has \t >
 @enduml

@@ -39,6 +39,7 @@ public class CategoryController extends BaseController {
      * and HTTP status 201 (Created) if creation is successful.
      */
     @PostMapping("/categories")
+    @PreAuthorize("hasRole('Admin')")
     public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO request) {
         CategoryDTO categoryDTO = categoryService.createCategory(request);
 
@@ -55,6 +56,7 @@ public class CategoryController extends BaseController {
      * and HTTP status 200 (Ok) if the update is successful.
      */
     @PutMapping("/categories/{id}")
+    @PreAuthorize("hasRole('Admin')")
     public ResponseEntity<CategoryDTO> updateCategory(@PathVariable("id") String id, @RequestBody CategoryDTO request) {
         if (!id.equals(request.getId())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

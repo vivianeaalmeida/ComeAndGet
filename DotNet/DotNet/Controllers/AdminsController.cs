@@ -10,15 +10,15 @@ namespace DotNet.Controllers {
     [Authorize(Roles = "Admin")]
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class AdminController : ControllerBase {
-        private readonly AdminService _adminService;
+    public class AdminsController : ControllerBase {
+        private readonly AdminService adminService;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AdminController"/> class.
+        /// Initializes a new instance of the <see cref="AdminsController"/> class.
         /// </summary>
         /// <param name="adminService">The instance of AdminService.</param>
-        public AdminController(AdminService adminService) {
-            _adminService = adminService;
+        public AdminsController(AdminService adminService) {
+            this.adminService = adminService;
         }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace DotNet.Controllers {
         /// </summary>
         [HttpGet]
         public IActionResult Get() {
-            var adminInfo = _adminService.GetAdminInfo();
+            var adminInfo = adminService.GetAdminInfo();
             return Ok(adminInfo);
         }
 
@@ -37,7 +37,7 @@ namespace DotNet.Controllers {
         /// <returns></returns>
         [HttpGet("token")]
         public IActionResult GetAdminId() {
-            var id = _adminService.GetAdminId();
+            var id = adminService.GetAdminId();
             return Ok(id);
         }
     }

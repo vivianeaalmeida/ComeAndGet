@@ -6,6 +6,7 @@ import { AuthService } from '../../Services/auth.service';
 import { LoggedUserSession } from '../../Models/logged-user-session';
 import { User1 } from '../../Models/user1';
 import { ReservationAttemptResponse } from '../../Models/reservation-attempt-response';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-reservation-attempt-list',
@@ -32,7 +33,45 @@ export class ReservationAttemptListComponent implements OnInit {
 
   constructor(private reservationAttemptService:ReservationAttemptService, private authService:AuthService){}
 
+  onChangeStatus(id:string, status:string){
+    this.reservationAttemptService.updateReservationAttemptStatus(id, status)
+    .subscribe(
+    {
+      next: _ => {
+        this.updateReservationStatus(id, status)
+        this.showSuccessMessage()
+      },
+      error: e => {console.log(e);this.showErrorMessage(e.error.message)}
+    }
+    )
+  }
 
+  private updateReservationStatus(reservationId: string, newStatus: string) {
+    const updatedReservations = this.reservationAttempt.map(reservation => {
+      if (reservation.id === reservationId) {
+        reservation.status = newStatus;
+      }
+      return reservation;
+    });
+  }
+
+  showSuccessMessage(){
+      Swal.fire({
+            title: 'Success!',
+            text: 'Request updated',
+            icon: 'success',
+            confirmButtonText: 'OK',
+          });
+    }
+  
+    showErrorMessage(error:string){
+      Swal.fire({
+             title: 'Error!',
+             text: error,
+             icon: 'error',
+             confirmButtonText: 'OK',
+           });
+   }
 
 }
 

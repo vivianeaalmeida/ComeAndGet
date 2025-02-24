@@ -54,17 +54,15 @@
               registerForm.get('name')?.invalid &&
               registerForm.get('name')?.touched
             "
-            class="text-red-600 text-sm mt-1"
+            class="validation-error"
           >
-            <small>Name is required</small>
+            <p>Name is required</p>
           </div>
         </div>
 
         <!-- Phone Input -->
         <div>
-          <label
-            for="phoneNumber"
-            class="block font-medium text-ground mb-1"
+          <label for="phoneNumber" class="block font-medium text-ground mb-1"
             >Phone:</label
           >
           <input
@@ -78,9 +76,7 @@
 
         <!-- Username Input -->
         <div>
-          <label
-            for="username"
-            class="block font-medium text-ground mb-1"
+          <label for="username" class="block font-medium text-ground mb-1"
             >Username:</label
           >
           <input
@@ -95,9 +91,11 @@
               registerForm.get('username')?.invalid &&
               registerForm.get('username')?.touched
             "
-            class="text-red-600 text-sm mt-1"
+            class="validation-error"
           >
-            <small>Username is required</small>
+            <p *ngIf="registerForm.get('username')!.errors?.['required']">
+              Username is required.
+            </p>
           </div>
         </div>
 
@@ -118,17 +116,17 @@
               registerForm.get('email')?.invalid &&
               registerForm.get('email')?.touched
             "
-            class="text-red-600 text-sm mt-1"
+            class="validation-error"
           >
-            <small>Valid email is required</small>
+            <p *ngIf="registerForm.get('email')!.errors?.['required']">
+              Valid email is required.
+            </p>
           </div>
         </div>
 
         <!-- Password Input -->
         <div>
-          <label
-            for="password"
-            class="block font-medium text-ground mb-1"
+          <label for="password" class="block font-medium text-ground mb-1"
             >Password:</label
           >
           <input
@@ -138,16 +136,43 @@
             formControlName="password"
             class="bg-gray-100 focus:bg-transparent w-full px-4 py-3.5 rounded-md outline-ground"
           />
+
           <div
+            class="flex items-start validation-error"
             *ngIf="
               registerForm.get('password')?.invalid &&
               registerForm.get('password')?.touched
             "
-            class="text-red-600 text-sm mt-1"
           >
-            <small>Password is required</small>
+            <p *ngIf="registerForm.get('password')?.errors?.['required']">
+              Password is required.
+            </p>
+            <div class="flex flex-col">
+              <p *ngIf="registerForm.get('password')?.errors?.['minlength']">
+                Password must be at least 8 characters long.
+              </p>
+              <div *ngIf="registerForm.get('password')?.errors?.['pattern']">
+                <p class="font-medium">Password must contain:</p>
+                <ul class="list-disc pl-4">
+                  <li *ngIf="isPasswordMissing(uppercasePattern)">
+                    at least one uppercase letter
+                  </li>
+                  <li *ngIf="isPasswordMissing(lowercasePattern)">
+                    at least one lowercase letter
+                  </li>
+                  <li *ngIf="isPasswordMissing(numberPattern)">
+                    at least one number
+                  </li>
+                  <li *ngIf="isPasswordMissing(specialPattern)">
+                    at least one special character
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
+
         </div>
+
         <div class="flex gap-4 mt-4">
           <button
             type="submit"

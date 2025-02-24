@@ -25,14 +25,14 @@ export class DashboardComponent {
   ngOnInit(): void {}
 
   advertisementsDash() {
-    this.router.navigate(['advertisementsDash']);
+    this.router.navigate(['dashboard/advertisements']);
   }
 
   categoriesDash() {
-    this.router.navigate(['categoriesDash']);
+    this.router.navigate(['dashboard/categories']);
   }
 
   tipsDash() {
-    this.router.navigate(['tipsDash']);
+    this.router.navigate(['dashboard/tips']);
   }
 }

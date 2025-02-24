@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgModule, OnInit } from '@angular/core';
 import { User1 } from '../../Models/user1';
 import { Tip } from '../../Models/tip';
 import { TipService } from '../../Services/tip.service';
@@ -12,21 +12,32 @@ import { ButtonFavoriteTipComponent } from '../Buttons/button-favorite-tip/butto
   standalone: true,
   imports: [NgFor, ButtonLikeTipComponent, ButtonFavoriteTipComponent],
   templateUrl: './favorite-tip-detail.component.html',
-  styleUrl: './favorite-tip-detail.component.css'
+  styleUrl: './favorite-tip-detail.component.css',
 })
 export class FavoriteTipDetailComponent implements OnInit {
   tips: Tip[] = [];
   loggedUser?: User1 | null;
 
-  constructor(private tipService: TipService, private authService: AuthService) { }
+  constructor(
+    private tipService: TipService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.authService.getUser().subscribe((user) => {
       this.loggedUser = user;
       console.log(user);
       this.tipService
-      .getFavoriteTipsByUserId(user?.userId || '')
-      .subscribe(res => this.tips = res)
+        .getFavoriteTipsByUserId(user?.userId || '')
+        .subscribe((res) => (this.tips = res));
     });
+  }
+
+  refreshTipData(updatedTip: Tip): void {
+    const index = this.tips.findIndex((t) => t.id === updatedTip.id);
+    if (index !== -1) {
+      this.tips[index] = updatedTip;
+      //this.updatePage(this.currentPage); // Atualiza a página com os dados novos
+    }
   }
 }

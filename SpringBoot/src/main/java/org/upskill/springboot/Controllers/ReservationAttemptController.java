@@ -3,6 +3,7 @@ package org.upskill.springboot.Controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.upskill.springboot.DTOs.ReservationAttemptDTO;
 import org.upskill.springboot.DTOs.ReservationAttemptResponseDTO;
@@ -70,6 +71,7 @@ public class ReservationAttemptController extends BaseController {
      * @return a ResponseEntity containing the created ReservationAttemptResponseDTO and HTTP status OK if creation is successful
      */
     @PostMapping("/reservationAttempts")
+    @PreAuthorize("hasRole('User')")
     public ResponseEntity<ReservationAttemptResponseDTO> postReservationAttempt(
             @RequestBody ReservationAttemptDTO reservationAttemptDTO,
             @RequestHeader("Authorization") String authorization) {
@@ -88,6 +90,7 @@ public class ReservationAttemptController extends BaseController {
      * if successful.
      */
     @PatchMapping("/reservationAttempts/{reservationId}/status")
+    @PreAuthorize("hasRole('User')")
     public ResponseEntity<ReservationAttemptResponseDTO> patchReservationAttemptStatus(
             @PathVariable String reservationId, @RequestHeader("Authorization")
             String authorization,
@@ -96,5 +99,4 @@ public class ReservationAttemptController extends BaseController {
                 reservationId, authorization, requestDTO);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
-
 }

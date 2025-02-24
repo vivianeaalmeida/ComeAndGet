@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ButtonComponent } from '../button/button.component';
+import { ButtonComponent } from '../Buttons/button/button.component';
 import { AdvService } from '../../Services/adv.service';
 import Swal from 'sweetalert2';
 import { HttpClientModule } from '@angular/common/http';

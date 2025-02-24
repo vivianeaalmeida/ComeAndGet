@@ -88,6 +88,32 @@ public class AdvertisementController extends BaseController {
     }
 
     /**
+     * Retrieves a list active advertisements based on search filters
+     * This method allows the user to search for active advertisements by applying filters such as keyword, municipality, and category
+     *
+     * @param keyword      A keyword to search advertisements whose title or description contain the specified text (optional).
+     * @param municipality The municipality to filter the advertisements (optional).
+     * @param category     The category to filter the advertisements (optional).
+     * @return A ResponseEntity containing a list of AdvertisementDTO that match the provided criteria
+     * The HTTP status returned will be 200 OK if the operation is successful.
+     */
+    @GetMapping("/advertisements/active/search")
+    public ResponseEntity<List<AdvertisementDTO>> searchAdvertisements(
+            @RequestParam Optional<String> keyword,
+            @RequestParam Optional<String> municipality,
+            @RequestParam Optional<String> category
+    ) {
+
+        List<AdvertisementDTO> advertisementsDTO = advertisementService.searchAdvertisements(
+                municipality.orElse(null),
+                keyword.orElse(null),
+                category.orElse(null)
+        );
+
+        return new ResponseEntity<>(advertisementsDTO, HttpStatus.OK);
+    }
+
+    /**
      * Creates a new advertisement.
      *
      * @param request the advertisement data transfer object
@@ -142,32 +168,5 @@ public class AdvertisementController extends BaseController {
     public ResponseEntity<AdvertisementDTO> deactivateAdvertisement(@PathVariable String id) {
         AdvertisementDTO advertisementDTO = advertisementService.deactivateAdvertisement(id);
         return new ResponseEntity<>(advertisementDTO, HttpStatus.OK);
-    }
-
-
-    /**
-     * Retrieves a list active advertisements based on search filters
-     * This method allows the user to search for active advertisements by applying filters such as keyword, municipality, and category
-     *
-     * @param keyword      A keyword to search advertisements whose title or description contain the specified text (optional).
-     * @param municipality The municipality to filter the advertisements (optional).
-     * @param category     The category to filter the advertisements (optional).
-     * @return A ResponseEntity containing a list of AdvertisementDTO that match the provided criteria
-     * The HTTP status returned will be 200 OK if the operation is successful.
-     */
-    @GetMapping("/advertisements/active/search")
-    public ResponseEntity<List<AdvertisementDTO>> searchAdvertisements(
-            @RequestParam Optional<String> keyword,
-            @RequestParam Optional<String> municipality,
-            @RequestParam Optional<String> category
-    ) {
-
-        List<AdvertisementDTO> advertisementsDTO = advertisementService.searchAdvertisements(
-                municipality.orElse(null),
-                keyword.orElse(null),
-                category.orElse(null)
-        );
-
-        return new ResponseEntity<>(advertisementsDTO, HttpStatus.OK);
     }
 }

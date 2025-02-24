@@ -51,18 +51,23 @@ entity User {
     password_hash        : VARCHAR
 }
 
-entity Like {
-    id          : VARCHAR <<PK>>
+entity Interaction {
+    id            : VARCHAR <<PK>>
+    --
+    like:         : BOOLEAN
+    favorite      : BOOLEAN
     --
     client_id     : VARCHAR <<FK>>
     tip_id        : VARCHAR <<FK>>
 }
 
 entity Tip {
-    id          : VARCHAR <<PK>>
+    id              : VARCHAR <<PK>>
     --
-    title         : VARCHAR
-    description   : VARCHAR
+    title           : VARCHAR
+    description     : VARCHAR
+    likeCount       : INT
+    favoriteCount   : INT
 }
 
 Advertisement "0..1" -- "1" Item
@@ -70,7 +75,7 @@ Advertisement "0..*" -- "1" User
 Item "1" -- "0..*" Category
 Reservation_Attempt "0..*" -- "1" Advertisement
 Reservation_Attempt "0..*" -- "1" User
-User "1" -- "0..*" Like
-Tip "1" -left- "0..*" Like : \t
+User "1" -- "0..*" Interaction
+Tip "1" -left- "0..*" Interaction : \t
 
 @enduml

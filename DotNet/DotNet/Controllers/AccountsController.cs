@@ -31,7 +31,7 @@ public class AccountsController : ControllerBase {
             if (!result.Succeeded) {
                 return BadRequest(result.Errors);
             }
-            return Ok(new { message = "User registered successfully." });
+            return Created("", new { message = "User registered successfully." });
         }
         catch (EmailInUseException ex) {
             return Conflict(new { message = ex.Message });
@@ -42,7 +42,6 @@ public class AccountsController : ControllerBase {
             return Conflict(new { message = "An unexpected error occurred." });
         }
     }
-
 
     /// <summary>
     /// Logs in a user.

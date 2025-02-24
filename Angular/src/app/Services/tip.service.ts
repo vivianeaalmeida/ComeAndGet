@@ -20,6 +20,10 @@ export class TipService {
     return this.http.get<Tip>(`${this.endpoint}/${id}`)
   }
 
+  getFavoriteTipsByUserId(id: string): Observable<Tip[]> {
+    return this.http.get<Tip[]>(`${this.endpoint}/favorites/users/${id}`);
+  }
+
   addTip(tip:Tip):Observable<Tip> {
     return this.http.post<Tip>(this.endpoint, tip)
   }

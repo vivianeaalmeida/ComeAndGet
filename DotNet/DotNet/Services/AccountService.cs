@@ -47,8 +47,6 @@ public class AccountService {
         return result;
     }
 
-
-
     /// <summary>
     /// Adds a new role.
     /// </summary>
@@ -60,7 +58,6 @@ public class AccountService {
         }
         return IdentityResult.Failed(new IdentityError { Description = "Roles already exists." });
     }
-
 
     /// <summary>
     /// Assigns a role to a user.
@@ -75,7 +72,6 @@ public class AccountService {
 
         return await userManager.AddToRoleAsync(user, model.Role);
     }
-
 
     /// <summary>
     /// Authenticates a user and generates a JWT token.

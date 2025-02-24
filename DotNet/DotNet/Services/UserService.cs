@@ -13,7 +13,6 @@ namespace DotNet.Services {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly UserManager<ApplicationUser> userManager;
 
-
         /// <summary>
         /// Initializes a new instance of the <see cref="UserService"/> class.
         /// </summary>
@@ -24,7 +23,6 @@ namespace DotNet.Services {
             _httpContextAccessor = httpContextAccessor;
             this.userManager = userManager;
         }
-
 
         /// <summary>
         /// Retrieves information about the current user.

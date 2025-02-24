@@ -6,15 +6,26 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace DotNet.Controllers {
+    /// <summary>
+    /// Handles tips-related operations.
+    /// </summary>
     [Route("api/v1/[controller]")]
     [ApiController]
     public class TipsController : Controller {
         private readonly ITipService tipService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TipsController"/> class.
+        /// </summary>
+        /// <param name="tipService">The service for handling tip operations.</param>
         public TipsController(ITipService tipService) {
             this.tipService = tipService;
         }
 
+        /// <summary>
+        /// Retrieves all tips.
+        /// </summary>
+        /// <returns>A list of all tips.</returns>
         [HttpGet]
         public ActionResult<IEnumerable<TipDTO>> GetAll() {
             try {
@@ -27,6 +38,11 @@ namespace DotNet.Controllers {
             }
         }
 
+        /// <summary>
+        /// Retrieves a specific tip by ID.
+        /// </summary>
+        /// <param name="id">The ID of the tip.</param>
+        /// <returns>The requested tip if found; otherwise, a NotFound response.</returns>
         [HttpGet("{id}")]
         public ActionResult<TipDTO> GetById(int id) {
             try {
@@ -43,6 +59,11 @@ namespace DotNet.Controllers {
             }
         }
 
+        /// <summary>
+        /// Retrieves the favorite tips of a specific user.
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <returns>A list of favorited tips.</returns>
         [HttpGet("favorites/users/{userId}")]
         public async Task<ActionResult<IEnumerable<TipDTO>>> GetFavoritedTips(string userId) {
             try 
@@ -56,6 +77,11 @@ namespace DotNet.Controllers {
             }
         }
 
+        /// <summary>
+        /// Adds a new tip.
+        /// </summary>
+        /// <param name="tipDTO">The tip data to add.</param>
+        /// <returns>The created tip with its generated ID.</returns>
         [HttpPost]
         public ActionResult<TipDTO> Add([FromBody] TipDTO tipDTO)
         {
@@ -78,14 +104,20 @@ namespace DotNet.Controllers {
             }
         }
 
+        /// <summary>
+        /// Updates an existing tip.
+        /// </summary>
+        /// <param name="id">The ID of the tip to update.</param>
+        /// <param name="tipDTO">The updated tip data.</param>
+        /// <returns>The updated tip or an error message if the update fails.</returns>
         [HttpPut("{id}")]
         public ActionResult Update(int id, [FromBody] TipDTO tipDTO) {
             if (id != tipDTO.Id)
             {
-                return BadRequest("The provided ids do not match.");
+                return BadRequest(new { message = "The provided ids do not match." });
             }
 
-            try 
+            try
             {
                 tipService.UpdateTip(id, tipDTO);
                 return Ok(tipDTO);
@@ -107,6 +139,11 @@ namespace DotNet.Controllers {
             }
         }
 
+        /// <summary>
+        /// Deletes a tip by ID.
+        /// </summary>
+        /// <param name="id">The ID of the tip to remove.</param>
+        /// <returns>The removed tip if successful, or an error message if not found.</returns>
         [HttpDelete("{id}")]
         public ActionResult Remove(int id) {
             try 

@@ -33,8 +33,6 @@ export class AdvertisementModalComponent implements OnInit {
     this.getReservationAttempts();
   }
 
-
-
   closeModal() {
     this.modalClosed.emit();
   }

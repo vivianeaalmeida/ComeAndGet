@@ -12,11 +12,12 @@ import { Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
 import { map } from 'rxjs';
 import { AuthService } from '../../Services/auth.service';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule],
+  imports: [FormsModule, ReactiveFormsModule, NgIf],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
@@ -29,8 +30,13 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private loginServ: AuthService,
-    private myRouter: Router // private loaderServ: PageLoaderService
-  ) {}
+    private myRouter: Router
+  ) {
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]], // campo obrigatório
+      password: ['', [Validators.required, Validators.minLength(6)]], // campo obrigatório
+    });
+  }
 
   ngOnInit() {
     this.loginForm = this.fb.group({

@@ -22,6 +22,11 @@ import { UsersService } from '../../Services/users.service';
 export class RegisterComponent {
   registerForm: FormGroup;
 
+  public uppercasePattern: RegExp = /[A-Z]/;
+  public lowercasePattern: RegExp = /[a-z]/;
+  public numberPattern: RegExp = /[0-9]/;
+  public specialPattern: RegExp = /[^a-zA-Z0-9]/;
+
   constructor(
     private addsrv: UsersService,
     private myRouter: Router,
@@ -29,38 +34,53 @@ export class RegisterComponent {
   ) {
     this.registerForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
-      phoneNumber: ['', [Validators.required, Validators.minLength(9)]],
+      phoneNumber: ['', [Validators.minLength(9)]],
       username: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^a-zA-Z\\d]).+$'),
+        ],
+      ],
     });
   }
 
   onSubmit() {
     if (this.registerForm.valid) {
-      // Chamar o método para registrar o usuário
       this.registerNewUser();
     }
   }
 
   registerNewUser() {
     if (this.registerForm.valid) {
-      this.addsrv.registerUser(this.registerForm.value).subscribe(() => {
-        Swal.fire({
-          icon: 'success',
-          title: 'New user registered successfully!',
-        });
-        this.myRouter.navigate(['login']);
-      });
-    } else {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error registering new user! Please try again.',
+      this.addsrv.registerUser(this.registerForm.value).subscribe({
+        next: () => {
+          Swal.fire({
+            icon: 'success',
+            title: 'New user registered successfully!',
+          });
+          this.myRouter.navigate(['login']);
+        },
+        error: (error) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error registering new user!',
+            text: error?.error?.message || 'An unexpected error occurred. Please try again.',
+          });
+        }
       });
     }
   }
 
   loginUser(): void {
     this.myRouter.navigate(['login']);
+  }
+  
+  isPasswordMissing(pattern: RegExp): boolean {
+    const password = this.registerForm.get('password')?.value || '';
+    return !pattern.test(password);
   }
 }

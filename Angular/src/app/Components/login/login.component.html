@@ -45,6 +45,20 @@
               formControlName="email"
               class="bg-gray-100 focus:bg-transparent w-full text-md px-4 py-3.5 rounded-md outline-ground"
             />
+            <div
+              *ngIf="
+                loginForm.get('email')?.touched &&
+                loginForm.get('email')?.invalid
+              "
+              class="validation-error"
+            >
+              <div *ngIf="loginForm.get('email')?.hasError('required')">
+                Email is required.
+              </div>
+              <div *ngIf="loginForm.get('email')?.hasError('email')">
+                Please enter a valid email.
+              </div>
+            </div>
           </div>
           <div>
             <label
@@ -59,6 +73,20 @@
               formControlName="password"
               class="bg-gray-100 focus:bg-transparent w-full text-md px-4 py-3.5 rounded-md outline-ground"
             />
+          </div>
+          <div
+            *ngIf="
+              loginForm.get('password')?.touched &&
+              loginForm.get('password')?.invalid
+            "
+            class="validation-error"
+          >
+            <div *ngIf="loginForm.get('password')?.hasError('required')">
+              Password is required.
+            </div>
+            <div *ngIf="loginForm.get('password')?.hasError('minlength')">
+              Password must be at least 8 characters long.
+            </div>
           </div>
         </div>
         <div>

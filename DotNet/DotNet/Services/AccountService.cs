@@ -1,5 +1,7 @@
-﻿using DotNet.DTOs;
+﻿using DotNet.Data;
+using DotNet.DTOs;
 using DotNet.Models;
+using DotNet.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -8,23 +10,18 @@ using System.Security.Claims;
 /// <summary>
 /// Provides methods for managing user accounts and authentication.
 /// </summary>
-public class AccountService {
-    private readonly UserManager<ApplicationUser> userManager;
-    private readonly RoleManager<IdentityRole> roleManager;
-    private readonly IConfiguration configuration;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AccountService"/> class.
-    /// </summary>
-    /// <param name="userManager">The user manager.</param>
-    /// <param name="roleManager">The role manager.</param>
-    /// <param name="configuration">The configuration.</param>
-    public AccountService(UserManager<ApplicationUser> userManager,
-        RoleManager<IdentityRole> roleManager, IConfiguration configuration) {
-        this.userManager = userManager;
-        this.roleManager = roleManager;
-        this.configuration = configuration;
-    }
+/// <remarks>
+/// Initializes a new instance of the <see cref="AccountService"/> class.
+/// </remarks>
+/// <param name="userManager">The user manager.</param>
+/// <param name="roleManager">The role manager.</param>
+/// <param name="configuration">The configuration.</param>
+public class AccountService(UserManager<ApplicationUser> userManager,
+    RoleManager<IdentityRole> roleManager, IConfiguration configuration) {
+    private readonly UserManager<ApplicationUser> userManager = userManager;
+    private readonly RoleManager<IdentityRole> roleManager = roleManager;
+    private readonly IConfiguration configuration = configuration;
+    private readonly UserContext context;
 
     /// <summary>
     /// Registers a new user.
@@ -32,6 +29,17 @@ public class AccountService {
     /// <param name="model">The registration model.</param>
     /// <returns>The result of the registration operation.</returns>
     public async Task<IdentityResult> RegisterUserAsync(Register model) {
+        // Verifica se o e-mail já existe
+        if (await userManager.FindByEmailAsync(model.Email) != null) {
+            throw new EmailInUseException("The email is already in use.");
+        }
+
+        // Verifica se o nome de usuário já existe
+        if (await userManager.FindByNameAsync(model.Username) != null) {
+            throw new UsernameInUseException("The username is already in use.");
+        }
+
+        // Cria o usuário somente se as verificações anteriores passarem
         var user = new ApplicationUser {
             UserName = model.Username,
             Email = model.Email,
@@ -40,12 +48,14 @@ public class AccountService {
         };
 
         var result = await userManager.CreateAsync(user, model.Password);
+
         if (result.Succeeded) {
             await userManager.AddToRoleAsync(user, "User");
         }
 
         return result;
     }
+
 
     /// <summary>
     /// Adds a new role.
@@ -80,6 +90,11 @@ public class AccountService {
     /// <returns>The login response containing the token and user role.</returns>
     public async Task<LoginResponse> LoginAsync(Login model) {
         var user = await userManager.FindByEmailAsync(model.Email);
+
+        if (user == null || !await userManager.CheckPasswordAsync(user, model.Password)) {
+            throw new InvalidLoginException("Invalid email or password.");
+        }
+
 
         if (user != null && await userManager.CheckPasswordAsync(user, model.Password)) {
             var userRoles = await userManager.GetRolesAsync(user);

@@ -4,8 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.upskill.springboot.DTOs.CategoryDTO;
 import org.upskill.springboot.DTOs.ItemDTO;
-import org.upskill.springboot.Exceptions.InvalidFileExtensionException;
-import org.upskill.springboot.Exceptions.ItemNotFoundException;
 import org.upskill.springboot.Exceptions.ItemValidationException;
 import org.upskill.springboot.Models.Category;
 import org.upskill.springboot.Models.Item;

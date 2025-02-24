@@ -56,25 +56,13 @@
             class="flex justify-end items-center py-2 px-4 bg-lime-100 rounded-b-lg space-x-4"
           >
             <!-- Botão de Curtida -->
-            <button (click)="toggleLike(tip)">
-              <i
-                [class.fa-solid]="tip.hasLiked"
-                [class.fa-regular]="!tip.hasLiked"
-                class="fa-thumbs-up fa-lg text-black text-xl"
-              ></i>
-            </button>
+            <app-button-like-tip [tip]="tip"></app-button-like-tip>
             <div class="flex items-center space-x-2 text-black font-medium">
               <span>{{ tip.likeCount || 0 }}</span>
             </div>
 
             <!-- Botão de Favoritar -->
-            <button (click)="toggleFavorite(tip)">
-              <i
-                [class.fa-solid]="tip.hasFavorited"
-                [class.fa-regular]="!tip.hasFavorited"
-                class="fa-bookmark fa-lg text-black text-md"
-              ></i>
-            </button>
+            <app-button-favorite-tip [tip]="tip"></app-button-favorite-tip>
             <div class="flex items-center space-x-2 text-black font-medium">
               <span>{{ tip.favoriteCount || 0 }}</span>
             </div>

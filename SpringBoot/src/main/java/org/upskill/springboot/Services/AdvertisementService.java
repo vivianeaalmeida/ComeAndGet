@@ -223,6 +223,7 @@ public class AdvertisementService implements IAdvertisementService {
         Advertisement advertisement = AdvertisementMapper.toEntity(advertisementDTO);
         advertisement.setTitle(advertisementUpdateDTO.getTitle());
         advertisement.setDescription(advertisementUpdateDTO.getDescription());
+        advertisement.setMunicipality(advertisementDTO.getMunicipality());
 
         // If status is changed to closed, rejects all requests
         if (advertisement.getStatus() == Advertisement.AdvertisementStatus.CLOSED) {

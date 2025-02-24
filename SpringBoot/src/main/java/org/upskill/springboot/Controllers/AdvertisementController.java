@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -44,6 +45,7 @@ public class AdvertisementController extends BaseController {
      * @return A ResponseEntity containing a list of AdvertisementDTO
      */
     @GetMapping("/advertisements")
+    @PreAuthorize("hasRole('Admin')")
     public ResponseEntity<List<AdvertisementDTO>> getAdvertisements() {
         List<AdvertisementDTO> advertisementsDTO = advertisementService.getAdvertisements();
         return new ResponseEntity<>(advertisementsDTO, HttpStatus.OK);
@@ -66,6 +68,7 @@ public class AdvertisementController extends BaseController {
      * @return A ResponseEntity containing a list of AdvertisementDTO with closed status
      */
     @GetMapping("/advertisements/closed")
+    @PreAuthorize("hasRole('Admin')")
     public ResponseEntity<List<AdvertisementDTO>> getClosedAdvertisements() {
         List<AdvertisementDTO> advertisementsDTO = advertisementService.getClosedAdvertisements();
         return new ResponseEntity<>(advertisementsDTO, HttpStatus.OK);
@@ -78,11 +81,13 @@ public class AdvertisementController extends BaseController {
      * @return A ResponseEntity containing a list of a AdvertisementDTO of the client
      */
     @GetMapping("/advertisements/users/{clientId}")
+    @PreAuthorize("hasRole('User')")
     public ResponseEntity<List<AdvertisementDTO>> getAdvertisementsByClientId(
-            @PathVariable String clientId) {
+            @PathVariable String clientId,
+            @RequestHeader("Authorization") String authorization) {
 
         List<AdvertisementDTO> advertisementsDTO = advertisementService
-                .getAdvertisementsByClientId(clientId);
+                .getAdvertisementsByClientId(clientId, authorization);
 
         return new ResponseEntity<>(advertisementsDTO, HttpStatus.OK);
     }
@@ -120,6 +125,7 @@ public class AdvertisementController extends BaseController {
      * @return the created advertisement data transfer object with HTTP status CREATED
      */
     @PostMapping(value = "/advertisements", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('User')")
     public ResponseEntity<AdvertisementDTO> createAdvertisement(
             @RequestPart(value = "advertisementDTO", required = true) @Valid AdvertisementDTO request,
             @RequestPart(value = "imageFile", required = true) MultipartFile imageFile,
@@ -147,13 +153,15 @@ public class AdvertisementController extends BaseController {
      * and HTTP status 200 (Ok) if the update is successful.
      */
     @PutMapping("/advertisements/{id}")
+    @PreAuthorize("hasRole('User')")
     public ResponseEntity<AdvertisementDTO> updateAdvertisement(@PathVariable("id") String id,
-                                                                @RequestBody AdvertisementUpdateDTO request) {
+                                                                @RequestBody AdvertisementUpdateDTO request,
+                                                                @RequestHeader("Authorization") String authorization) {
         if (!id.equals(request.getId())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        AdvertisementDTO advertisementDTO = advertisementService.updateAdvertisement(id, request);
+        AdvertisementDTO advertisementDTO = advertisementService.updateAdvertisement(id, request, authorization);
 
         return new ResponseEntity<>(advertisementDTO, HttpStatus.OK);
     }
@@ -165,6 +173,7 @@ public class AdvertisementController extends BaseController {
      * @return A ResponseEntity containing the deactivated AdvertisementDTO
      */
     @PatchMapping("/advertisements/{id}/deactivate")
+    @PreAuthorize("hasRole('Admin')")
     public ResponseEntity<AdvertisementDTO> deactivateAdvertisement(@PathVariable String id) {
         AdvertisementDTO advertisementDTO = advertisementService.deactivateAdvertisement(id);
         return new ResponseEntity<>(advertisementDTO, HttpStatus.OK);

@@ -6,7 +6,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.upskill.springboot.DTOs.ItemDTO;
 import org.upskill.springboot.Exceptions.CategoryNotFoundException;
 import org.upskill.springboot.Exceptions.InvalidFileExtensionException;
-import org.upskill.springboot.Exceptions.ItemNotFoundException;
 import org.upskill.springboot.Exceptions.ItemValidationException;
 import org.upskill.springboot.Mappers.CategoryMapper;
 import org.upskill.springboot.Mappers.ItemMapper;
@@ -43,19 +42,6 @@ public class  ItemService implements IItemService {
     CategoryService categoryService;
 
     /**
-     * Retrieves ab item by its id. If the item does not exist, an exception is thrown.
-     *
-     * @param id The unique identifier of the item.
-     * @return The ItemDTO corresponding to the id.
-     */
-    @Override
-    public ItemDTO getItemById(String id) {
-        return itemRepository.findById(id)
-                .map(ItemMapper::toDTO)
-                .orElseThrow(ItemNotFoundException::new);
-    }
-
-    /**
      * Creates a new item.
      *
      * @param itemDTO the item data transfer object
@@ -69,11 +55,6 @@ public class  ItemService implements IItemService {
         item = this.itemRepository.save(item);
 
         return ItemMapper.toDTO(item);
-    }
-
-    @Override
-    public ItemDTO updateItem(String id, ItemDTO itemDTO) {
-        return null;
     }
 
     /**

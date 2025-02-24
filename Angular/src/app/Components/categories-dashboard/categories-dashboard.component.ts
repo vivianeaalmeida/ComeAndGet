@@ -58,12 +58,13 @@ export class CategoriesDashboardComponent implements OnInit {
           icon: 'success',
           title: 'Category added successfully!.',
         });
+        this.getCategories();
         this.closeModal();
       },
       error: (error) => {
         Swal.fire({
           icon: 'error',
-          title: 'Error adding this category!',
+          title: `Error adding this category - ${error?.error.message}`,
         });
       },
     });

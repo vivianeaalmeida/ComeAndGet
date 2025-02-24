@@ -6,11 +6,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DotNet.Controllers {
-    [Route("api/[controller]")]
-    [ApiController]
+
     /// <summary>
     /// Handles interactions-related operations.
     /// </summary>
+    [Route("api/v1/[controller]")]
+    [ApiController]
     public class InteractionsController : ControllerBase {
         private readonly IInteractionService interactionService;
 
@@ -57,7 +58,6 @@ namespace DotNet.Controllers {
             {
                 return BadRequest(new { message = "The provided ids do not match." });
             }
-
             try 
             {
                 interactionService.UpdateInteraction(id, interactionDTO);

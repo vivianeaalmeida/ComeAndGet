@@ -9,7 +9,12 @@ import org.upskill.springboot.Models.ReservationAttempt;
 import java.time.LocalDate;
 
 public class ReservationAttemptMapper {
-
+    /**
+     * Maps a ReservationAttempt model to a ReservationAttemptResponseDTO.
+     *
+     * @param reservationAttempt The ReservationAttempt model to be mapped.
+     * @return A ReservationAttemptResponseDTO containing the data from the ReservationAttempt model.
+     */
     public static ReservationAttemptResponseDTO toDTO(ReservationAttempt reservationAttempt) {
         ReservationAttemptResponseDTO requestDTO = new ReservationAttemptResponseDTO();
         requestDTO.setId(reservationAttempt.getId());
@@ -30,7 +35,15 @@ public class ReservationAttemptMapper {
 
     }
 
-    //nenhuma informação, exceto o status, vem do request do usuario (DTO)
+    /**
+     * Maps a ReservationAttemptDTO to a ReservationAttempt entity.
+     *
+     * @param status The status of the reservation attempt.
+     * @param clientId The client ID associated with the reservation attempt.
+     * @param advertisement The advertisement related to the reservation attempt.
+     * @return A ReservationAttempt entity.
+     */
+    //nenhuma informação - exceto o status - vem do request do usuario (DTO)
     public static ReservationAttempt toEntity(@NotNull String status, @NotNull String clientId, @NotNull Advertisement advertisement ) {
         ReservationAttempt reservationAttempt = new ReservationAttempt();
 
@@ -40,7 +53,6 @@ public class ReservationAttemptMapper {
         reservationAttempt.setClientId(clientId);
         reservationAttempt.setAdvertisement(advertisement);
         reservationAttempt.setDate(LocalDate.now());
-
         return reservationAttempt;
     }
 

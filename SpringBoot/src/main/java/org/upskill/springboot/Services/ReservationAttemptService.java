@@ -23,8 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Service class for handling operations related to Request entities.
- * Provides methods for creating, updating, deleting, and retrieving Requests.
+ * Service class responsible for handling reservation attempts.
  */
 @Service
 public class ReservationAttemptService implements IReservationAttemptService {
@@ -38,6 +37,9 @@ public class ReservationAttemptService implements IReservationAttemptService {
     @Autowired
     private AuthUserWebClient userWebClient;
 
+    /**
+     * List of immutable statuses where a reservation attempt cannot be modified.
+     */
     private final List<ReservationAttempt.ReservationAttemptStatus> unmodifiableStatus = Arrays.asList(
             ReservationAttempt.ReservationAttemptStatus.DONATED,
             ReservationAttempt.ReservationAttemptStatus.CANCELED,
@@ -45,9 +47,12 @@ public class ReservationAttemptService implements IReservationAttemptService {
     );
 
     /**
-     * Retrieves all requests from the database.
+     * Retrieves a list of reservation attempts based on the provided filters.
      *
-     * @return a list of RequestDTO objects representing all requests
+     * @param reservationAttemptClientId The client ID of the reservation attempt.
+     * @param advertisementClientId The client ID of the advertisement.
+     * @param advertisementId The ID of the advertisement.
+     * @return A list of reservation attempt response DTOs.
      */
     @Override
     public List<ReservationAttemptResponseDTO> getReservationAttempts(String reservationAttemptClientId,
@@ -62,11 +67,11 @@ public class ReservationAttemptService implements IReservationAttemptService {
     }
 
     /**
-     * Retrieves a specific request by its ID.
+     * Retrieves a reservation attempt by its ID.
      *
-     * @param id the ID of the request to retrieve
-     * @return the RequestDTO object corresponding to the requested ID
-     * @throws ReservationAttemptNotFoundException if no request is found with the given ID
+     * @param id The ID of the reservation attempt.
+     * @return The reservation attempt response DTO.
+     * @throws ReservationAttemptNotFoundException if the reservation attempt is not found.
      */
     @Override
     public ReservationAttemptResponseDTO getReservationAttemptById(String id) {
@@ -75,11 +80,11 @@ public class ReservationAttemptService implements IReservationAttemptService {
     }
 
     /**
-     * Creates a new request with the provided RequestDTO data.
+     * Creates a new reservation attempt.
      *
-     * @param reservationAttemptDTO the RequestDTO object containing the details of the new request
-     * @param authorization the authorization of the client creating the reservation attempt
-     * @return the created RequestDTO object
+     * @param reservationAttemptDTO The reservation attempt data transfer object.
+     * @param authorization The authorization token of the user.
+     * @return The created reservation attempt response DTO.
      */
     @Override
     public ReservationAttemptResponseDTO createReservationAttempt(ReservationAttemptDTO reservationAttemptDTO, String authorization) {
@@ -95,14 +100,12 @@ public class ReservationAttemptService implements IReservationAttemptService {
     }
 
     /**
-     * Updates the status of an existing reservation attempt with the provided status.
-     * The method performs validations before changing the status and handles the logic for closing the advertisement
-     * and rejecting other reservation attempts
+     * Updates the status of an existing reservation attempt.
      *
-     * @param id the ID of the reservation attempt to be updated
-     * @param authorization the authorization of the client making the update
-     * @param reservationAttemptStatusDTO the DTO object containing the new status for the reservation attempt
-     * @return the ReservationAttemptResponseDTO object with the details of the reservation attempt after the update
+     * @param id The ID of the reservation attempt.
+     * @param authorization The authorization token of the user.
+     * @param reservationAttemptStatusDTO The new status data transfer object.
+     * @return The updated reservation attempt response DTO.
      */
     @Override
     public ReservationAttemptResponseDTO updateReservationAttemptStatus(String id, String authorization,
@@ -140,11 +143,10 @@ public class ReservationAttemptService implements IReservationAttemptService {
     }
 
     /**
-     * Closes the advertisement associated with the given reservation attempt and rejects
-     * all other pending or accepted reservation attempts for the same advertisement.
+     * Closes an advertisement and rejects other pending or accepted reservation attempts.
      *
-     * @param id the ID of the reservation attempt that was marked as "DONATED"
-     * @param reservationAttempt the reservation attempt that triggered this process
+     * @param id The ID of the reservation attempt being donated.
+     * @param reservationAttempt The reservation attempt entity.
      */
     private void closeAdvertisementAndRejectedOtherAttempts(String id, ReservationAttempt reservationAttempt) {
         String advertisementId = reservationAttempt.getAdvertisement().getId();
@@ -170,14 +172,9 @@ public class ReservationAttemptService implements IReservationAttemptService {
     }
 
     /**
-     * Validates whether a user is authorized to update the status of a reservation attempt.
+     * Validates whether a reservation attempt status can be updated.
      *
-     * The update is only allowed if the advertisement is active and the current status is modifiable.
-     * Only the advertisement owner or the reservation attempt owner can update the status.
-     * The advertisement owner can change it to ACCEPTED, REJECTED, or DONATED, while
-     * the reservation attempt owner can change it to PENDING or CANCELED.
-     *
-     * @param reservationAttempt The reservation attempt being updated.
+     * @param reservationAttempt The reservation attempt entity.
      * @param clientId The ID of the client attempting to update the status.
      * @param newStatus The new status to be applied.
      */
@@ -229,15 +226,11 @@ public class ReservationAttemptService implements IReservationAttemptService {
     }
 
     /**
-     * Validates whether a reservation attempt can be created.
+     * Validates if a reservation attempt can be created for a given advertisement.
      *
-     * A user cannot create a reservation attempt if they have already made a request
-     * for the same advertisement, if they are the owner of the advertisement,
-     * or if the advertisement is not active.
-     *
-     * @param reservationAttemptDTO The reservation attempt details.
-     * @param advertisementDTO The advertisement details.
-     * @param loggedClientId The ID of the logged-in client attempting to create the reservation.
+     * @param reservationAttemptDTO The reservation attempt data transfer object.
+     * @param advertisementDTO The advertisement data transfer object.
+     * @param loggedClientId The ID of the user attempting to create the reservation.
      * @return true if the reservation attempt is valid.
      */
     private boolean validateReservationAttempt(ReservationAttemptDTO reservationAttemptDTO,
@@ -258,21 +251,20 @@ public class ReservationAttemptService implements IReservationAttemptService {
     }
 
     /**
-     * Checks if there are requests associated with a specific advertisement.
+     * Checks if an advertisement has any reservation attempts.
      *
-     * @param advertisementId The identifier of the advertisement.
-     * @return {@code true} if there are requests associated with the advertisement, {@code false} otherwise.
+     * @param advertisementId The ID of the advertisement.
+     * @return true if there are reservation attempts, false otherwise.
      */
     public boolean hasRequestsInAdvertisement(String advertisementId) {
         return reservationAttemptRepository.existsByAdvertisement_Id(advertisementId);
     }
 
     /**
-     * Retrieves all requests associated with a specific advertisement.
+     * Retrieves all reservation attempts for a specific advertisement.
      *
-     * @param advertisementId The identifier of the advertisement.
-     * @return A list of {@link ReservationAttemptResponseDTO} objects associated with the advertisement.
-     *         Returns an empty list if no reservation attempts are found.
+     * @param advertisementId The ID of the advertisement.
+     * @return A list of reservation attempt response DTOs.
      */
     @Override
     public List<ReservationAttemptResponseDTO> getReservationAttemptsByAdvertisement(String advertisementId) {
@@ -285,20 +277,19 @@ public class ReservationAttemptService implements IReservationAttemptService {
     }
 
     /**
-     * Checks if there are reservation attempts associated with a specific advertisement.
+     * Checks if an advertisement has a donated reservation attempt.
      *
-     * @param advertisementId The identifier of the advertisement.
-     * @return {@code true} if there are reservation attempts associated with the advertisement, {@code false} otherwise.
+     * @param advertisementId The ID of the advertisement.
+     * @return true if a donated request exists, false otherwise.
      */
     public boolean hasDonatedRequestInAdvertisement(String advertisementId) {
         return reservationAttemptRepository.existsDonatedReservationsForAdvertisement(advertisementId);
     }
 
     /**
-     * Rejects all reservations associated with an advertisement by its ID,
-     * for reservations with status PENDING or ACCEPTED.
+     * Rejects all pending or accepted reservation attempts for a given advertisement.
      *
-     * @param advertisementId the ID of the advertisement
+     * @param advertisementId The ID of the advertisement.
      */
     public void rejectReservationAttempts(String advertisementId) {
         // Get ReservationAttempts with pending and accepted status

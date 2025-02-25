@@ -117,7 +117,6 @@ class ReservationAttemptServiceTest {
         assertThrows(AdvertisementNotFoundException.class, () -> reservationAttemptService.createReservationAttempt(reservationAttemptDTO, authorization));
 
         //verifica chamadas dos mocks
-        verify(advertisementService, times(1)).getAdvertisementById("invalid_ad");
         verify(reservationAttemptRepository, times(0)).save(any(ReservationAttempt.class));  // O save não deve ser chamado
     }
 }

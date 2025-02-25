@@ -225,26 +225,20 @@ public class AdvertisementService implements IAdvertisementService {
         AdvertisementDTO advertisementDTO = getAdvertisementById(id);
 
         Advertisement advertisement = AdvertisementMapper.toEntity(advertisementDTO);
-        System.out.println("Entidade do anúncio convertida com os dados atuais: " + advertisement);
 
         advertisement.setTitle(advertisementUpdateDTO.getTitle());
         advertisement.setDescription(advertisementUpdateDTO.getDescription());
         advertisement.setMunicipality(advertisementDTO.getMunicipality());
-        System.out.println("Dados atualizados - Título: " + advertisement.getTitle() + ", Descrição: " + advertisement.getDescription());
 
         if (advertisementUpdateDTO.getStatus().equals("CLOSED") && advertisement.getStatus() != Advertisement.AdvertisementStatus.CLOSED) {
-            System.out.println("Status do anúncio alterado para 'CLOSED'. Rejeitando todas as tentativas de reserva...");
             reservationAttemptService.rejectReservationAttempts(advertisement.getId());
             advertisement.setStatus(Advertisement.AdvertisementStatus.CLOSED);
-        } else {
-            System.out.println("Status do anúncio não foi alterado para 'CLOSED'. Status atual: " + advertisement.getStatus());
         }
 
         advertisement = advertisementRepository.save(advertisement);
 
         AdvertisementDTO savedAdvertisementDTO = AdvertisementMapper.toDTO(advertisement);
         savedAdvertisementDTO.setMunicipality(advertisement.getMunicipality());
-        System.out.println("DTO do anúncio salvo: " + savedAdvertisementDTO);
 
         return savedAdvertisementDTO;
     }
@@ -363,12 +357,6 @@ public class AdvertisementService implements IAdvertisementService {
         AdvertisementDTO advertisementDTO = this.getAdvertisementById(id);
         Advertisement advertisement = AdvertisementMapper.toEntity(advertisementDTO);
         validateTitleAndDescription(advertisementUpdateDTO.getTitle(), advertisementUpdateDTO.getDescription());
-
-        // Check if the advertisement has requests. If so, the advertisement cannot be updated
-        if (reservationAttemptService.hasRequestsInAdvertisement(advertisement.getId())) {
-            throw new AdvertisementValidationException("The advertisement with id " + id +
-                    " has requests, therefore it cannot be updated.");
-        }
 
         // Check if the advertisement is closed. If so, the advertisement cannot be updated
         if (!advertisement.getStatus().equals(Advertisement.AdvertisementStatus.ACTIVE)) {

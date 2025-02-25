@@ -1,15 +1,15 @@
 -- Insert categories
 INSERT INTO CATEGORY (ID, DESIGNATION) VALUES
-                                           (1, 'Electrodomésticos'),
-                                           (2, 'Tecnologia'),
-                                           (3, 'Roupas'),
-                                           (4, 'Móveis'),
-                                           (5, 'Ferramentas e Bricolage'),
-                                           (6, 'Brinquedos e Jogos'),
-                                           (7, 'Livros e Material Escolar'),
-                                           (8, 'Utensílios Domésticos'),
-                                           (9, 'Arte e Decoração'),
-                                           (10, 'Outros');
+(1, 'Electrodomésticos'),
+(2, 'Tecnologia'),
+(3, 'Roupas'),
+(4, 'Móveis'),
+(5, 'Ferramentas e Bricolage'),
+(6, 'Brinquedos e Jogos'),
+(7, 'Livros e Material Escolar'),
+(8, 'Utensílios Domésticos'),
+(9, 'Arte e Decoração'),
+(10, 'Outros');
 
 -- Insert items
 INSERT INTO ITEM (ID, IMAGE, CONDITION, CATEGORY_ID) VALUES

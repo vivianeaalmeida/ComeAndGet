@@ -9,9 +9,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.upskill.springboot.DTOs.ReservationAttemptDTO;
 import org.upskill.springboot.DTOs.ReservationAttemptResponseDTO;
 import org.upskill.springboot.DTOs.ReservationAttemptStatusDTO;
+import org.upskill.springboot.Exceptions.AdvertisementNotFoundException;
 import org.upskill.springboot.Exceptions.ReservationAttemptNotFoundException;
-import org.upskill.springboot.Mappers.ReservationAttemptMapper;
 import org.upskill.springboot.Models.Advertisement;
+import org.upskill.springboot.Models.Category;
+import org.upskill.springboot.Models.Item;
 import org.upskill.springboot.Models.ReservationAttempt;
 import org.upskill.springboot.Repositories.ReservationAttemptRepository;
 import org.upskill.springboot.WebClient.AuthUserWebClient;
@@ -31,11 +33,16 @@ class ReservationAttemptServiceTest {
     @Mock
     private AuthUserWebClient userWebClient;
 
+    @Mock
+    private AdvertisementService advertisementService;
+
     @InjectMocks
     private ReservationAttemptService reservationAttemptService;
 
     private ReservationAttempt reservationAttempt;
     private Advertisement advertisement;
+    private Item item;
+    private Category category;
 
     @BeforeEach
     void setUp() {
@@ -93,5 +100,24 @@ class ReservationAttemptServiceTest {
         assertEquals("ACCEPTED", updatedAttempt.getStatus());
         verify(userWebClient, times(1)).getUserId(anyString());
         verify(reservationAttemptRepository, times(1)).save(any(ReservationAttempt.class));
+    }
+
+    @Test
+    void shouldThrowException_WhenAdvertisementNotFound() {
+        //dados de entrada
+        ReservationAttemptDTO reservationAttemptDTO = new ReservationAttemptDTO();
+        reservationAttemptDTO.setAdvertisementId("invalid_ad");
+        reservationAttemptDTO.setStatus("PENDING");
+        String authorization = "Bearer token123";
+
+        //mock - não localiza o anuncio
+        when(advertisementService.getAdvertisementById("invalid_ad")).thenThrow(new AdvertisementNotFoundException("Advertisement not found"));
+
+        //asserts
+        assertThrows(AdvertisementNotFoundException.class, () -> reservationAttemptService.createReservationAttempt(reservationAttemptDTO, authorization));
+
+        //verifica chamadas dos mocks
+        verify(advertisementService, times(1)).getAdvertisementById("invalid_ad");
+        verify(reservationAttemptRepository, times(0)).save(any(ReservationAttempt.class));  // O save não deve ser chamado
     }
 }

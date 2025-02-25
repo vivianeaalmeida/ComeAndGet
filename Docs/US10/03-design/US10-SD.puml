@@ -1,0 +1,56 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Admin" as Admin
+participant ":AdvertisementUI" as UI
+participant ":AdvertisementController" as CTRL
+participant ":AdvertisementService" as SERV
+participant "mapper\n:AdvertisementMapper" as MAPPER
+participant ":AdvertisementsRepository" as AD_REPO
+participant "closedAdvertisementList" as AD_LIST
+participant "advertisementDTO\n:AdvertisementDTO" as advertisementDTO
+
+
+
+activate Admin
+
+    Admin -> UI : requests to list all closed advertisements
+    activate UI
+        UI -> CTRL : getClosedAdvertisementsList()
+        activate CTRL
+
+            CTRL -> SERV : getClosedAdvertisementsList()
+            activate SERV
+
+                SERV -> AD_REPO : findAllByStatusClosed()
+                activate AD_REPO
+                AD_REPO -->> AD_LIST**:returns()
+                AD_REPO --> SERV : closedAdvertisementList
+                deactivate AD_REPO
+            SERV --> MAPPER : toDTO(closedAdvertisementList)
+            activate MAPPER
+            MAPPER --> closedAdvertisementsDTOList**:create()
+            loop for each advertisement in AD_LIST
+                MAPPER -> AD_LIST : advertisement = get(i)
+                activate AD_LIST
+                deactivate AD_LIST
+                MAPPER -> MAPPER : advertisementDTO = toDTO(advertisement)
+                activate MAPPER
+                MAPPER -->> advertisementDTO**:create(...)
+                deactivate MAPPER
+                MAPPER -> closedAdvertisementsDTOList :add(advertisementDTO)
+                activate closedAdvertisementsDTOList
+                deactivate closedAdvertisementsDTOList
+            end
+            MAPPER --> SERV : closedAdvertisementsDTOList
+            SERV --> CTRL : closedAdvertisementsDTOList
+            deactivate SERV
+        CTRL --> UI : closedAdvertisementsDTOList
+        UI --> Admin : closedAdvertisementsDTOList
+        deactivate CTRL
+deactivate Admin
+@enduml

@@ -12,13 +12,13 @@ participant ":System" as System
 
 activate Client
 
-    Client -> System : requests to delete a advertisement
+    Client -> System : requests to deactivate an advertisement
         activate System
 
             System --> Client : displays confirmation button
         deactivate System
 
-        Client -> System : confirms deletion
+        Client -> System : confirms deactivating
         activate System
 
             System --> Client : displays operation success

@@ -2,7 +2,6 @@ package org.upskill.springboot.Services;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.upskill.springboot.DTOs.AdvertisementDTO;
 import org.upskill.springboot.Models.Advertisement;
 import org.upskill.springboot.Models.Item;
 

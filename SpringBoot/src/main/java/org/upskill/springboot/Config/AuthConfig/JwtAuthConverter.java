@@ -10,13 +10,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * This class is responsible for converting a JWT (JSON Web Token) into an {@link AbstractAuthenticationToken}.
  * It extracts roles from the JWT and creates a {@link JwtAuthenticationToken} with the corresponding authorities.
- *
  * The class implements the {@link Converter} interface, converting a JWT into an authentication token used
  * in Spring Security.
  */

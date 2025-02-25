@@ -99,11 +99,11 @@ namespace DotNet.Services {
         /// <param name="Id">The ID of the tip to update.</param>
         /// <param name="tipDTO">The updated tip data.</param>
         /// <returns>The updated tip.</returns>
-        public TipDTO UpdateTip(int Id, TipDTO tipDTO)
+        public TipDTO UpdateTip(int Id, TipUpdateDTO tipDTO)
         {
             ValidateContext();
             Tip tip = GetTip(Id);
-            ValidateToUpdateTip(tipDTO, tip);
+            ValidateToUpdateTip(tipDTO);
 
             tip.Title = tipDTO.Title;
             tip.Content = tipDTO.Content;
@@ -132,9 +132,8 @@ namespace DotNet.Services {
         /// Validates the given tip data for updating.
         /// </summary>
         /// <param name="tipDTO">The tip data to validate.</param>
-        /// <param name="id">The ID of the tip to update.</param>
         /// <returns>True if the tip data is valid, otherwise throws an exception.</returns>
-        private Boolean ValidateToUpdateTip(TipDTO tipDTO, Tip tip2) {
+        private Boolean ValidateToUpdateTip(TipUpdateDTO tipDTO) {
 
             if (tipDTO == null) {
                 throw new ArgumentNullException("Tip cannot be null");
@@ -144,9 +143,6 @@ namespace DotNet.Services {
             }
             if (tipDTO.Content.Length < 5 || tipDTO.Content.Length > 400) {
                 throw new TipValidationException("Content must be between 5 and 400 characters");
-            }
-            if (tipDTO.LikeCount != tip2.LikeCount || tipDTO.FavoriteCount != tip2.FavoriteCount) {
-                throw new TipValidationException("Like and favorite cannot be updated");
             }
 
             return true;

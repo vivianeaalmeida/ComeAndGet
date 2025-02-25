@@ -2,9 +2,7 @@ package org.upskill.springboot.Services;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.upskill.springboot.Models.Advertisement;
 import org.upskill.springboot.Models.Category;
-import org.upskill.springboot.Repositories.CategoryRepository;
 
 import java.util.ArrayList;
 import java.util.List;

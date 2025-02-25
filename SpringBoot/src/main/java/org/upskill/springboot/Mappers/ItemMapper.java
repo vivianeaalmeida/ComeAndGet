@@ -10,8 +10,8 @@ import org.upskill.springboot.Models.Item;
 public class ItemMapper {
 
     /**
-     * Converts a {@link Item} entity to a {@link ItemDTO}.
-     * @param item The {@link Item} entity to be converted.
+     * Converts an Item entity to a ItemDTO.
+     * @param item The Item entity to be converted.
      * @return A ItemDTO containing the data from the provided Item entity.
      */
     public static ItemDTO toDTO(Item item) {
@@ -25,10 +25,10 @@ public class ItemMapper {
     }
 
     /**
-     * Converts a {@link ItemDTO} to a {@link Item} entity.
+     * Converts a ItemDTO to an Item entity.
      *
      * @param itemDTO The item DTO to be converted.
-     * @return A category containing the data from the provided {@link ItemDTO}.
+     * @return A category containing the data from the provided {ItemDTO.
      */
     public static Item toEntity(ItemDTO itemDTO) {
         Item item = new Item();

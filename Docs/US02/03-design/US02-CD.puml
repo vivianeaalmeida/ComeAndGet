@@ -13,9 +13,9 @@ class User {
     - String email
     - String phoneNumber
     - String password
-    - String clientType
+    - String username
 
-    + User(name, email, phoneNumber, password, clientType)
+    + User(name, email, phoneNumber, password, username)
 }
 
 class UserRepository {

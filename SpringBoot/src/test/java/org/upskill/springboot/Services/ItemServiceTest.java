@@ -17,7 +17,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class ItemServiceTest {
 
     private ItemService itemService;
-    private Item item;
     private Category category;
     private CategoryDTO categoryDTO;
 
@@ -35,7 +34,7 @@ class ItemServiceTest {
         categoryDTO = new CategoryDTO();
         categoryDTO.setId("cat123");
 
-        item = new Item();
+        Item item = new Item();
         item.setId("item123");
         item.setImage("image.jpg");
         item.setCondition(Item.Condition.GOOD);

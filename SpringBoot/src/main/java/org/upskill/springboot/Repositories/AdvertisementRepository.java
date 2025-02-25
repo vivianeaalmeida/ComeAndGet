@@ -30,7 +30,7 @@ public interface AdvertisementRepository extends JpaRepository<Advertisement, St
     List<Advertisement> findByStatus(Advertisement.AdvertisementStatus status);
 
     /**
-     * Finds advertisements by client ID, excluding ones with a specificied status.
+     * Finds advertisements by client ID, excluding ones with a specified status.
      *
      * @param clientId the ID of the client
      * @return a list of active advertisements for the given client

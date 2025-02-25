@@ -10,8 +10,8 @@ class User {
     - role: String
 }
 
-class DeleteAdvertisementUI {
-    + deleteAdvertisement(id)
+class DeactivateAdvertisementUI {
+    + deactivateAdvertisement(id)
 }
 
 class Advertisement {
@@ -24,31 +24,23 @@ class Advertisement {
     + Advertisement(designation, status)
 }
 
-'class AdvertisementDTO {
-'    - id : String
-'    - designation : String
- '   + AdvertisementDTO()
-'}
 
 class AdvertisementController {
-    + deleteAdvertisement(id: String)
+    + deactivateAdvertisement(id: String)
 }
 
 class AdvertisementService {
-    + deleteAdvertisement(id: String)
+    + deactivateAdvertisement(id: String)
 }
 
-class AdvertisementRepository {
-    + deleteById(id: String)
+interface AdvertisementRepository {
+    + findById(id: String)
+    + save(advertisement :Advertisement)
 }
 
-'class AdvertisementMapper {
-'    + toEntity()
-'    + toDTO()
-'}
 
-User .> DeleteAdvertisementUI : Requests
-DeleteAdvertisementUI .> AdvertisementController
+User .> DeactivateAdvertisementUI : Requests
+DeactivateAdvertisementUI .> AdvertisementController
 AdvertisementController ..> AdvertisementService
 AdvertisementService ..> AdvertisementRepository
 AdvertisementRepository "1" --> "*" Advertisement : advertisement

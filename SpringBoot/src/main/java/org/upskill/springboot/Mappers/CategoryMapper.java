@@ -10,10 +10,10 @@ import org.upskill.springboot.Models.Category;
 public class CategoryMapper {
 
     /**
-     * Converts a {@link Category} entity to a {@link CategoryDTO}.
+     * Converts a Category entity to a CategoryDTO.
      *
-     * @param category The {@link Category} entity to be converted.
-     * @return A categoryDTO containing the data from the provided {@link Category} entity.
+     * @param category The Category entity to be converted.
+     * @return A categoryDTO containing the data from the provided Category entity.
      */
     public static CategoryDTO toDTO(Category category) {
         CategoryDTO categoryDTO = new CategoryDTO();
@@ -24,10 +24,10 @@ public class CategoryMapper {
     }
 
     /**
-     * Converts a {@link CategoryDTO} to a {@link Category} entity.
+     * Converts a {CategoryDTO to a Category entity.
      *
      * @param categoryDTO The category DTO to be converted.
-     * @return A category containing the data from the provided {@link CategoryDTO}.
+     * @return A category containing the data from the provided CategoryDTO.
      */
     public static Category toEntity(CategoryDTO categoryDTO) {
         Category category = new Category();

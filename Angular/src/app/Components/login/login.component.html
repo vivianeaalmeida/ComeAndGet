@@ -100,6 +100,7 @@
           >
             Log in
           </button>
+          
         </div>
         <p class="text-md mt-6 text-black">
           Don't have an account?
@@ -110,6 +111,11 @@
             Register here
           </a>
         </p>
+
+        <div *ngIf="isLoading" class="mx-auto my-6 w-[3vw]">
+          <img src="../../../assets/loading.gif" alt="Loading gif">
+        </div>
+        
       </form>
     </div>
     <div>

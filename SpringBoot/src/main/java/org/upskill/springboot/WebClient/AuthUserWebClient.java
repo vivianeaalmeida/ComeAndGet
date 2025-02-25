@@ -1,14 +1,12 @@
 package org.upskill.springboot.WebClient;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 /**
  * This service class is responsible for making HTTP requests to the .Net API using WebClient.
  * It provides methods to interact with user-related data via a REST API.
- *
  * The class uses reactive programming principles with Project Reactor's Mono to handle asynchronous HTTP requests.
  * It communicates with an external service running at `http://localhost:5016/api/v1` and sends Authorization headers
  * to authenticate the user.
@@ -69,7 +67,7 @@ public class AuthUserWebClient {
                 .header("Authorization", authorization)
                 .retrieve()
                 .bodyToMono(String.class)
-                .block(); // Bloqueia para aguardar a resposta síncrona
+                .block(); // Blocks to wait for the synchronous response
     }
 }
 

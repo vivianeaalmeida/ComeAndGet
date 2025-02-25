@@ -14,6 +14,7 @@ import { TipsDashboardComponent } from './Components/tips-dashboard/tips-dashboa
 import { ReservationAttemptListComponent } from './Components/reservation-attempt-list/reservation-attempt-list.component';
 import { TipsListingComponent } from './Components/tips-listing/tips-listing.component';
 import { PublicTipsListingComponent } from './Components/public-tips-listing/public-tips-listing.component';
+import { managerGuard } from './Guards/manager.guard';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -33,11 +34,21 @@ export const routes: Routes = [
 
   { path: 'view-active', component: AdvlistingComponent }, // Lista dos users
   // CRIAR: path> 'view-all' ---> Lista dos admins
-  { path: 'dashboard', component: DashboardComponent },
-  { path: 'dashboard/advertisements', component: AdvertisementsDashboardComponent },
-  { path: 'dashboard/categories', component: CategoriesDashboardComponent },
-  { path: 'dashboard/tips', component: TipsDashboardComponent },
-  { path: 'advertisements', component: AdvlistingComponent },
+  { path: 'dashboard', component: DashboardComponent,
+    canActivate: [managerGuard],
+   },
+  { path: 'dashboard/advertisements', component: AdvertisementsDashboardComponent,
+    canActivate: [managerGuard],
+   },
+  { path: 'dashboard/categories', component: CategoriesDashboardComponent,
+    canActivate: [managerGuard],
+   },
+  { path: 'dashboard/tips', component: TipsDashboardComponent,
+    canActivate: [managerGuard],
+   },
+  { path: 'advertisements', component: AdvlistingComponent,
+    canActivate: [managerGuard],
+   },
   { path: 'reservation-attempts', component: ReservationAttemptListComponent},
   { path: 'blog-tips', component: TipsListingComponent},
   { path: 'tips-blog', component: PublicTipsListingComponent},

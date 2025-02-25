@@ -55,15 +55,15 @@ enum AdvertisementStatus {
 }
 
 interface CategoryRepository {
-    + getCategoryById(id: Long)
+    + getCategoryById(id: string)
 }
 interface AdvertisementRepository {
     + save(advertisement: Advertisement)
-    + findById(id: Long)
+    + findById(id: string)
 }
 interface ItemRepository {
     + save(item: Item)
-    + findById(id: Long)
+    + findById(id: string)
 }
 
 class AdvertisementMapper {
@@ -73,7 +73,7 @@ class AdvertisementMapper {
 
 class AdvertisementService {
     + Advertisement(dto: AdvertisementDto)
-    - validateItem(itemId: Long)
+    - validateItem(itemId: string)
 }
 
 class AdvertisementController {

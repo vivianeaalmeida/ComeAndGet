@@ -92,7 +92,7 @@ public class AdvertisementService implements IAdvertisementService {
                     AdvertisementDTO advertisementDTO = AdvertisementMapper.toDTO(advertisement);
                     advertisementDTO.setMunicipality(advertisement.getMunicipality());
 
-                    // Verifica se há um item e define a imagem corretamente
+                    // Check if there is an item and define the image correctly
                     setItemImage(advertisement, advertisementDTO);
 
                     return advertisementDTO;
@@ -173,13 +173,13 @@ public class AdvertisementService implements IAdvertisementService {
      */
     @Transactional
     public AdvertisementDTO createAdvertisement(AdvertisementDTO advertisementDTO, MultipartFile imageFile, String authorization) throws IOException, java.io.IOException {
-        // Obtém o ID do usuário autenticado usando o token JWT
+        // Get the authenticated user id using JWT token
         String clientId = webClient.getUserId(authorization);
 
-        // Valida os dados do anúncio
+        // Check advertisement data
         validateAdvertisementCreation(advertisementDTO);
 
-        // Valida o ItemDTO
+        // Gets ItemDTO associated with the advertisement and validates it
         ItemDTO itemDTO = advertisementDTO.getItem();
         itemService.validateItem(itemDTO);
 
@@ -189,19 +189,20 @@ public class AdvertisementService implements IAdvertisementService {
             itemDTO.setImage(imagePath);
         }
 
-        // Cria o item no banco de dados
+        // Create item in DB
         ItemDTO savedItemDTO = itemService.createItem(itemDTO);
         Item item = ItemMapper.toEntity(savedItemDTO);
 
-        // Converte DTO para entidade e associa o item e clientId
+        // Convert DTO to entity and associate item, clientId and municipality
         Advertisement advertisement = AdvertisementMapper.toEntity(advertisementDTO);
         advertisement.setItem(item);
         advertisement.setMunicipality(advertisementDTO.getMunicipality());
-        advertisement.setClientId(clientId); // Agora o ID do usuário autenticado é setado corretamente
-        // Salva no banco de dados
+        advertisement.setClientId(clientId);
+
+        // Save in db
         advertisement = advertisementRepository.save(advertisement);
 
-        // Converte para DTO e retorna
+        // Converts saved entity into DTO
         AdvertisementDTO savedAdvertisementDTO = AdvertisementMapper.toDTO(advertisement);
         savedAdvertisementDTO.setMunicipality(advertisement.getMunicipality());
 

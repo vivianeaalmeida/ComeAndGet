@@ -22,7 +22,7 @@ As an unauthenticated user, I want to log in to the application to access restri
 
 ### 1.3. Acceptance Criteria
 
-* **AC1:** Each client is identified by an automatic sequence-generated number.
+* **AC1:** Each client is identified by an automatic generated number.
 * **AC2:** The email must be unique for each client.
 
 ### 1.4. Found out Dependencies

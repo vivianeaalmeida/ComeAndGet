@@ -4,7 +4,7 @@
 
 ### 1.1. User Story Description
 
-As a user with manager role, I want to delete a category so that outdated or irrelevant categories are removed.
+As a manager, I want to delete a category so that outdated or irrelevant categories are removed.
 
 ### 1.2. Customer Specifications and Clarifications 
 

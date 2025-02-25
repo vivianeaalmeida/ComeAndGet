@@ -10,7 +10,7 @@ As an unregistered user, I want to register a new client.
 
 **From the specifications document:**
 
-> Each client must have a unique identification number, a valid email address, and a password. 
+> Each client must have a unique identification number, a valid email address, a username and a password. 
 > The email address serves as the unique identifier for login. 
 > The system must validate the email format and ensure password security (e.g., minimum length, special characters).
 

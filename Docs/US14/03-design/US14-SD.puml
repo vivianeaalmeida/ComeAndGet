@@ -10,10 +10,13 @@ participant ":AdvertisementUI" as UI
 participant ":AdvertisementController" as CTRL
 participant ":AdvertisementService" as SERVICE
 participant ":AdvertisementsRepository" as AD_REPO
+participant ":AdvertisementMapper" as MAPPER
+participant "advDTO :AdvertisementDTO" as DTO
+
 
 activate USER
 
-    USER -> UI : requests to delete advertisement
+    USER -> UI : requests to deactivate advertisement
     activate UI
 
     UI --> USER : request confirmation
@@ -22,24 +25,32 @@ activate USER
     USER -> UI : confirm
     activate UI
 
-        UI -> CTRL : deleteAdvertisement(id)
+        UI -> CTRL : deactivateAdvertisement(id)
         activate CTRL
 
-            CTRL -> SERVICE : deleteAdvertisement(id)
+            CTRL -> SERVICE : deactivateAdvertisement(id)
             activate SERVICE
 
-            SERVICE -> AD_REPO : deleteById(id)
+            SERVICE -> AD_REPO : findById(id)
             activate AD_REPO
-            AD_REPO -> SERVICE :void
+            AD_REPO --> SERVICE :advertisement
+            SERVICE -> AD_REPO : deactivateAdvertisement (advertisement)
+            AD_REPO --> SERVICE :deactivatedAdvertisement
             deactivate AD_REPO
-
-            SERVICE --> CTRL : void
+            SERVICE -> MAPPER: toDto(deactivatedAdvertisement)
+            activate MAPPER
+            MAPPER -> DTO: create()
+            activate DTO
+            deactivate DTO
+            MAPPER --> SERVICE: return(advDTO :AdvertisementDTO)
+            deactivate MAPPER
+            SERVICE --> CTRL : advDTO
             deactivate SERVICE
 
-            CTRL --> UI : success 204
+            CTRL --> UI : advDTO (success 200)
         deactivate CTRL
 
-        UI --> USER : display "Advertisement deleted "
+        UI --> USER : display "Advertisement deactivated "
     deactivate UI
 
 deactivate USER

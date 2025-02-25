@@ -3,7 +3,7 @@ skinparam monochrome true
 skinparam packageStyle rectangle
 skinparam shadowing false
 
-title System Sequence Diagram (SSD)
+title System Sequence Diagram (SSD) - Register a new user
 
 autonumber
 
@@ -15,7 +15,7 @@ activate User
     User -> System : requests to register a new user
     activate System
 
-        System --> User : requests data (i.e. name, email, phone number, \npassword, client type)
+        System --> User : requests data (i.e. name, email, username,\n phone number, password)
     deactivate System
 
     User -> System : types requested data

@@ -20,7 +20,7 @@ class UserService {
 
 class RegisterUserController {
     + RegisterUserController(userRepository)
-    + registerUser(name, email, phoneNumber, password, clientType)
+    + registerUser(name, email, phoneNumber, username, password)
 }
 
 class User {
@@ -29,9 +29,9 @@ class User {
     - String email
     - String phoneNumber
     - String password
-    - String clientType
+    - String username
 
-    + User(name, email, phoneNumber, password, clientType)
+    + User(name, email, phoneNumber,username, password)
 }
 
 class UserDTO {
@@ -40,13 +40,13 @@ class UserDTO {
     - String email
     - String phoneNumber
     - String password
-    - String clientType
+    - String username
 
-    + UserDTO(name, email, phoneNumber, password, clientType)
+    + UserDTO(name, email, phoneNumber,username, password)
 }
 
 class UserRepository {
-    + createUser(name, email, phoneNumber, password, clientType)
+    + createUser(name, email, phoneNumber,username, password)
 }
 
 

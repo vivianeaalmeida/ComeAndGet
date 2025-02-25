@@ -21,6 +21,7 @@ import { UsersService } from '../../Services/users.service';
 })
 export class RegisterComponent {
   registerForm: FormGroup;
+  isLoading: Boolean = false;
 
   public uppercasePattern: RegExp = /[A-Z]/;
   public lowercasePattern: RegExp = /[a-z]/;
@@ -55,9 +56,15 @@ export class RegisterComponent {
   }
 
   registerNewUser() {
+    this.isLoading = true;
+
     if (this.registerForm.valid) {
+      this.isLoading = true;
+
       this.addsrv.registerUser(this.registerForm.value).subscribe({
         next: () => {
+          this.isLoading = false;
+          
           Swal.fire({
             icon: 'success',
             title: 'New user registered successfully!',
@@ -65,6 +72,8 @@ export class RegisterComponent {
           this.myRouter.navigate(['login']);
         },
         error: (error) => {
+          this.isLoading = false;
+
           Swal.fire({
             icon: 'error',
             title: 'Error registering new user!',

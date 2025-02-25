@@ -1,4 +1,4 @@
-# US01 - Create advertisement
+# US07 - Create advertisement
 
 ## 1. Requirements Engineering
 
@@ -10,7 +10,7 @@ As a client, I want to create an advertisement so that I can donate an item.
 
 **From the specifications document:**
 
-> Each advertisement must have a designation, an initial date, a final date, an address, a status and the item values. 
+> Each advertisement must have a designation, an initial date, a final date, a municipality, a status and the item values. 
 
 **From the client clarifications:**
 
@@ -20,7 +20,7 @@ As a client, I want to create an advertisement so that I can donate an item.
 
 ### 1.3. Acceptance Criteria
 
-* **AC1:** Advertisement Status is "available" by default.
+* **AC1:** Advertisement Status is "open" by default.
 * **AC2:** Initial Date is automatically created with the current date.
 * **AC3:** The user must provide the item details when creating an advertisement.
 * **AC4:** The system must create the associated item together with the advertisement.

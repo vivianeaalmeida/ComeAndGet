@@ -26,6 +26,7 @@ export class LoginComponent implements OnInit {
   isVisible: boolean = false;
   isAuthorized: boolean = false;
   isLogged: any;
+  isLoading: Boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -53,11 +54,13 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.invalid) {
       return;
     }
+    this.isLoading = true;
 
     const { email, password } = this.loginForm.value;
 
     this.loginServ.login(email, password).subscribe({
       next: (response) => {
+        this.isLoading = false;
         this.isAuthorized = true;
         if (this.isLogged.roles == 'User') {
           this.myRouter.navigate(['/']);
@@ -66,6 +69,8 @@ export class LoginComponent implements OnInit {
         }
       },
       error: (error: any) => {
+        this.isLoading = false;
+        this.isLoading = false;
         this.isAuthorized = false;
         Swal.fire({
           icon: 'error',

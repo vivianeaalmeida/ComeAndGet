@@ -194,8 +194,12 @@
             Return to LogIn
           </button>
         </div>
-        <!-- Submit Button -->
+
+        <div *ngIf="isLoading" class="mx-auto my-6 w-[3vw]">
+          <img src="../../../assets/loading.gif" alt="Loading gif">
+        </div>
       </form>
+
     </div>
   </div>
 </div>

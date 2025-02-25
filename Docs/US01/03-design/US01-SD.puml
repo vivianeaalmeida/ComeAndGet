@@ -21,7 +21,7 @@ activate User
     UI -> User : show signup form
     deactivate UI
 
-    User -> UI : types requested data (name, email, phone number, password, clientType)
+    User -> UI : types requested data (name, email, phone number,username, password)
     activate UI
 
     UI ---> User : shows all data and confirm button is enabled.
@@ -30,10 +30,10 @@ activate User
     User -> UI : submits data
     activate UI
 
-        UI -> CTRL : registerUser(name,\nemail, phone number,\npassword, clientType)
+        UI -> CTRL : registerUser(name,\nemail, phone number,\npassword, username)
         activate CTRL
 
-            CTRL -->> UserDTO**: UserDTO(name, email, phone number,\npassword, clientType)
+            CTRL -->> UserDTO**: UserDTO(name, email, phone number,\npassword, username)
 
             CTRL -> UserService : addUser(userDTO)
             activate UserService

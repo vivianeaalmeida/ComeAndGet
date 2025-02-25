@@ -1,0 +1,60 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+skinparam classAttributeIconSize 0
+
+
+class TipUI {
+}
+
+class TipController {
+    + getTips()
+}
+
+class TipService {
+    + getTips()
+}
+
+interface TipRepository {
+    + findAll()
+}
+
+class AllUsers {
+}
+
+class Tip {
+    - id: String
+    - title: String
+    - description: String
+    - likeCount: int
+    - favoriteCount: int
+}
+
+
+class TipMapper {
+    + toEntity()
+    + toDTO()
+}
+
+class TipDTO {
+    - id: String
+    - title: String
+    - description: String
+    - likeCount: int
+    - favoriteCount: int
+}
+
+' --- Relacionamentos ---
+AllUsers ..> TipUI : requests to list all tips
+TipUI ..> TipController
+TipController .> TipService
+TipService ..> TipRepository
+TipService ..> TipMapper
+TipMapper ..> Tip
+TipMapper ..> TipDTO
+TipRepository "1" --> "*" Tip : tip
+
+
+
+@enduml

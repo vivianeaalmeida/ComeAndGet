@@ -20,16 +20,16 @@
 | US16 - Create ReservationAttempt on advertisement                  | 6            |
 | US17 - View ReservationAttempt                                     | 5            |
 | US18 - View my list of ReservationAttempts                         | 5            |
-| US19 - View ReservationAttempts on my advertisements               | 9            |
-| US20 - Updates ReservationAttempt status                           | 9            |
+| US19 - View ReservationAttempts on my advertisements               | 10           |
+| US20 - Updates ReservationAttempt status                           | 10           |
 | US21 - Create tip                                                  | 5            |
 | US22 - View tips                                                   | 2            |
 | US23 - View tip                                                    | 2            |
 | US24 - View my favorite tips                                       | 3            |
 | US25 - Update tip                                                  | 5            |
 | US26 - Delete Tip                                                  | 2            |
-| US27 - Create interaction (like or favorite a tip)                 | 8            |
-| US28 - Update interaction (like, unlike, favorite, unfavorite tip) | 8            |
+| US27 - Create interaction (like or favorite a tip)                 | 10           |
+| US28 - Update interaction (like, unlike, favorite, unfavorite tip) | 12           |
 
 
 ## US01 - Register new user
@@ -164,8 +164,7 @@
 - **Acceptance Criteria**:
     - Only advertisements with active status can be updated.
     - Only title, designation and status can be updated
-    - Advertisement status can only be updated to closed.
-    - Advertisement status can be updated to closed, but if there are ReservationAttempts with status pending or accepted their status change to rejected.
+    - Advertisement status can only be updated to closed, but if there are ReservationAttempts with status pending or accepted their status change to rejected.
 
 ---
 

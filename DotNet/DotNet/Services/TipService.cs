@@ -102,10 +102,12 @@ namespace DotNet.Services {
         public TipDTO UpdateTip(int Id, TipDTO tipDTO)
         {
             ValidateContext();
+            Tip tip = GetTip(Id);
+            ValidateToUpdateTip(tipDTO, tip);
 
-            Tip tip = TipMapper.ToEntity(tipDTO);
+            tip.Title = tipDTO.Title;
+            tip.Content = tipDTO.Content;
 
-            this.context.Update(tip);
             this.context.SaveChanges();
 
             return TipMapper.ToDTO(tip);
@@ -118,7 +120,6 @@ namespace DotNet.Services {
         /// <returns>The removed tip.</returns>
         public TipDTO RemoveTip(int Id) {
             ValidateContext();
-
             var tip = GetTip(Id);
 
             this.context.Tips.Remove(tip);
@@ -126,24 +127,48 @@ namespace DotNet.Services {
             return TipMapper.ToDTO(tip);
         }
 
+       
+        /// <summary>
+        /// Validates the given tip data for updating.
+        /// </summary>
+        /// <param name="tipDTO">The tip data to validate.</param>
+        /// <param name="id">The ID of the tip to update.</param>
+        /// <returns>True if the tip data is valid, otherwise throws an exception.</returns>
+        private Boolean ValidateToUpdateTip(TipDTO tipDTO, Tip tip2) {
+
+            if (tipDTO == null) {
+                throw new ArgumentNullException("Tip cannot be null");
+            }
+            if (tipDTO.Title.Length < 5 || tipDTO.Title.Length > 150) {
+                throw new TipValidationException("Title must be between 5 and 100 characters");
+            }
+            if (tipDTO.Content.Length < 5 || tipDTO.Content.Length > 400) {
+                throw new TipValidationException("Content must be between 5 and 400 characters");
+            }
+            if (tipDTO.LikeCount != tip2.LikeCount || tipDTO.FavoriteCount != tip2.FavoriteCount) {
+                throw new TipValidationException("Like and favorite cannot be updated");
+            }
+
+            return true;
+        }
+
         /// <summary>
         /// Validates the given tip data.
         /// </summary>
         /// <param name="tipDTO">The tip data to validate.</param>
         /// <returns>True if the tip is valid, otherwise throws an exception.</returns>
-        private Boolean ValidateTip(TipDTO tipDTO)
-        {
-            if (tipDTO == null)
-            {
+        private Boolean ValidateTip(TipDTO tipDTO) {
+            if (tipDTO == null) {
                 throw new ArgumentNullException("Tip cannot be null");
             }
-            if (tipDTO.Title.Length < 5 || tipDTO.Title.Length > 150)
-            {
+            if (tipDTO.Title.Length < 5 || tipDTO.Title.Length > 150) {
                 throw new TipValidationException("Title must be between 5 and 100 characters");
             }
-            if (tipDTO.Content.Length < 5 || tipDTO.Content.Length > 400)
-            {
+            if (tipDTO.Content.Length < 5 || tipDTO.Content.Length > 400) {
                 throw new TipValidationException("Content must be between 5 and 400 characters");
+            }
+            if (tipDTO.LikeCount > 0 || tipDTO.FavoriteCount > 0) {
+                throw new TipValidationException("Like and favorite count must be 0");
             }
 
             return true;

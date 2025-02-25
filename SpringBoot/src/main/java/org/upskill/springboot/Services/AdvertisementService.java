@@ -218,35 +218,38 @@ public class AdvertisementService implements IAdvertisementService {
     @Override
     @Transactional
     public AdvertisementDTO updateAdvertisement(String id, AdvertisementUpdateDTO advertisementUpdateDTO, String authorization) {
-        // Verifies if the user owns the resource
         verifyUserOwnership(authorization, id);
-        // Validates AdvertisementUpdateDTO
+
         validateAdvertisementUpdate(id, advertisementUpdateDTO);
 
-        // Get advertisement
         AdvertisementDTO advertisementDTO = getAdvertisementById(id);
 
-        // Updated advertisement
         Advertisement advertisement = AdvertisementMapper.toEntity(advertisementDTO);
+        System.out.println("Entidade do anúncio convertida com os dados atuais: " + advertisement);
+
         advertisement.setTitle(advertisementUpdateDTO.getTitle());
         advertisement.setDescription(advertisementUpdateDTO.getDescription());
         advertisement.setMunicipality(advertisementDTO.getMunicipality());
+        System.out.println("Dados atualizados - Título: " + advertisement.getTitle() + ", Descrição: " + advertisement.getDescription());
 
-        // If status is changed to closed, rejects all requests
-        if (advertisement.getStatus() == Advertisement.AdvertisementStatus.CLOSED) {
+        if (advertisementUpdateDTO.getStatus().equals("CLOSED") && advertisement.getStatus() != Advertisement.AdvertisementStatus.CLOSED) {
+            System.out.println("Status do anúncio alterado para 'CLOSED'. Rejeitando todas as tentativas de reserva...");
             reservationAttemptService.rejectReservationAttempts(advertisement.getId());
             advertisement.setStatus(Advertisement.AdvertisementStatus.CLOSED);
+        } else {
+            System.out.println("Status do anúncio não foi alterado para 'CLOSED'. Status atual: " + advertisement.getStatus());
         }
 
-        // Saves advertisement
         advertisement = advertisementRepository.save(advertisement);
 
-        // Converts to DTO and sets municipality
         AdvertisementDTO savedAdvertisementDTO = AdvertisementMapper.toDTO(advertisement);
         savedAdvertisementDTO.setMunicipality(advertisement.getMunicipality());
+        System.out.println("DTO do anúncio salvo: " + savedAdvertisementDTO);
 
         return savedAdvertisementDTO;
     }
+
+
 
     /**
      * Changes the status of an advertisement to inactive.

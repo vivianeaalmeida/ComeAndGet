@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AdvService } from '../../../Services/adv.service';
 import { UpdateAdvModalComponent } from '../../update-adv-modal/update-adv-modal.component';
 import { Advertisement } from '../../../Models/advertisement';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-button-update-adv',
@@ -45,28 +46,39 @@ export class ButtonUpdateAdvComponent implements OnInit {
           status: this.advertisement.status,
         },
       });
-
-      dialogRef.afterClosed().subscribe((updatedData) => {
-        if (updatedData) {
-          // Enviar o ID junto com os dados da atualização
+  
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result && result.data) {
           const updatedAdvertisement = {
-            ...updatedData,
-            id: this.id, // Garantir que o id seja enviado corretamente
+            ...result.data,
+            id: this.id,
           };
-          this.advService
-            .updateAdvertisement(this.id, updatedAdvertisement)
-            .subscribe({
-              next: () => {
-                console.log('Anúncio atualizado com sucesso');
-              },
-              error: (err) => {
-                console.error('Erro ao atualizar o anúncio', err);
-              },
-            });
+  
+          this.advService.updateAdvertisement(this.id, updatedAdvertisement).subscribe({
+            next: () => {
+              Swal.fire({
+                title: 'Success!',
+                text: 'Advertisement updated successfully.',
+                icon: 'success',
+                confirmButtonText: 'OK',
+              }).then(() => {
+                console.log('Advertisement updated successfully');
+              });
+            },
+            error: (err) => {
+              console.error('Error updating advertisement', err);
+              Swal.fire({
+                title: 'Error!',
+                text: `${err?.error.message}`,
+                icon: 'error',
+                confirmButtonText: 'OK',
+              });
+            },
+          });
         }
       });
     } else {
-      console.error('Anúncio não carregado');
+      console.error('Advertisement not loaded');
     }
   }
 }

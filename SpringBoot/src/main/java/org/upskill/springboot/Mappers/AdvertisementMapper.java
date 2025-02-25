@@ -1,12 +1,7 @@
 package org.upskill.springboot.Mappers;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.upskill.springboot.DTOs.AdvertisementDTO;
 import org.upskill.springboot.Models.Advertisement;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Mapper class for converting {@link Advertisement} entities to {@link AdvertisementDTO} objects and vice versa.
@@ -14,10 +9,10 @@ import java.util.stream.Collectors;
 public class AdvertisementMapper {
 
     /**
-     * Converts an {@link Advertisement} entity to an {@link AdvertisementDTO} object.
+     * Converts an {Advertisement entity to an AdvertisementDTO object.
      *
-     * @param advertisement The {@link Advertisement} entity to be converted.
-     * @return The {@link AdvertisementDTO} object created from the {@link Advertisement} entity.
+     * @param advertisement The Advertisement entity to be converted.
+     * @return The AdvertisementDTO object created from the Advertisement entity.
      */
     public static AdvertisementDTO toDTO(Advertisement advertisement) {
         AdvertisementDTO advertisementDTO = new AdvertisementDTO();
@@ -32,12 +27,11 @@ public class AdvertisementMapper {
         return advertisementDTO;
     }
 
-
     /**
-     * Converts an {@link AdvertisementDTO} object to an {@link Advertisement} entity.
+     * Converts an AdvertisementDTO object to an Advertisement entity.
      *
-     * @param advertisementDTO The {@link AdvertisementDTO} object to be converted.
-     * @return The {@link Advertisement} entity created from the {@link AdvertisementDTO} object.
+     * @param advertisementDTO The AdvertisementDTO object to be converted.
+     * @return The Advertisement entity created from the AdvertisementDTO object.
      */
     public static Advertisement toEntity(AdvertisementDTO advertisementDTO) {
         Advertisement advertisement = new Advertisement();

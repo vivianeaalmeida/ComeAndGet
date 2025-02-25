@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.upskill.springboot.DTOs.ErrorResponse;
 import org.upskill.springboot.Exceptions.*;
 
@@ -27,8 +28,7 @@ public class GlobalHandlerException {
     public ResponseEntity<ErrorResponse> AdvertisementNotFoundException(AdvertisementNotFoundException e) {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
-
+    
     /**
      * Handles AdvertisementValidationException.
      *
@@ -245,6 +245,12 @@ public class GlobalHandlerException {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Handles IOException
+     *
+     * @param e the IOException
+     * @return a ResponseEntity containing an ErrorResponse and HTTP status BAD_REQUEST
+     */
     @ExceptionHandler(IOException.class)
     public ResponseEntity<ErrorResponse> handleIOException(IOException e) {
         ErrorResponse errorResponse = new ErrorResponse(
@@ -259,16 +265,32 @@ public class GlobalHandlerException {
      * Handles Access Denied exception
      *
      * @param e the Access Denied Exception
-     * @return a ResponseEntity containing an ErrorResponse and HTTP status FORBIDDEN
+     * @return a ResponseEntity containing an ErrorResponse and HTTP status UNAUTHORIZED
      */
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<Object> handleAccessDenied(AccessDeniedException e) {
+    public ResponseEntity<ErrorResponse> handleAccessDenied(AccessDeniedException e) {
         ErrorResponse errorResponse = new ErrorResponse(
                 e.getMessage(),
-                HttpStatus.FORBIDDEN.value(),
-                HttpStatus.FORBIDDEN.getReasonPhrase()
+                HttpStatus.UNAUTHORIZED.value(),
+                HttpStatus.UNAUTHORIZED.getReasonPhrase()
         );
-        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+    /**
+     * Handles axUploadSizeExceededException
+     *
+     * @param e the axUploadSizeExceededException
+     * @return a ResponseEntity containing an ErrorResponse and HTTP status BAD REQUEST
+     */
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ErrorResponse>  handleMaxSizeException(MaxUploadSizeExceededException e) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                e.getMessage(),
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     /**

@@ -1,6 +1,5 @@
 package org.upskill.springboot.Repositories;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -8,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.upskill.springboot.Models.ReservationAttempt;
 
 import java.util.List;
+
 /**
  * Repository interface for performing CRUD operations on {@link ReservationAttempt} entities.
  * Extends {@link JpaRepository} to leverage built-in methods for data access.
@@ -15,7 +15,11 @@ import java.util.List;
 @Repository
 public interface ReservationAttemptRepository extends JpaRepository<ReservationAttempt, String> {
 
-
+    /**
+     * Finds all reservations attempts of a given advertisement
+     * @param advertisementId The unique identifier of the advertisement.
+     * @return a list of reservations attempts by advertisement id
+     */
     List<ReservationAttempt> findByAdvertisement_Id(String advertisementId);
 
     /**
@@ -26,6 +30,13 @@ public interface ReservationAttemptRepository extends JpaRepository<ReservationA
      */
     boolean existsByAdvertisement_Id(String advertisementId);
 
+    /**
+     * Retrieves a list of ReservationAttempts based on the provided filter criteria.
+     * @param reservationAttemptClientId The client ID associated with the reservation attempt (optional).
+     * @param advertisementClientId The client ID associated with the advertisement (optional).
+     * @param advertisementId advertisementId The ID of the advertisement (optional).
+     * @return A list of ReservationAttempt entities that match the provided criteria.
+     */
     @Query("SELECT r FROM ReservationAttempt r " +
             "WHERE (:reservationAttemptClientId IS NULL OR r.clientId = :reservationAttemptClientId) " +
             "AND (:advertisementClientId IS NULL OR r.advertisement.clientId = :advertisementClientId) " +
@@ -55,20 +66,11 @@ public interface ReservationAttemptRepository extends JpaRepository<ReservationA
     boolean existsDonatedReservationsForAdvertisement(String advertisementId);
 
     /**
-     * Retrieves all reservation attempts associated with a given user based on their advertisement's client ID.
-     *
-     * @param clientId the ID of the user
-     * @return a {@link Page} of {@link ReservationAttempt} entities associated with the user's advertisement.
-     */
-    @Query("SELECT r FROM ReservationAttempt r INNER JOIN Advertisement ad ON r.advertisement.id = ad.id WHERE ad.clientId = :clientId")
-    List<ReservationAttempt> findReservationAttemptsFromClientAdvertisement(String clientId);
-
-    /**
      * Finds all reservation attempts for a specific advertisement and with statuses included in a list.
      *
      * @param advertisementId the ID of the advertisement to query
      * @param statuses a list of statuses to filter the reservation attempts
-     * @return a list of {@link ReservationAttempt} entities matching the given advertisement ID and statuses
+     * @return a list of ReservationAttempt entities matching the given advertisement ID and statuses
      */
     List<ReservationAttempt> findByAdvertisement_IdAndStatusIn(String advertisementId, List<ReservationAttempt.ReservationAttemptStatus> statuses);
 }

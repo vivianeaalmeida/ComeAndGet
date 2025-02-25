@@ -17,7 +17,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Getter
 @Setter
-
 public class ReservationAttempt {
 
     /**

@@ -219,7 +219,7 @@ public class ReservationAttemptService implements IReservationAttemptService {
                 throw new IllegalStateException("Unauthorized change.");
             }
 
-        // If the user is neither the advertisement or the reservation attempt owner throws exception
+        // If the user is neither the advertisement nor the reservation attempt owner throws exception
         } else {
             throw new UserUnauthorizedException("Only the reservation attempt owner or the advertisement owner can update the newStatus.");
         }

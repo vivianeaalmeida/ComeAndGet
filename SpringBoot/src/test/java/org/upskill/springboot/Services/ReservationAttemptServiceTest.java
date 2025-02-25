@@ -40,13 +40,10 @@ class ReservationAttemptServiceTest {
     private ReservationAttemptService reservationAttemptService;
 
     private ReservationAttempt reservationAttempt;
-    private Advertisement advertisement;
-    private Item item;
-    private Category category;
 
     @BeforeEach
     void setUp() {
-        advertisement = new Advertisement();
+        Advertisement advertisement = new Advertisement();
         advertisement.setId("ad1");
         advertisement.setClientId("client123");
 
@@ -104,7 +101,7 @@ class ReservationAttemptServiceTest {
 
     @Test
     void shouldThrowException_WhenAdvertisementNotFound() {
-        //dados de entrada
+        // entry data
         ReservationAttemptDTO reservationAttemptDTO = new ReservationAttemptDTO();
         reservationAttemptDTO.setAdvertisementId("invalid_ad");
         reservationAttemptDTO.setStatus("PENDING");

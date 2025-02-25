@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
@@ -13,66 +12,67 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtGra
 import org.springframework.security.web.SecurityFilterChain;
 
 import javax.crypto.spec.SecretKeySpec;
-import java.util.Collection;
 
+/**
+ * Security configuration class for handling authentication and authorization in the application.
+ * This class configures security settings using Spring Security, including JWT authentication.
+ * It also enables method-level security with annotations like {@code @PreAuthorize}.
+ */
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(prePostEnabled = true)  // Habilita segurança com anotações @PreAuthorize
+@EnableMethodSecurity(prePostEnabled = true)  // Enables method-level security with @PreAuthorize annotations
 public class SecurityConfig {
 
+    /**
+     * Configures the security filter chain for HTTP requests.
+     *
+     * @param http The HttpSecurity object to configure security settings.
+     * @return A configured SecurityFilterChain bean.
+     * @throws Exception If an error occurs while configuring security.
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Desabilita CSRF para APIs stateless
+                .csrf(csrf -> csrf.disable()) // Disables CSRF protection for stateless APIs
                 .authorizeHttpRequests(auth -> auth
-                        // Permite acesso sem autenticação para as rotas públicas
-//                        .requestMatchers(
-//                                "/swagger-ui.html",
-//                                "/swagger-ui/**",
-//                                "/v3/api-docs/**",
-//                                "/webjars/**",
-//                                "/swagger-resources/**",
-//                                "/h2-console/**",
-//                                "/categories",      // Permite acesso sem autenticação
-//                                "/categories/**"    // Permite acesso sem autenticação
-//                        ).permitAll()  // Permite acesso sem autenticação
-
-                        // Protege rotas de admin (Exemplo: /api/v1/admin/**)
-//                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
-//
-//                        // Protege rotas de user (Exemplo: /api/v1/user/**)
-//                        .requestMatchers("/api/v1/user/**").hasAnyRole("USER", "ADMIN")
-
-                        // Qualquer outra rota precisa de autenticação
                         .anyRequest().permitAll()
                 )
-                // Aplicar a autenticação JWT apenas nas rotas protegidas
+                // Applies JWT authentication only to protected routes
                 .oauth2ResourceServer(oauth2 -> oauth2
-                        .jwt(jwt -> jwt.decoder(jwtDecoder())) // Configura a validação do JWT
+                        .jwt(jwt -> jwt.decoder(jwtDecoder())) // Configures JWT validation
                 )
                 .headers(headers -> headers
-                        .frameOptions(frameOptions -> frameOptions.disable()) // Desabilita X-Frame-Options para o H2 Console
+                        .frameOptions(frameOptions -> frameOptions.disable()) // Disables X-Frame-Options for H2 Console
                 );
         return http.build();
     }
 
+    /**
+     * Configures the JWT decoder to validate JWT tokens using an HMAC SHA-256 secret key.
+     *
+     * @return A JwtDecoder bean for decoding JWT tokens.
+     */
     @Bean
     public JwtDecoder jwtDecoder() {
-        // Use a mesma chave secreta que você usa no .NET
+        // Uses the same secret key as in the .NET backend
         String secretKey = "656867SecretKeyWithLots46_9.OfCharacters!@ThatIsLongEnoughToKeepItSecure(*@#$)";
         return NimbusJwtDecoder.withSecretKey(new SecretKeySpec(secretKey.getBytes(), "HmacSHA256")).build();
     }
 
-
+    /**
+     * Configures the JWT authentication converter to extract user roles from JWT claims.
+     *
+     * @return A JwtAuthenticationConverter bean that maps JWT claims to Spring Security authorities.
+     */
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
         JwtGrantedAuthoritiesConverter authoritiesConverter = new JwtGrantedAuthoritiesConverter();
 
-        // Define o prefixo para as roles
+        // Sets the prefix for roles
         authoritiesConverter.setAuthorityPrefix("ROLE_");
 
-        // Define o claim onde as roles estão armazenadas
+        // Specifies the claim where roles are stored
         authoritiesConverter.setAuthoritiesClaimName("http://schemas.microsoft.com/ws/2008/06/identity/claims/role");
 
         converter.setJwtGrantedAuthoritiesConverter(authoritiesConverter);

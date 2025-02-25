@@ -13,7 +13,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     /**
      * Configures the resource handler to serve files located in the "uploads" directory.
-     *
      * This method maps requests to "/uploads/**" to the file system location "uploads/"
      * so that files can be accessed from the browser or external resources.
      *

@@ -2,9 +2,6 @@ package org.upskill.springboot.DTOs;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.hateoas.RepresentationModel;
-
-import java.time.LocalDate;
 
 /**
  * Data Transfer Object (DTO) for Advertisement.

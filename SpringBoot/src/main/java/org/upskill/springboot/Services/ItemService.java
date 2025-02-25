@@ -2,6 +2,7 @@ package org.upskill.springboot.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 import org.upskill.springboot.DTOs.ItemDTO;
 import org.upskill.springboot.Exceptions.CategoryNotFoundException;
@@ -115,6 +116,11 @@ public class  ItemService implements IItemService {
             throw new IllegalArgumentException("The image file cannot be empty.");
         }
 
+        // Check if the image exceeds the size limit (5MB)
+        if (file.getSize() > 5 * 1024 * 1024) {  // 5MB em bytes
+            throw new MaxUploadSizeExceededException(5 * 1024 * 1024);
+        }
+
         // Ensures that the directory exists
         File uploadDir = new File(IMAGE_UPLOAD_DIR);
         if (!uploadDir.exists()) {
@@ -135,7 +141,7 @@ public class  ItemService implements IItemService {
 
 
     /**
-     * Auxiliar method to extract the file extension from a given file name.
+     * Auxiliary method to extract the file extension from a given file name.
      * This method checks if the file name is valid (not null and contains an extension).
      * If the file name is invalid, an exception is thrown.
      *

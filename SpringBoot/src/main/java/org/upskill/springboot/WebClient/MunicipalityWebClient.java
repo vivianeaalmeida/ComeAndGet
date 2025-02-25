@@ -119,7 +119,6 @@ public class MunicipalityWebClient {
                     .block()));
 
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException("Error accessing GEO API");
         }
     }

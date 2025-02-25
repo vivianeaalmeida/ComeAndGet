@@ -8,6 +8,10 @@ import org.upskill.springboot.Models.ReservationAttempt;
 
 import java.time.LocalDate;
 
+/**
+ * Mapper class to convert between {@link ReservationAttempt} entity and {@link ReservationAttemptResponseDTO} data transfer object.
+ * This class contains methods for transforming data between the entity and DTO representations.
+ */
 public class ReservationAttemptMapper {
     /**
      * Maps a ReservationAttempt model to a ReservationAttemptResponseDTO.
@@ -22,6 +26,7 @@ public class ReservationAttemptMapper {
         requestDTO.setClientId(reservationAttempt.getClientId());
         requestDTO.setDate(reservationAttempt.getDate());
         requestDTO.setAdvertisementId(reservationAttempt.getAdvertisement().getId());
+
         //faz o set das informações que a UI necessita para dispor os requests.
         AdvertisementSummaryDTO advertisementSummaryDTO = new AdvertisementSummaryDTO();
         advertisementSummaryDTO.setId(reservationAttempt.getAdvertisement().getId());
@@ -29,10 +34,10 @@ public class ReservationAttemptMapper {
         advertisementSummaryDTO.setDate(reservationAttempt.getAdvertisement().getDate());
         advertisementSummaryDTO.setTitle(reservationAttempt.getAdvertisement().getTitle());
         advertisementSummaryDTO.setDescription(reservationAttempt.getAdvertisement().getDescription());
-        //set do objeto
+
+        //set of the object
         requestDTO.setAdvertisement(advertisementSummaryDTO);
         return requestDTO;
-
     }
 
     /**
@@ -43,7 +48,6 @@ public class ReservationAttemptMapper {
      * @param advertisement The advertisement related to the reservation attempt.
      * @return A ReservationAttempt entity.
      */
-    //nenhuma informação - exceto o status - vem do request do usuario (DTO)
     public static ReservationAttempt toEntity(@NotNull String status, @NotNull String clientId, @NotNull Advertisement advertisement ) {
         ReservationAttempt reservationAttempt = new ReservationAttempt();
 

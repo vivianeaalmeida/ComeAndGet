@@ -65,7 +65,7 @@ public class AuthUserWebClient {
      */
     public String getUserId(String authorization) { // @RequestHeader
         return webClient.get()
-                .uri("/users/id")
+                .uri("/users/token")
                 .header("Authorization", authorization)
                 .retrieve()
                 .bodyToMono(String.class)

@@ -1,8 +1,8 @@
 import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
 import { CommonModule, NgIf } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../Services/auth.service';
-import { map } from 'rxjs';
+import { filter, map } from 'rxjs';
 import { FormsModule, NgModel } from '@angular/forms';
 import { SearchService } from '../../Services/search.service';
 
@@ -22,6 +22,8 @@ export class HeaderComponent implements OnInit {
 
   searchKeyword: string = '';
 
+  currentUrl: string = '';
+
   constructor(private myrouter: Router, protected authService: AuthService, private searchService: SearchService) {}
 
   ngOnInit(): void {
@@ -33,6 +35,12 @@ export class HeaderComponent implements OnInit {
       if (user) {
         this.checkRole = user.roles; // Define o role do usuário
       }
+    });
+
+    this.myrouter.events
+    .pipe(filter((event) => event instanceof NavigationEnd))
+    .subscribe((event: any) => {
+      this.currentUrl = event.url;
     });
   }
 

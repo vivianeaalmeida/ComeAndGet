@@ -6,9 +6,7 @@
         <img src="../assets/Logo.png" alt="Logo" class="w-44" />
       </a>
     </div>
-
-    <!-- Barra de Pesquisa -->
-    <div class="relative w-full max-w-[550px] flex">
+    <div *ngIf="currentUrl.includes('/view-active')" class="relative w-full max-w-[550px] flex">
       <input
         [(ngModel)]="searchKeyword"
         (ngModelChange)="search()"
@@ -23,6 +21,7 @@
         <i class="fa-solid fa-lg fa-magnifying-glass"></i>
       </button>
     </div>
+    
 
     <div class="items-center flex space-x-8">
       <div

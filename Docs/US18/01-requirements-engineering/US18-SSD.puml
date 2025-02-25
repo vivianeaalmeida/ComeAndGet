@@ -1,0 +1,23 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - View available advertisements list
+
+autonumber
+
+actor "Logged User" as User
+participant ":System" as System
+
+activate User
+
+    User -> System : asks to list all reservation attempts made by the user
+    activate System
+
+        System --> User : shows all reservation attempts.
+    deactivate System
+
+
+deactivate User
+@enduml

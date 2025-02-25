@@ -1,0 +1,29 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam shadowing true
+skinparam classAttributeIconSize 0
+hide circle
+hide methods
+
+
+class Advertisement {
+    - title: String
+    - description: String
+    - date: Date
+    - municipality: String
+}
+
+class ReservationAttempt {
+    - status: Status
+    '(pending, canceled, rejected, accepted, donated)
+    - clientId : String
+    - date : Date
+}
+
+note left of ReservationAttempt
+    - Status = pending, canceled,
+    rejected, accepted, donated
+end note
+
+ReservationAttempt "0..*" -- "1..*" Advertisement : has
+@enduml

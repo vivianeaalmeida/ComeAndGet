@@ -1,0 +1,43 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Users" as USER
+participant ":ReservationAttemptUI" as UI
+participant ":ReservationAttemptController" as CTRL
+participant ":ReservationAttemptService" as SERV
+participant "mapper\n:ReservationAttemptMapper" as MAPPER
+participant ":ReservationAttemptRepository" as ATTEMPT_REPO
+participant "reservationAttempt\n:ReservationAttempt" as ATTEMPT
+participant "reservationAttemptDTO\n:ReservationAttemptResponseDTO" as attemptDTO
+
+activate USER
+
+    USER -> UI : requests a reservation attempt by ID
+    activate UI
+    UI -> CTRL : getReservationAttemptById(id)
+
+    activate CTRL
+
+        CTRL -> SERV : getReservationAttemptById(id)
+        activate SERV
+
+            SERV -> ATTEMPT_REPO : findById(id)
+            activate ATTEMPT_REPO
+            ATTEMPT_REPO -->> ATTEMPT**: returns()
+            ATTEMPT_REPO --> SERV : reservationAttempt
+            deactivate ATTEMPT_REPO
+            SERV -> MAPPER : toDTO(reservationAttempt)
+            MAPPER -->> attemptDTO**: create(...)
+
+        SERV --> CTRL : attemptDTO
+        deactivate SERV
+    CTRL --> UI : attemptDTO
+    deactivate CTRL
+    UI --> USER : attemptDTO
+    deactivate UI
+deactivate USER
+@enduml

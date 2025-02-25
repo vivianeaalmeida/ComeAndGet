@@ -2,32 +2,32 @@
 
 | US                                                                 | Story Points |
 |--------------------------------------------------------------------|--------------|
-| US01 - Register new user                                           | 6            |
-| US02 - Log In                                                      | 6            |
+| US01 - Register new user                                           | 5            |
+| US02 - Log In                                                      | 5            |
 | US03 - Create category                                             | 5            |
-| US04 - View categories list                                        | 2            |
+| US04 - View categories list                                        | 4            |
 | US05 - Update category                                             | 5            |
-| US06 - Delete category                                             | 5            |
+| US06 - Delete category                                             | 6            |
 | US07 - Create an advertisement                                     | 10           |
-| US08 - View advertisements list                                    | 3            |
-| US09 - View active advertisements list                             | 3            |
-| US10 - View closed advertisement list                              | 3            |
-| US11 - View advertisement                                          | 3            |
-| US12 - Search advertisements                                       | 12           |
-| US13 - Update advertisement                                        | 9            |
+| US08 - View advertisements list                                    | 4            |
+| US09 - View active advertisements list                             | 4            |
+| US10 - View closed advertisement list                              | 4            |
+| US11 - View advertisement                                          | 4            |
+| US12 - Search advertisements                                       | 10           |
+| US13 - Update advertisement                                        | 6            |
 | US14 - Deactivate advertisement                                    | 9            |
 | US15 - View my published advertisements                            | 5            |
-| US16 - Create ReservationAttempt on advertisement                  | 6            |
-| US17 - View ReservationAttempt                                     | 5            |
-| US18 - View my list of ReservationAttempts                         | 5            |
+| US16 - Create ReservationAttempt on advertisement                  | 7            |
+| US17 - View ReservationAttempt                                     | 7            |
+| US18 - View my list of ReservationAttempts                         | 8            |
 | US19 - View ReservationAttempts on my advertisements               | 10           |
 | US20 - Updates ReservationAttempt status                           | 10           |
-| US21 - Create tip                                                  | 5            |
+| US21 - Create tip                                                  | 4            |
 | US22 - View tips                                                   | 2            |
 | US23 - View tip                                                    | 2            |
-| US24 - View my favorite tips                                       | 3            |
+| US24 - View my favorite tips                                       | 4            |
 | US25 - Update tip                                                  | 5            |
-| US26 - Delete Tip                                                  | 2            |
+| US26 - Delete Tip                                                  | 3            |
 | US27 - Create interaction (like or favorite a tip)                 | 10           |
 | US28 - Update interaction (like, unlike, favorite, unfavorite tip) | 12           |
 

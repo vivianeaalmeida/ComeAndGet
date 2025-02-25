@@ -13,6 +13,7 @@ import { AdvertisementsDashboardComponent } from './Components/advertisements-da
 import { TipsDashboardComponent } from './Components/tips-dashboard/tips-dashboard.component';
 import { ReservationAttemptListComponent } from './Components/reservation-attempt-list/reservation-attempt-list.component';
 import { TipsListingComponent } from './Components/tips-listing/tips-listing.component';
+import { PublicTipsListingComponent } from './Components/public-tips-listing/public-tips-listing.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -39,5 +40,6 @@ export const routes: Routes = [
   { path: 'advertisements', component: AdvlistingComponent },
   { path: 'reservation-attempts', component: ReservationAttemptListComponent},
   { path: 'blog-tips', component: TipsListingComponent},
+  { path: 'tips-blog', component: PublicTipsListingComponent},
   { path: '**', component: NotFoundComponent },
 ];

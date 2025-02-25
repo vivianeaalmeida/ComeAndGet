@@ -458,16 +458,16 @@ public class AdvertisementService implements IAdvertisementService {
      * This method is scheduled to run every day at midnight.
      */
     @Scheduled(cron = "0 0 0 * * ?")  // Cron expression for every day at midnight
-    public void closeExpiredAdvertisements() {
+    public void closeExpiredAdvertisementsScheduled() {
         // Get all advertisements and filter out inactive ones
         List<Advertisement> advertisements = advertisementRepository.findByStatus(Advertisement.AdvertisementStatus.ACTIVE);
 
         for (Advertisement advertisement : advertisements) {
             // Close advertisement if expired
             if (advertisement.closeIfExpired()) {
-                advertisementRepository.save(advertisement);  // Save the advertisement with the updated status
+                advertisementRepository.save(advertisement);
 
-                // Reject reservation attemps associated with the advertisement
+                // Reject reservation attempts associated with the advertisement
                 reservationAttemptService.rejectReservationAttempts(advertisement.getId());
             }
         }

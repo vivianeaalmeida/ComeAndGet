@@ -52,17 +52,6 @@ public class ReservationAttemptController extends BaseController {
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
-    /**
-     * Retrieves a reservation attempt by Advertisement ID.
-     *
-     * @param idAdvertisement the ID of the  Advertisement
-     * @return a ResponseEntity containing the ReservationAttemptResponseDTO and HTTP status OK if retrieval is successful
-     */
-    @GetMapping("/reservationAttempts/advertisement/{idAdvertisement}")
-    public ResponseEntity<List<ReservationAttemptResponseDTO>> getReservationAttemptByIdAdvertisement(@PathVariable String idAdvertisement) {
-        List<ReservationAttemptResponseDTO> responseDTO = reservationAttemptService.getReservationAttemptsByAdvertisement(idAdvertisement);
-        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
-    }
 
     /**
      * Creates a new reservation attempt.

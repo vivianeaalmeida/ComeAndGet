@@ -29,13 +29,6 @@ public interface IReservationAttemptService {
      */
     ReservationAttemptResponseDTO getReservationAttemptById(String id);
 
-    /**
-     * Retrieves all reservation attempts associated with a specific advertisement.
-     *
-     * @param advertisementId The ID of the advertisement.
-     * @return A list of reservation attempt DTOs related to the advertisement.
-     */
-    List<ReservationAttemptResponseDTO> getReservationAttemptsByAdvertisement(String advertisementId);
 
     /**
      * Creates a new reservation attempt

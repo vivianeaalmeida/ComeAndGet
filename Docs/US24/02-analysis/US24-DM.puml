@@ -1,0 +1,17 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam shadowing true
+skinparam classAttributeIconSize 0
+hide circle
+hide methods
+
+
+class Tip {
+    - id: String
+    - title: String
+    - description: String
+    - likeCount: int
+    - favoriteCount: int
+}
+
+@enduml

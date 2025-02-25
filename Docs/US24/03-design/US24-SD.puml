@@ -1,0 +1,65 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "AllUsers" as USER
+participant ":TipUI" as UI
+participant ":TipController" as CTRL
+participant ":TipService" as SERV
+participant "mapper\n:TipMapper" as MAPPER
+participant ":TipsRepository" as TIP_REPO
+participant "favoriteTipsList" as FAVE_TIP_LIST
+participant "tipDTO\n:TipDTO" as tipDTO
+
+activate USER
+
+    USER -> UI : requests to list favorite tips
+    activate UI
+
+        UI -> CTRL : GetFavoritedTipsAsync()
+        activate CTRL
+
+            CTRL -> SERV : GetFavoritedTipsAsync()
+            activate SERV
+
+                SERV -> TIP_REPO : findFavorites()
+                activate TIP_REPO
+                TIP_REPO -->> SERV : returns favoriteTipsList
+                deactivate TIP_REPO
+
+            SERV -> MAPPER : toDTO(favoriteTipsList)
+            activate MAPPER
+
+            MAPPER -> tipsDTOList : create()
+            activate tipsDTOList
+            deactivate tipsDTOList
+
+            loop for each tip in FAVE_TIP_LIST
+                MAPPER -> FAVE_TIP_LIST : get(i)
+                activate FAVE_TIP_LIST
+                FAVE_TIP_LIST -->> MAPPER : tip
+                deactivate FAVE_TIP_LIST
+
+                MAPPER -> MAPPER : tipDTO = toDTO(tip)
+                MAPPER -->> tipDTO : create(...)
+
+                MAPPER -> tipsDTOList : add(tipDTO)
+            end
+
+            MAPPER --> SERV : tipsDTOList
+            deactivate MAPPER
+
+            SERV --> CTRL : tipsDTOList
+            deactivate SERV
+
+        CTRL --> UI : tipsDTOList
+        deactivate CTRL
+
+    UI --> USER : tipsDTOList
+    deactivate UI
+
+deactivate USER
+@enduml

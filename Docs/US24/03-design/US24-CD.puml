@@ -9,15 +9,15 @@ class TipUI {
 }
 
 class TipController {
-    + getTips()
+    + getFavoritedTips()
 }
 
 class TipService {
-    + getTips()
+    + getFavoritedTips()
 }
 
 interface TipRepository {
-    + findAll()
+    + findFavorites()
 }
 
 class AllUsers {
@@ -46,7 +46,7 @@ class TipDTO {
 }
 
 ' --- Relacionamentos ---
-AllUsers ..> TipUI : requests to list all tips
+AllUsers ..> TipUI : requests to list favorite tips
 TipUI ..> TipController
 TipController .> TipService
 TipService ..> TipRepository

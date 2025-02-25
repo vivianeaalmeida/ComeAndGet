@@ -22,7 +22,7 @@ namespace DotNet.Controllers {
         }
 
         /// <summary>
-        /// Retrieves user information.
+        /// Retrieves user information with the user token.
         /// </summary>
         /// <returns>A JSON response containing the user information.</returns>
         [HttpGet]
@@ -50,10 +50,10 @@ namespace DotNet.Controllers {
         }
 
         /// <summary>
-        /// Retrieves user ID.
+        /// Retrieves user ID with the user token.
         /// </summary>
         /// <returns></returns>
-        [HttpGet("id")]
+        [HttpGet("token")]
         public IActionResult GetUserId() {
             var id = userService.GetUserId();
             return Ok(id);

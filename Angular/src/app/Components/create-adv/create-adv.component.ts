@@ -142,7 +142,7 @@ export class CreateAdvComponent implements OnInit {
               window.location.href = '/user-area';
             }
           }),
-        error: () => Swal.fire({ icon: 'error', title: 'Error adding ad!' }),
+        error: (error) => Swal.fire({ icon: 'error', title: `Error adding ad! - ${error?.error.message}` }),
       });
     }
   }

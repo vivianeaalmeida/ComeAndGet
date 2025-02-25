@@ -27,7 +27,7 @@ export class UpdateAdvModalComponent {
         Validators.required,
         Validators.minLength(10),
       ]),
-      status: new FormControl(data?.status || 'ACTIVE', [Validators.required]),
+      status: new FormControl(data?.status, [Validators.required]),
     });
   }
 
@@ -37,22 +37,16 @@ export class UpdateAdvModalComponent {
 
   onSubmit() {
     if (this.updateAdvForm.valid) {
-      // Exibe um alerta de sucesso
-      Swal.fire({
-        title: 'Success!',
-        text: 'Advertisement updated succesfully.',
-        icon: 'success',
-        confirmButtonText: 'OK',
-      }).then(() => {
-        this.dialogRef.close(this.updateAdvForm.value);
-      });
+      console.log('Form Value:', this.updateAdvForm.value); // Verifique o valor do status aqui
+      this.dialogRef.close({ data: this.updateAdvForm.value, error: null });
     } else {
       Swal.fire({
-        title: 'Erro!',
+        title: 'Error!',
         text: 'Please, fill in all the required data properly.',
         icon: 'error',
         confirmButtonText: 'OK',
       });
     }
   }
+  
 }

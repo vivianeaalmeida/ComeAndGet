@@ -35,6 +35,8 @@ import { FavoriteTipDetailComponent } from '../favorite-tip-detail/favorite-tip-
 export class UserAreaComponent implements OnInit {
   advCollection: Advertisement[] = [];
   tipCollection: Tip[] = [];
+  // Variáveis de controle de filtro
+  filterStatus: string = 'ACTIVE'; // ou 'CLOSED'
 
   menus: any = {
     profile: true,
@@ -157,5 +159,13 @@ export class UserAreaComponent implements OnInit {
   closeModal() {
     this.openedModal = false;
     this.selectedAdv = null;
+  }
+
+  getFilteredAds() {
+    return this.advCollection.filter(adv => adv.status === this.filterStatus);
+  }
+
+  setFilter(status: string) {
+    this.filterStatus = status;
   }
 }

@@ -51,7 +51,6 @@
           My Donation Requests
         </button>
       </li>
-
       <li class="">
         <button
           (click)="changeView('myFavoriteTips')"
@@ -129,9 +128,37 @@
         </div>
       </ng-template>
     </div>
-    } @else if (menus.myAdvs) { @for (adv of advCollection; track $index) {
+    } @else if (menus.myAdvs) {
+    <!-- Botões de Filtro -->
+    <div class="flex space-x-4 mb-4 justify-center">
+      <button
+        (click)="setFilter('ACTIVE')"
+        [class]="
+          filterStatus === 'ACTIVE'
+            ? 'bg-lime-600 text-white'
+            : 'bg-gray-200 text-gray-700'
+        "
+        class="px-4 py-2 rounded-md"
+      >
+        Active Ads
+      </button>
+      <button
+        (click)="setFilter('CLOSED')"
+        [class]="
+          filterStatus === 'CLOSED'
+            ? 'bg-lime-600 text-white'
+            : 'bg-gray-200 text-gray-700'
+        "
+        class="px-4 py-2 rounded-md"
+      >
+        Closed Ads
+      </button>
+    </div>
+
+    <!-- Lista de Anúncios Filtrados -->
+    @for (adv of getFilteredAds(); track $index) {
     <div
-      class="grid grid-cols-2 max-w-5xl h-60 max-h-60 justify-between"
+      class="grid grid-cols-2 max-w-5xl h-60 max-h-60 justify-between mx-auto mb-4"
       [class]="
         $index % 2 == 0
           ? ' bg-white p-4 rounded-lg flex flex-col '
@@ -154,9 +181,15 @@
         <p class="text-left text-lg text-lime-800 mb-1 mt-1">
           {{ adv.description }}
         </p>
-        <p class="text-left text-md text-gray-800">
-          {{ adv.date | date : "mediumDate" }}
-        </p>
+        <div class="flex space-x-2">
+          <p class="text-left text-md text-gray-800">
+            {{ adv.date | date : "mediumDate" }}
+          </p>
+          <p>•</p>
+          <p class="text-left text-md text-gray-800">
+            Status: {{ adv.status | titlecase }}
+          </p>
+        </div>
         <div class="mt-2 flex text-white space-x-4 pt-4">
           <button
             class="bg-lime-600 py-1 px-6 rounded-md hover:bg-lime-800"
@@ -165,13 +198,14 @@
             See details
           </button>
 
-          <app-button-update-adv [id]="adv.id || ''"></app-button-update-adv>
-
-          <!-- <app-button-deactivate-advertisement [id]="adv.id || ''"></app-button-deactivate-advertisement> -->
+          <app-button-update-adv
+            *ngIf="adv.status != 'CLOSED'"
+            [id]="adv.id || ''"
+          ></app-button-update-adv>
         </div>
       </div>
     </div>
-    } }@else if (menus.myRequests) {
+    } } @else if (menus.myRequests) {
     <app-reservation-attempt-list></app-reservation-attempt-list>
     } @else if (menus.myFavoriteTips) {
     <app-favorite-tip-detail></app-favorite-tip-detail>

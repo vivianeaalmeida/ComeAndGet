@@ -25,7 +25,7 @@ import { FavoriteTipDetailComponent } from '../favorite-tip-detail/favorite-tip-
     CommonModule,
     ButtonUpdateAdvComponent,
     ReservationAttemptListComponent,
-    ButtonDeactivateAdvertisementComponent,
+    /*ButtonDeactivateAdvertisementComponent,*/
     AdvertisementModalComponent,
     FavoriteTipDetailComponent,
   ],

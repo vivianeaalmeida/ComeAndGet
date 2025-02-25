@@ -147,14 +147,14 @@ namespace DotNet.Controllers {
         /// Deletes a tip by ID.
         /// </summary>
         /// <param name="id">The ID of the tip to remove.</param>
-        /// <returns>The removed tip if successful, or an error message if not found.</returns>
+        /// <returns>No content if successful, or an error message if not found.</returns>
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public ActionResult Remove(int id) {
             try 
             {
                 var removedTip = tipService.RemoveTip(id);
-                return Ok(removedTip);
+                return NoContent();
             }
             catch (TipNotFoundException e) 
             {

@@ -1,0 +1,23 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - View closed advertisements list
+
+autonumber
+
+actor "Admin" as Admin
+participant ":System" as System
+
+activate "Admin"
+
+    "Admin" -> System : asks to list all available\nadvertisements (ordered desc by date)
+    activate System
+
+        System --> "Admin" : shows available advertisements list
+    deactivate System
+
+
+deactivate "Admin"
+@enduml

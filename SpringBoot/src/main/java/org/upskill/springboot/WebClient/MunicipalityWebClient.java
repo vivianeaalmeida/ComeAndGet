@@ -68,15 +68,14 @@ public class MunicipalityWebClient {
      */
     public List<String> getMunicipalities() {
         // If cache empty, reload from file or fetch new data
-        if (municipalitiesCache.isEmpty()) {
-            municipalitiesCache = loadMunicipalitiesFromFile();
+        municipalitiesCache = loadMunicipalitiesFromFile();
 
-            // if municipalitiesCache is null or cache has expired (more than 6 months)
-            if (municipalitiesCache == null || isCacheExpired()) {
-                municipalitiesCache = fetchMunicipalities(); // fetch municipalities in external api
-                saveMunicipalitiesToFile(municipalitiesCache); // save results into file
-            }
+        // if municipalitiesCache is null or cache has expired (more than 6 months)
+        if (municipalitiesCache == null || isCacheExpired()) {
+            municipalitiesCache = fetchMunicipalities(); // fetch municipalities in external api
+            saveMunicipalitiesToFile(municipalitiesCache); // save results into file
         }
+
         return municipalitiesCache;
     }
 

@@ -164,8 +164,7 @@
 - **Acceptance Criteria**:
     - Only advertisements with active status can be updated.
     - Only title, designation and status can be updated
-    - Advertisement status can only be updated to closed.
-    - Advertisement status can be updated to closed, but if there are ReservationAttempts with status pending or accepted their status change to rejected.
+    - Advertisement status can only be updated to closed, but if there are ReservationAttempts with status pending or accepted their status change to rejected.
 
 ---
 

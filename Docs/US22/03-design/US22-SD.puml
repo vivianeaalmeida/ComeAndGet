@@ -1,0 +1,65 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "AllUsers" as USER
+participant ":TipUI" as UI
+participant ":TipController" as CTRL
+participant ":TipService" as SERV
+participant "mapper\n:TipMapper" as MAPPER
+participant ":TipsRepository" as TIP_REPO
+participant "tipList" as TIP_LIST
+participant "tipDTO\n:TipDTO" as tipDTO
+
+activate USER
+
+    USER -> UI : requests to list all available tips
+    activate UI
+
+        UI -> CTRL : getTipsList()
+        activate CTRL
+
+            CTRL -> SERV : getTipsList()
+            activate SERV
+
+                SERV -> TIP_REPO : findAll()
+                activate TIP_REPO
+                TIP_REPO -->> SERV : returns tipList
+                deactivate TIP_REPO
+
+            SERV -> MAPPER : toDTO(tipList)
+            activate MAPPER
+
+            MAPPER -> tipsDTOList : create()
+            activate tipsDTOList
+            deactivate tipsDTOList
+
+            loop for each tip in TIP_LIST
+                MAPPER -> TIP_LIST : get(i)
+                activate TIP_LIST
+                TIP_LIST -->> MAPPER : tip
+                deactivate TIP_LIST
+
+                MAPPER -> MAPPER : tipDTO = toDTO(tip)
+                MAPPER -->> tipDTO : create(...)
+
+                MAPPER -> tipsDTOList : add(tipDTO)
+            end
+
+            MAPPER --> SERV : tipsDTOList
+            deactivate MAPPER
+
+            SERV --> CTRL : tipsDTOList
+            deactivate SERV
+
+        CTRL --> UI : tipsDTOList
+        deactivate CTRL
+
+    UI --> USER : tipsDTOList
+    deactivate UI
+
+deactivate USER
+@enduml

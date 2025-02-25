@@ -67,14 +67,14 @@ export class ButtonLikeTipComponent implements OnInit {
           // Atualizar contador de likes corretamente
           if (wasLiked !== updated.like) {
             tip.likeCount = updated.like
-              ? (tip.likeCount || 0) + 1
+              ? (tip.likeCount ?? 0) + 1
               : Math.max(0, (tip.likeCount || 0) - 1);
           }
 
           // Atualizar contador de favoritos corretamente
           if (wasFavorited !== updated.favorite) {
             tip.favoriteCount = updated.favorite
-              ? (tip.favoriteCount || 0) + 1
+              ? (tip.favoriteCount ?? 0) + 1
               : Math.max(0, (tip.favoriteCount || 0) - 1);
           }
         },

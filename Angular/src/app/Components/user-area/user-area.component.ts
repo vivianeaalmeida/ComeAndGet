@@ -65,6 +65,9 @@ export class UserAreaComponent implements OnInit {
       .subscribe((user) => {
         this.isLogged = user;
       });
+
+    this.getFilteredAds();
+    this.asyncGetMyAdvs();
   }
 
   changeView(menu: string) {
@@ -167,5 +170,13 @@ export class UserAreaComponent implements OnInit {
 
   setFilter(status: string) {
     this.filterStatus = status;
+  }
+
+
+  onAdsUpdated(success: boolean): void {
+    if (success) {
+      this.asyncGetMyAdvs();
+      this.getFilteredAds(); // refresh ads
+    }
   }
 }

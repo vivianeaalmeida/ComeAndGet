@@ -1,5 +1,5 @@
 // button-update-adv.component.ts
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AdvService } from '../../../Services/adv.service';
 import { UpdateAdvModalComponent } from '../../update-adv-modal/update-adv-modal.component';
@@ -16,6 +16,9 @@ import Swal from 'sweetalert2';
 export class ButtonUpdateAdvComponent implements OnInit {
   @Input() id!: string;
   advertisement: Advertisement | null = null;
+  @Input() currentAdv!: any;
+
+  @Output() isUpdateSuccess = new EventEmitter<boolean>();
 
   constructor(private dialog: MatDialog, private advService: AdvService) {}
 
@@ -53,6 +56,8 @@ export class ButtonUpdateAdvComponent implements OnInit {
             ...result.data,
             id: this.id,
           };
+
+          this.currentAdv = updatedAdvertisement;
   
           this.advService.updateAdvertisement(this.id, updatedAdvertisement).subscribe({
             next: () => {
@@ -64,6 +69,7 @@ export class ButtonUpdateAdvComponent implements OnInit {
               }).then(() => {
                 console.log('Advertisement updated successfully');
               });
+              this.isUpdateSuccess.emit(true);
             },
             error: (err) => {
               console.error('Error updating advertisement', err);

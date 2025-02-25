@@ -199,8 +199,10 @@
           </button>
 
           <app-button-update-adv
+            [currentAdv]="adv"
             *ngIf="adv.status != 'CLOSED'"
             [id]="adv.id || ''"
+            (isUpdateSuccess)="onAdsUpdated($event)"
           ></app-button-update-adv>
         </div>
       </div>

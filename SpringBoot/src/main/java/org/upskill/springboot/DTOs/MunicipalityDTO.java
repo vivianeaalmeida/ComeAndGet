@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Data Transfer Object (DTO) for Municipality. It contains the designation
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

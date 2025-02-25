@@ -87,4 +87,7 @@ INSERT INTO RESERVATION_ATTEMPT (ID, ADVERTISEMENT_ID, CLIENT_ID, DATE, STATUS) 
 --Requests advertisement 6
 (7, 6, 'd9ae1423-3844-4959-81b1-7cd802902c62', '2025-02-20', 1),
 (8, 6, 'b6ee76ff-85d9-4954-a6bb-0b9a9a395f70', '2025-02-21', 2),
-(9, 6, 'dac79cce-277d-48a6-b8db-eb88d9b192ea', '2025-02-22', 0);
+(9, 6, 'dac79cce-277d-48a6-b8db-eb88d9b192ea', '2025-02-22', 0),
+('b763f623-48f7-494f-a303-8dc25b12b4fb', 1, '290648c4-badb-47cd-9d6d-445dbe839abb', '2025-02-24', 0),
+('pp63f623-48f7-494f-a303-8dc25b12b4mm', 6, '290648c4-badb-47cd-9d6d-445dbe839abb', '2025-02-24', 1),
+(78, 6, '290648c4-badb-47cd-9d6d-445dbe839abb', '2025-02-22', 3);

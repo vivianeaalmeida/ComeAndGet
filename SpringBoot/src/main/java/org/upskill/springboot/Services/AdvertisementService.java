@@ -208,7 +208,6 @@ public class AdvertisementService implements IAdvertisementService {
         return savedAdvertisementDTO;
     }
 
-
     /**
      * Updates an existing advertisement.
      *
@@ -482,7 +481,6 @@ public class AdvertisementService implements IAdvertisementService {
             }
         }
     }
-
 
     /**
      * Verifies if the authenticated user is the owner of the specified advertisement.

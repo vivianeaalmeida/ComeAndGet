@@ -1,6 +1,4 @@
-<div
-  class="font-[sans-serif] bg-gradient-to-b from-lime-600 via-lime-700 to-lime-800 text-ground py-32"
->
+<div class="font-[sans-serif] bg-gradient-to-b from-lime-600 via-lime-700 to-lime-800 text-ground py-32">
   <h1 class="font-bold text-white text-3xl text-center mt-10 mb-4">
     Reduce, Reuse, Recycle
   </h1>
@@ -25,22 +23,16 @@
           <!-- Título e Botão de Expansão -->
           <div
             class="flex cursor-pointer w-full text-left p-4 hover:bg-lime-200 focus:outline-none transition-all duration-300 rounded-t-lg justify-between"
-            (click)="toggleContent(tip)"
-          >
-            <span
-              [class]="
+            (click)="toggleContent(tip)">
+            <span [class]="
                 openStates[tip.id]
                   ? 'font-bold text-lime-800 text-xl'
                   : 'font-semibold text-black text-xl'
-              "
-              >{{ tip.title }}</span
-            ><i
-              [class]="
+              ">{{ tip.title }}</span><i [class]="
                 openStates[tip.id]
                   ? 'align-middle fa-md fa-solid fa-angle-up  mt-2'
                   : 'align-middle fa-md fa-solid fa-angle-down mt-2'
-              "
-            ></i>
+              "></i>
           </div>
 
           <div *ngIf="openStates[tip.id]" class="p-4 bg-lime-50">
@@ -48,6 +40,25 @@
               {{ tip.content }}
             </p>
           </div>
+
+
+          <hr class="border-t border-gray-300" />
+
+          <!-- Contagem de Curtidas, Favoritos e Botões -->
+          <div class="flex justify-end items-center py-2 px-4 bg-lime-100 rounded-b-lg space-x-4">
+            <!-- Botão de Curtida -->
+            <i class="far fa-thumbs-up fa-lg text-black text-xl"></i>
+            <div class="flex items-center space-x-2 text-black font-medium">
+              <span>{{ tip.likeCount || 0 }}</span>
+            </div>
+
+            <!-- Botão de Favoritar -->
+            <i class="far fa-bookmark fa-lg text-black text-md"></i>
+            <div class="flex items-center space-x-2 text-black font-medium">
+              <span>{{ tip.favoriteCount || 0 }}</span>
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -55,19 +66,13 @@
       <div class="flex justify-center mt-8">
         <button
           class="px-4 py-2 bg-lime-500 text-white rounded-lg hover:bg-lime-600 focus:outline-none transition-all duration-300"
-          [disabled]="currentPage === 1"
-          (click)="changePage(currentPage - 1)"
-        >
+          [disabled]="currentPage === 1" (click)="changePage(currentPage - 1)">
           Previous
         </button>
-        <span class="mx-4 text-lime-100 self-center"
-          >Page {{ currentPage }} of {{ totalPages }}</span
-        >
+        <span class="mx-4 text-lime-100 self-center">Page {{ currentPage }} of {{ totalPages }}</span>
         <button
           class="px-4 py-2 bg-lime-500 text-white rounded-lg hover:bg-lime-600 focus:outline-none transition-all duration-300"
-          [disabled]="currentPage === totalPages"
-          (click)="changePage(currentPage + 1)"
-        >
+          [disabled]="currentPage === totalPages" (click)="changePage(currentPage + 1)">
           Next
         </button>
       </div>

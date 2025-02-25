@@ -115,7 +115,7 @@ namespace DotNet.Controllers {
         /// <returns>The updated tip or an error message if the update fails.</returns>
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
-        public ActionResult Update(int id, [FromBody] TipDTO tipDTO) {
+        public ActionResult Update(int id, [FromBody] TipUpdateDTO tipDTO) {
             if (id != tipDTO.Id)
             {
                 return BadRequest(new { message = "The provided ids do not match." });

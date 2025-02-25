@@ -40,7 +40,7 @@ namespace DotNet.Services.Interfaces
         /// <param name="id">The unique identifier of the tip to update.</param>
         /// <param name="tipDTO">The TipDTO object containing the updated data of the tip.</param>
         /// <returns>The updated TipDTO object.</returns>
-        TipDTO UpdateTip(int id, TipDTO tipDTO);
+        TipDTO UpdateTip(int id, TipUpdateDTO tipDTO);
 
         /// <summary>
         /// Removes a tip by its unique identifier.

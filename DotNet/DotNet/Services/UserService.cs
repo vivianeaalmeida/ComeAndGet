@@ -67,7 +67,7 @@ namespace DotNet.Services {
             var user = await userManager.FindByIdAsync(id);
             if (user == null)
             {
-                return null; // Melhor retornar null explicitamente
+                return null;
             }
             return new UserInfoResponseDTO
             {

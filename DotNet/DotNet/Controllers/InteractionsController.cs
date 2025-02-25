@@ -70,6 +70,9 @@ namespace DotNet.Controllers {
             {
                 return BadRequest(new { message = ex.Message });
             }
+            catch (InteractionInvalidActionException ex) {
+                return BadRequest(new { message = ex.Message });
+            }
             catch (ArgumentNullException ex)
             {
                 return BadRequest(new { message = ex.Message });
@@ -84,10 +87,15 @@ namespace DotNet.Controllers {
         /// </summary>
         /// <param name="userId">The ID of the user whose interactions are to be retrieved.</param>
         /// <returns>A list of interactions associated with the specified user.</returns>
+        [Authorize(Roles = "User")]
         [HttpGet("users/{userId}")]
         public ActionResult<IEnumerable<InteractionDTO>> GetUserInteractions(string userId) {
-            return Ok(interactionService.GetUserInteractions(userId));
+            try {
+                return Ok(interactionService.GetUserInteractions(userId));
+            }
+            catch (InteractionInvalidActionException ex) {
+                return BadRequest(new { message = ex.Message });
+            }
         }
-
     }
 }

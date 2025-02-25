@@ -12,14 +12,18 @@ namespace DotNet.Services {
     /// </summary>
     public class InteractionService : IInteractionService {
         private readonly BlogContext context;
+        private readonly UserContext usersContext;
+        private readonly UserService usersService;
 
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InteractionService"/> class.
         /// </summary>
         /// <param name="context">The database context.</param>
-        public InteractionService(BlogContext context, UserService userService) {
+        public InteractionService(BlogContext context, UserService usersService, UserContext usersContext) {
             this.context = context;
+            this.usersContext = usersContext;
+            this.usersService = usersService;
         }
 
         /// <summary>
@@ -34,17 +38,12 @@ namespace DotNet.Services {
             {
                 throw new ArgumentNullException(nameof(interactionDTO));
             }
+            DoesUserExist(interactionDTO.UserId);
 
             var tip = context.Tips.SingleOrDefault(t => t.Id == interactionDTO.TipId)
                       ?? throw new TipNotFoundException("Tip not found.");
 
             var interaction = InteractionMapper.ToEntity(interactionDTO);
-            //var interaction = new Interaction {
-            //    TipId = interactionDTO.TipId,
-            //    UserId = interactionDTO.UserId,
-            //    Like = interactionDTO.Like,
-            //    Favorite = interactionDTO.Favorite
-            //};
 
             if (interactionDTO.Like == true) {
                 tip.LikeCount = (tip.LikeCount ?? 0) + 1;
@@ -72,6 +71,8 @@ namespace DotNet.Services {
             if (interactionDTO == null) {
                 throw new ArgumentNullException("The json body cannot be null.");
             }
+            DoesUserExist(interactionDTO.UserId);
+            VerifyUserOwnership(interactionDTO.UserId);
 
             var interaction = context.Interactions
                 .Include(i => i.Tip)
@@ -118,6 +119,9 @@ namespace DotNet.Services {
         /// <param name="userId">The ID of the user whose interactions are to be retrieved.</param>
         /// <returns>A collection of InteractionDTO objects representing the user's interactions.</returns>
         public IEnumerable<InteractionDTO> GetUserInteractions(string userId) {
+            DoesUserExist(userId);
+            VerifyUserOwnership(userId);
+
             var interactions = context.Interactions
              .Where(i => i.UserId == userId)
              .Select(interaction => InteractionMapper.ToDTO(interaction))
@@ -128,6 +132,24 @@ namespace DotNet.Services {
             }
 
             return interactions;
+        }
+
+
+        private bool DoesUserExist(string userId) {
+            var user = usersContext.Users.Any(u => u.Id == userId);
+            if (!user) {
+                throw new UserNotFoundException("User not found");
+            }
+            return true;
+        }
+
+        private bool VerifyUserOwnership(string userId) {
+            string loggedUserId = usersService.GetUserId();
+
+            if (userId != loggedUserId) {
+                throw new InteractionInvalidActionException("You don't have permission to access this resource.");
+            }
+            return true;
         }
     }
 }

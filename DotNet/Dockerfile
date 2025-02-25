@@ -11,7 +11,7 @@ COPY DotNet/ .
 RUN dotnet build
 
 # Exposes port 5000, which is the default port for the app.
-EXPOSE 5000
+EXPOSE 5016
 
 # Runs the application using "dotnet run" for a simple development experience.
 CMD ["dotnet", "run"]

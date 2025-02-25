@@ -17,7 +17,7 @@ RUN chmod +x mvnw
 RUN ./mvnw clean package -DskipTests
 
 # Expose the port your application listens on
-EXPOSE 8081
+EXPOSE 8080
 
 # Run the Spring Boot application (basically, "java, run the -jar comamnd in this specific jar file)
 CMD ["java", "-jar", "target/SpringBoot-0.0.1-SNAPSHOT.jar"]

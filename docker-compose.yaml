@@ -15,10 +15,11 @@ services:
       context: ./DotNet
       dockerfile: Dockerfile
     ports:
-      - "5000:5000"
+      - "5016:5016"
     environment:
       # Overwrite the "ConnectionStrings:UserDB" from your appsettings.json
       ConnectionStrings__UserDB: "Host=hopper.proxy.rlwy.net;Port=49584;Database=railway;Username=postgres;Password=wWbcCDJgPbNsEeLHBVqnWDjsUsJyJRaD;SSL Mode=Disable"
+      ASPNETCORE_URLS: "http://+:5016"
     networks:
       - app-network
 
@@ -27,7 +28,7 @@ services:
       context: ./SpringBoot
       dockerfile: Dockerfile
     ports:
-      - "8081:8081"
+      - "8080:8080"
     environment:
       SPRING_DATASOURCE_URL: "jdbc:h2:tcp://h2:1521//opt/h2-data/ComeAndGet"
       SPRING_DATASOURCE_USERNAME: "sa"

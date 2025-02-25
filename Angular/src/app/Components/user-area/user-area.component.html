@@ -62,7 +62,7 @@
               : 'border-gray-700'
           "
         >
-          <i class="fa-solid fa-lg fa-hand-holding-heart mr-1"></i>
+          <i class="fa-solid fa-lg fa-bookmark mr-1"></i>
           My Favorite Tips
         </button>
       </li>
@@ -158,22 +158,24 @@
           {{ adv.date | date : "mediumDate" }}
         </p>
         <div class="mt-2 flex text-white space-x-4 pt-4">
-          <button class="bg-lime-600 py-1 px-6 rounded-md hover:bg-lime-800" (click)="openModal(adv)">
+          <button
+            class="bg-lime-600 py-1 px-6 rounded-md hover:bg-lime-800"
+            (click)="openModal(adv)"
+          >
             See details
           </button>
 
           <app-button-update-adv [id]="adv.id || ''"></app-button-update-adv>
 
           <!-- <app-button-deactivate-advertisement [id]="adv.id || ''"></app-button-deactivate-advertisement> -->
-          
         </div>
       </div>
     </div>
     } }@else if (menus.myRequests) {
-      <app-reservation-attempt-list></app-reservation-attempt-list>
-     } @else if (menus.myFavoriteTips) {
-      <app-favorite-tip-detail></app-favorite-tip-detail>
-      }
+    <app-reservation-attempt-list></app-reservation-attempt-list>
+    } @else if (menus.myFavoriteTips) {
+    <app-favorite-tip-detail></app-favorite-tip-detail>
+    }
   </div>
 </div>
 

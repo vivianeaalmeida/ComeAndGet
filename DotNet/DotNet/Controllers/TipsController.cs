@@ -2,6 +2,7 @@
 using DotNet.Exceptions;
 using DotNet.Services;
 using DotNet.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -64,6 +65,7 @@ namespace DotNet.Controllers {
         /// </summary>
         /// <param name="userId">The ID of the user.</param>
         /// <returns>A list of favorited tips.</returns>
+        [Authorize(Roles = "User")]
         [HttpGet("favorites/users/{userId}")]
         public async Task<ActionResult<IEnumerable<TipDTO>>> GetFavoritedTips(string userId) {
             try 
@@ -81,7 +83,8 @@ namespace DotNet.Controllers {
         /// Adds a new tip.
         /// </summary>
         /// <param name="tipDTO">The tip data to add.</param>
-        /// <returns>The created tip with its generated ID.</returns>
+        /// <returns>The created tip with its generated ID.</returns> 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public ActionResult<TipDTO> Add([FromBody] TipDTO tipDTO)
         {
@@ -110,6 +113,7 @@ namespace DotNet.Controllers {
         /// <param name="id">The ID of the tip to update.</param>
         /// <param name="tipDTO">The updated tip data.</param>
         /// <returns>The updated tip or an error message if the update fails.</returns>
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public ActionResult Update(int id, [FromBody] TipDTO tipDTO) {
             if (id != tipDTO.Id)
@@ -144,6 +148,7 @@ namespace DotNet.Controllers {
         /// </summary>
         /// <param name="id">The ID of the tip to remove.</param>
         /// <returns>The removed tip if successful, or an error message if not found.</returns>
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public ActionResult Remove(int id) {
             try 

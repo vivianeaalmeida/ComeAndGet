@@ -2,6 +2,7 @@
 using DotNet.Exceptions;
 using DotNet.Services;
 using DotNet.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,6 +29,7 @@ namespace DotNet.Controllers {
         /// </summary>
         /// <param name="interactionDTO">The interaction data to create.</param>
         /// <returns>The created interaction with its generated ID.</returns>
+        [Authorize(Roles = "User")]
         [HttpPost]
         public IActionResult CreateInteraction([FromBody] InteractionDTO interactionDTO) {
             try {
@@ -52,6 +54,7 @@ namespace DotNet.Controllers {
         /// <param name="id">The ID of the interaction to update.</param>
         /// <param name="interactionDTO">The updated interaction data.</param>
         /// <returns>The updated interaction or an error message if the update fails.</returns>
+        [Authorize(Roles = "User")]
         [HttpPut("{id}")]
         public IActionResult UpdateInteraction(int id, [FromBody] InteractionDTO interactionDTO) {
           
@@ -65,6 +68,9 @@ namespace DotNet.Controllers {
             }
             catch (TipNotFoundException ex)
             {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (InteractionInvalidActionException ex) {
                 return BadRequest(new { message = ex.Message });
             }
             catch (ArgumentNullException ex)
@@ -81,10 +87,15 @@ namespace DotNet.Controllers {
         /// </summary>
         /// <param name="userId">The ID of the user whose interactions are to be retrieved.</param>
         /// <returns>A list of interactions associated with the specified user.</returns>
+        [Authorize(Roles = "User")]
         [HttpGet("users/{userId}")]
         public ActionResult<IEnumerable<InteractionDTO>> GetUserInteractions(string userId) {
-            return Ok(interactionService.GetUserInteractions(userId));
+            try {
+                return Ok(interactionService.GetUserInteractions(userId));
+            }
+            catch (InteractionInvalidActionException ex) {
+                return BadRequest(new { message = ex.Message });
+            }
         }
-
     }
 }

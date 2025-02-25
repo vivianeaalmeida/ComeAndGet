@@ -13,18 +13,18 @@ import { User1 } from '../../../Models/user1';
   styleUrl: './button-favorite-tip.component.css',
 })
 export class ButtonFavoriteTipComponent {
+  userInteractions: Interaction[] = [];
   user?: User1;
   userId?: string;
 
   @Input() tip!: Tip;
-  @Output() interactionChanged = new EventEmitter<void>();
 
   constructor(
     private interactServ: InteractionsService,
     private userServ: AuthService
   ) {}
+
   ngOnInit(): void {
-    console.log(this.tip);
     this.profileInfo();
   }
 
@@ -32,20 +32,22 @@ export class ButtonFavoriteTipComponent {
     this.userServ.getUser().subscribe((user) => {
       this.user = user;
       this.userId = user.userId;
-      this.toggleFavorite(this.tip);
     });
   }
 
   toggleFavorite(tip: Tip): void {
-    this.updateInteraction(tip, {
-      like: tip.hasLiked,
-      favorite: !tip.hasFavorited,
-    });
+    if (tip.interactionId) {
+      this.updateInteraction(tip, {
+        like: tip.hasLiked,
+        favorite: !tip.hasFavorited,
+      });
+    } else {
+      this.createInteraction(tip, { like: false, favorite: true });
+    }
   }
 
   updateInteraction(tip: Tip, interaction: Partial<Interaction>): void {
     if (!tip.interactionId) return;
-
     const wasLiked = tip.hasLiked;
     const wasFavorited = tip.hasFavorited;
 
@@ -81,5 +83,33 @@ export class ButtonFavoriteTipComponent {
           console.error(' Error updating interaction:', error);
         }
       );
+  }
+
+  createInteraction(tip: Tip, interaction: Partial<Interaction>): void {
+    const newInteraction: Interaction = {
+      tipId: tip.id,
+      userId: this.userId!,
+      ...interaction,
+    };
+    this.interactServ.addNewInteraction(newInteraction).subscribe(
+      (createdInteraction) => {
+        tip.interactionId = createdInteraction.id;
+        tip.hasLiked = createdInteraction.like;
+        tip.hasFavorited = createdInteraction.favorite;
+
+        // Atualizar contadores corretamente
+        if (createdInteraction.like) {
+          tip.likeCount = (tip.likeCount || 0) + 1;
+        }
+        if (createdInteraction.favorite) {
+          tip.favoriteCount = (tip.favoriteCount || 0) + 1;
+        }
+
+        this.userInteractions.push(createdInteraction);
+      },
+      (error) => {
+        console.error('Error creating interaction', error);
+      }
+    );
   }
 }

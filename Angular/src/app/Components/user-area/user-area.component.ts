@@ -57,7 +57,6 @@ export class UserAreaComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log(this.menus);
     this.profileInfo();
     this.authService.loggedSession
       .pipe(map((user) => user))
@@ -81,7 +80,6 @@ export class UserAreaComponent implements OnInit {
 
   profileInfo() {
     this.authService.getUser().subscribe((user) => {
-      console.log('User data update:', user);
       this.user = user;
       this.userId = user.userId;
       let arr = this.user.username.split(' ');

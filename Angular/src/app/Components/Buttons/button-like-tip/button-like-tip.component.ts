@@ -14,16 +14,15 @@ import { User1 } from '../../../Models/user1';
 export class ButtonLikeTipComponent implements OnInit {
   user?: User1;
   userId?: string;
+  userInteractions: Interaction[] = [];
 
   @Input() tip!: Tip;
-  @Output() interactionChanged = new EventEmitter<void>();
 
   constructor(
     private interactServ: InteractionsService,
     private userServ: AuthService
   ) {}
   ngOnInit(): void {
-    console.log(this.tip);
     this.profileInfo();
   }
 
@@ -31,15 +30,18 @@ export class ButtonLikeTipComponent implements OnInit {
     this.userServ.getUser().subscribe((user) => {
       this.user = user;
       this.userId = user.userId;
-      this.toggleLike(this.tip);
     });
   }
 
   toggleLike(tip: Tip): void {
-    this.updateInteraction(tip, {
-      like: !tip.hasLiked,
-      favorite: tip.hasFavorited,
-    });
+    if (tip.interactionId) {
+      this.updateInteraction(tip, {
+        like: !tip.hasLiked,
+        favorite: tip.hasFavorited,
+      });
+    } else {
+      this.createInteraction(tip, { like: true, favorite: false });
+    }
   }
 
   updateInteraction(tip: Tip, interaction: Partial<Interaction>): void {
@@ -80,5 +82,33 @@ export class ButtonLikeTipComponent implements OnInit {
           console.error(' Error updating interaction:', error);
         }
       );
+  }
+
+  createInteraction(tip: Tip, interaction: Partial<Interaction>): void {
+    const newInteraction: Interaction = {
+      tipId: tip.id,
+      userId: this.userId!,
+      ...interaction,
+    };
+    this.interactServ.addNewInteraction(newInteraction).subscribe(
+      (createdInteraction) => {
+        tip.interactionId = createdInteraction.id;
+        tip.hasLiked = createdInteraction.like;
+        tip.hasFavorited = createdInteraction.favorite;
+
+        // Atualizar contadores corretamente
+        if (createdInteraction.like) {
+          tip.likeCount = (tip.likeCount || 0) + 1;
+        }
+        if (createdInteraction.favorite) {
+          tip.favoriteCount = (tip.favoriteCount || 0) + 1;
+        }
+
+        this.userInteractions.push(createdInteraction);
+      },
+      (error) => {
+        console.error('Error creating interaction', error);
+      }
+    );
   }
 }

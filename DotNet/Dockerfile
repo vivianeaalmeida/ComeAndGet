@@ -10,7 +10,7 @@ COPY DotNet/ .
 # Builds the project (skips tests?)
 RUN dotnet build
 
-# Exposes port 5000, which is the default port for the app.
+# Exposes port 5016, which is the default port for the app.
 EXPOSE 5016
 
 # Runs the application using "dotnet run" for a simple development experience.

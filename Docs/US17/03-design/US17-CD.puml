@@ -1,0 +1,82 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+skinparam classAttributeIconSize 0
+
+class UserAreaUi {
+}
+
+class ReservationAttemptController {
+    + getReservationAttempts(reservationAttemptClientId)
+}
+
+class ReservationAttemptService {
+    + getReservationAttempts(reservationAttemptClientId, advertisementClientId, advertisementId)
+}
+
+interface ReservationAttemptRepository {
+    + findAllBy(reservationAttemptClientId, advertisementClientId, advertisementId)
+}
+
+class ReservationAttempt {
+    - id : String
+    - date: Date
+    - status: ReservationAttemptStatus
+    - client: Client
+    - advertisement : Advertisement
+    + ReservationAttempt(...)
+}
+
+enum ReservationAttemptStatus {
+    designation: String
+}
+
+class ReservationAttemptMapper {
+    + toEntity()
+    + toDTO()
+}
+
+class ReservationAttemptDTO {
+    - id : String
+    - date: Date
+    - status: ReservationAttemptStatus
+    - clientId: String
+    + ReservationAttemptDTO(...)
+}
+
+class AdvertisementSummaryDTO {
+    - id : String
+    - status: String
+    - date: Date
+    - title: String
+    - description: String
+    + AdvertisementSummaryDTO(...)
+}
+
+class Advertisement {
+    - id : String
+    - designation: String
+    - initialDate: Date
+    - finalDate: Date
+    - address: String
+    + Advertisement(...)
+}
+
+enum AdvertisementStatus {
+    designation: String
+}
+
+' --- Relationships ---
+UserAreaUi ..> ReservationAttemptController
+ReservationAttemptController .> ReservationAttemptService
+ReservationAttemptService ..> ReservationAttemptRepository
+ReservationAttemptService ..> ReservationAttemptMapper
+ReservationAttemptMapper ..> ReservationAttemptDTO
+ReservationAttemptMapper ..> ReservationAttempt
+ReservationAttempt "*" --> "1" ReservationAttemptStatus : has
+ReservationAttempt --> Advertisement : belongs to
+ReservationAttemptDTO --> AdvertisementSummaryDTO : contains
+ReservationAttemptRepository "1" --> "*" ReservationAttempt : manages
+
+@enduml

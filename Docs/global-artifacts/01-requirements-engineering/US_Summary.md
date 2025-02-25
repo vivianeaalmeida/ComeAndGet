@@ -218,7 +218,7 @@
 - **Acceptance Criteria**:
     - The client should be able to view a list of ReservationAttempts they have made on advertisements ordered by descending date.
     - Each ReservationAttempt should display its status.
-    - Clicking on a ReservationAttempt should show its details and the associated advertisement.
+    - The reservation card must contain all information about the Advertisement.
 
 ---
 

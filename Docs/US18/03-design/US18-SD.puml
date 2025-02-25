@@ -1,0 +1,50 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Users" as USER
+participant ":ReservationAttemptUI" as UI
+participant ":ReservationAttemptController" as CTRL
+participant ":ReservationAttemptService" as SERV
+participant "mapper\n:ReservationAttemptMapper" as MAPPER
+participant ":ReservationAttemptRepository" as ATTEMPT_REPO
+participant "reservationAttemptList" as ATTEMPT_LIST
+participant "reservationAttemptDTO\n:ReservationAttemptResponseDTO" as attemptDTO
+
+activate USER
+
+    USER -> UI : requests to list all reservation attempts by clientId
+    activate UI
+        UI -> CTRL : getReservationAttempts(reservationAttemptClientId)
+        activate CTRL
+
+            CTRL -> SERV : getReservationAttempts(reservationAttemptClientId)
+            activate SERV
+
+                SERV -> ATTEMPT_REPO : findAllBy(reservationAttemptClientId)
+                activate ATTEMPT_REPO
+                ATTEMPT_REPO -->> ATTEMPT_LIST**: returns()
+                ATTEMPT_REPO --> SERV : reservationAttemptList
+                deactivate ATTEMPT_REPO
+            SERV --> MAPPER : toDTO(reservationAttemptList)
+            activate MAPPER
+            MAPPER --> reservationAttemptDTOList**: create()
+            loop for each reservationAttempt in ATTEMPT_LIST
+                MAPPER -> ATTEMPT_LIST : reservationAttempt = get(i)
+                MAPPER -> MAPPER : attemptDTO = toDTO(reservationAttempt)
+                activate MAPPER
+                MAPPER -->> attemptDTO**: create(...)
+                MAPPER -> reservationAttemptDTOList : add(attemptDTO)
+            end
+            MAPPER --> SERV : reservationAttemptDTOList
+            deactivate MAPPER
+            SERV --> CTRL : reservationAttemptDTOList
+            deactivate SERV
+        CTRL --> UI : reservationAttemptDTOList
+        UI --> USER : reservationAttemptDTOList
+        deactivate CTRL
+deactivate USER
+@enduml

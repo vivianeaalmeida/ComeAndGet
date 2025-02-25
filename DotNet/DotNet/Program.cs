@@ -99,4 +99,7 @@ using (var scope = app.Services.CreateScope()) {
     var dbContext = scope.ServiceProvider.GetRequiredService<BlogContext>();
     await dbContext.SeedDataAsync();
 }
+
+builder.WebHost.UseUrls("http://0.0.0.0:5016");
+
 app.Run();

@@ -67,7 +67,6 @@ public class MunicipalityWebClient {
      * @return A list of municipalities.
      */
     public List<String> getMunicipalities() {
-        // If cache empty, reload from file or fetch new data
         municipalitiesCache = loadMunicipalitiesFromFile();
 
         // if municipalitiesCache is null or cache has expired (more than 6 months)
@@ -75,7 +74,6 @@ public class MunicipalityWebClient {
             municipalitiesCache = fetchMunicipalities(); // fetch municipalities in external api
             saveMunicipalitiesToFile(municipalitiesCache); // save results into file
         }
-
         return municipalitiesCache;
     }
 

@@ -1,0 +1,22 @@
+services:
+  angular:
+    build:
+      context: ./Angular
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./Angular:/app
+      - /app/node_modules
+    command: ng serve --host
+
+  dotnet:
+    build:
+      context: ./DotNet
+      dockerfile: Dockerfile
+    ports:
+      - "5016:5016"
+    environment:
+      # Overwrite the "ConnectionStrings:UserDB" from your appsettings.json
+      ConnectionStrings__UserDB: "Host=hopper.proxy.rlwy.net;Port=49584;Database=railway;Username=postgres;Password=wWbcCDJgPbNsEeLHBVqnWDjsUsJyJRaD;SSL Mode=Disable"
+      ASPNETCORE_URLS: "http://+:5016"

@@ -266,7 +266,6 @@ public class ReservationAttemptService implements IReservationAttemptService {
      * @param advertisementId The ID of the advertisement.
      * @return A list of reservation attempt response DTOs.
      */
-    @Override
     public List<ReservationAttemptResponseDTO> getReservationAttemptsByAdvertisement(String advertisementId) {
         List<ReservationAttempt> reservationAttempts = reservationAttemptRepository.findByAdvertisement_Id(advertisementId);
         List<ReservationAttemptResponseDTO> reservationAttemptResponseDTOS = new ArrayList<>();

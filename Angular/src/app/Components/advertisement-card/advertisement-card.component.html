@@ -1,12 +1,12 @@
 <div
-  class="cursor-pointer group relative flex flex-col bg-white shadow-md rounded-lg h-[50vh] min-h-[410px] w-[19vw] max-w-[19vw] hover:shadow-lg transition-shadow duration-300 justify-evenly"
+  class="cursor-pointer group relative flex flex-col bg-white shadow-md rounded-lg h-[60vh] min-h-[460px] w-[19vw] max-w-[19vw] hover:shadow-lg transition-shadow duration-300 justify-between"
 >
   <!-- Imagem -->
   <div
-    class="relative h-48 min-h-48 max-h-48 m-2.5 overflow-hidden text-white rounded-md w-full flex items-center justify-center"
+    class="relative h-[70%] w-full overflow-hidden rounded-md p-4"
   >
     <img
-      class="object-scale-down max-h-full max-w-[18vw] w-auto m-auto transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-105"
+      class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)]"
       [src]="imageSrc"
       [alt]="title"
     />
@@ -23,19 +23,19 @@
 
     <!-- Descrição -->
     <p
-      class="text-slate-600 leading-normal font-medium text-lg line-clamp-2 text-ellipsis overflow-hidden min-h-[3.5rem]"
+      class="text-slate-600 leading-normal font-medium text-lg line-clamp-2 text-ellipsis overflow-hidden min-h-[3.5rem] text-left"
     >
       {{ description }}
     </p>
   </div>
 
   <!-- Botão -->
-  <div class="flex justify-center overflow-hidden">
+  <div class="flex justify-center mt-auto mb-6">
     <app-button
       [buttonText]="buttonText"
       fontSize="1rem"
       padding=".5rem 1rem"
-      class="mb-36"
+      class="mb-6"
     ></app-button>
   </div>
 </div>

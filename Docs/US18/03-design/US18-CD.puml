@@ -1,0 +1,78 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+skinparam classAttributeIconSize 0
+
+
+class UserAreaUi {
+}
+
+class ReservationAttemptController {
+    + getReservationAttempts(reservationAttemptClientId)
+}
+
+class ReservationAttemptService {
+    + getReservationAttempts(reservationAttemptClientId, advertisementClientId, advertisementId)
+}
+
+interface ReservationAttemptRepository {
+    + findAllBy(reservationAttemptClientId,advertisementClientId,advertisementId)
+}
+
+class Advertisement {
+    - id : String
+    - designation: String
+    - initialDate: Date
+    - finalDate: Date
+    - address: String
+    + Advertisement(...)
+}
+
+enum AdvertisementStatus {
+    designation: String
+}
+
+class ReservationAttemptMapper {
+    + toEntity()
+    + toDTO()
+}
+
+class ReservationAttemptDTO {
+    - id : String
+    - date: Date
+    - status: ReservationAttemptStatus
+    - clientId: String
+    + AdvertisementSummaryDTO(...)
+}
+
+
+class ReservationAttempt {
+    - id : String
+    - date: Date
+    - status: ReservationAttemptStatus
+    - client: Client
+    - advertisement : Advertisement
+    + Advertisement(...)
+}
+
+enum ReservationAttemptStatus {
+    designation: String
+}
+
+
+' --- Relacionamentos ---
+UserAreaUi ..> ReservationAttemptController
+ReservationAttemptController .> ReservationAttemptService
+ReservationAttemptService ..> ReservationAttemptRepository
+ReservationAttemptService ..> ReservationAttemptMapper
+ReservationAttemptMapper ..> ReservationAttempt
+ReservationAttempt ..> Advertisement
+ReservationAttemptRepository "1" --> "*" ReservationAttempt : reservationAttempt
+ReservationAttempt --> Advertisement : belongs to
+ReservationAttempt "*" --> "1" ReservationAttemptStatus : has
+Advertisement --> AdvertisementStatus : has
+
+
+
+@enduml

@@ -42,6 +42,6 @@ entity Reservation_Attempt {
 }
 
 Advertisement "1" -- "1" Item
-Item "1" -right- "0..*" Category : \t
+Item "0..*" -right- "1" Category : \t
 Reservation_Attempt "0..*" -- "1" Advertisement
 @enduml

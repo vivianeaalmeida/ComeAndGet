@@ -10,7 +10,7 @@ export const authenticationGuard: CanActivateFn = (route, state) => {
   Swal.fire({
     icon: 'warning',
     title: 'Access denied: This page is only accessible by registered users!',
-    footer: 'McGonagall',
+    footer: 'Come And Get Team',
   });
   inject(Router).navigate(['login'], { queryParams: { returnUrl: state.url } });
   return false;

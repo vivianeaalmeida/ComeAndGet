@@ -12,14 +12,14 @@ export const managerGuard: CanActivateFn = (route, state) => {
       .subscribe((user) => {
         teste = user;
       });
-    if (teste.role === 'manager') {
+    if (teste.roles === 'Admin') {
       return true;
     }
   }
   Swal.fire({
     icon: 'warning',
     title: 'Access denied: This page is only accessible by ADMIN!',
-    footer: 'McGonagall',
+    footer: 'Come And Get Team',
   });
   inject(Router).navigate(['home'], { queryParams: { returnUrl: state.url } });
   return false;

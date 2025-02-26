@@ -1,0 +1,47 @@
+@startuml
+hide circles
+hide methods
+'left to right direction
+
+entity Advertisement {
+    id           : INT <<PK>>
+    --
+    title         : VARCHAR
+    description   : VARCHAR
+    date          : DATE
+    status        : INT
+    municipality  : VARCHAR
+    client_id     : VARCHAR
+    --
+    item_id       : VARCHAR <<FK>>
+}
+
+entity Item {
+    id          : VARCHAR <<PK>>
+    --
+    condition    : INT
+    image        : VARCHAR
+    --
+    category_id  : VARCHAR <<FK>>
+}
+
+entity Category {
+    id          : VARCHAR <<PK>>
+    --
+    designation  : VARCHAR
+}
+
+entity Reservation_Attempt {
+    id               : INT <<PK>>
+    --
+    date              : DATE
+    status            : INT
+    client_id         : VARCHAR
+    --
+    advertisement_id  : INT <<FK>>
+}
+
+Advertisement "1" -- "1" Item
+Item "1" -right- "0..*" Category : \t
+Reservation_Attempt "0..*" -- "1" Advertisement
+@enduml

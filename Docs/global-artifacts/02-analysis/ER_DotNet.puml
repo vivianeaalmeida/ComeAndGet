@@ -1,0 +1,37 @@
+@startuml
+hide circles
+hide methods
+'left to right direction
+
+entity User {
+    + id                 : VARCHAR <<PK>>
+    --
+    user_name            : VARCHAR
+    name                 : VARCHAR
+    phone_number         : VARCHAR
+    email                : VARCHAR
+    password_hash        : VARCHAR
+}
+
+entity Interaction {
+    id            : VARCHAR <<PK>>
+    --
+    like:         : BOOLEAN
+    favorite      : BOOLEAN
+    --
+    client_id     : VARCHAR <<FK>>
+    tip_id        : VARCHAR <<FK>>
+}
+
+entity Tip {
+    id              : VARCHAR <<PK>>
+    --
+    title           : VARCHAR
+    description     : VARCHAR
+    likeCount       : INT
+    favoriteCount   : INT
+}
+
+User "1" -- "0..*" Interaction
+Tip "1" -left- "0..*" Interaction : \t
+@enduml
